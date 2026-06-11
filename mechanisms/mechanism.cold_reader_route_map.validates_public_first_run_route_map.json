@@ -1,0 +1,10 @@
+{
+  "full_public_source_release": "not_authorized_yet",
+  "path": "mechanisms/mechanism.cold_reader_route_map.validates_public_first_run_route_map.json",
+  "private_material_publication": "forbidden",
+  "release_mode": "public_shell",
+  "schema_version": "microcosm_public_shell_placeholder_v0",
+  "security_reports": "https://github.com/wcook04/microcosm-substrate/security/advisories/new",
+  "source_material_population": "withheld_or_pending",
+  "status": "reserved_path_source_body_withheld"
+}
