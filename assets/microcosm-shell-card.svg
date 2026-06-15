@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" role="img" aria-label="Microcosm Substrate public shell: link resolution live, security intake live, source bodies withheld, release switch not cleared">
+  <rect x="0" y="0" width="1280" height="640" fill="#0d1117"/>
+  <rect x="40" y="40" width="1200" height="560" rx="18" fill="none" stroke="#30363d" stroke-width="2"/>
+  <text x="104" y="176" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="74" font-weight="700" fill="#e6edf3" letter-spacing="1.5">MICROCOSM SUBSTRATE</text>
+  <text x="106" y="232" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="30" fill="#8b949e" letter-spacing="9">PUBLIC SHELL</text>
+  <line x1="104" y1="272" x2="1176" y2="272" stroke="#21262d" stroke-width="1.5"/>
+  <g font-family="SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace" font-size="34">
+    <text x="104" y="344" fill="#c9d1d9" text-anchor="start">link resolution</text>
+    <text x="1176" y="344" fill="#3fb950" text-anchor="end">live</text>
+    <text x="104" y="408" fill="#c9d1d9" text-anchor="start">security intake</text>
+    <text x="1176" y="408" fill="#3fb950" text-anchor="end">live</text>
+    <text x="104" y="472" fill="#c9d1d9" text-anchor="start">source bodies</text>
+    <text x="1176" y="472" fill="#d29922" text-anchor="end">withheld</text>
+    <text x="104" y="536" fill="#c9d1d9" text-anchor="start">release switch</text>
+    <text x="1176" y="536" fill="#d29922" text-anchor="end">not cleared</text>
+  </g>
+  <text x="104" y="584" font-family="SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace" font-size="21" fill="#6e7681">private system  &#8594;  release boundary  &#8594;  public shell  &#8594;  populated source later</text>
+</svg>
