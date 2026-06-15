@@ -42,32 +42,41 @@ This section describes the *body* that the reserved paths are holding space for.
 
 When populated, the source is meant to be enterable in one screen and one step: ask for the map, then run a single local command that will write a small record beside your own project and print what it found, what backs each count, and what it does not prove. From there the source will branch by reader: someone deciding whether to spend ten minutes, a safety or evaluation reviewer, a peer developer, or an AI agent arriving with a task.
 
-## The exoskeleton
+## Architecture
 
-Think of the released project as a body with a hard shell around it. The **shell** is everything that faces outward: the repository, this README, the agent-entry contract, the reserved paths, the security route, and the release-state table above. The **body** is the Microcosm source: the components, the evidence, the runnable commands. Right now the shell exists and the body does not yet sit inside it.
-
-This first diagram is constitutional. It shows where the boundary is and which arrow is operator-gated:
+**How it works.** Bring a folder; Microcosm builds project-local `.microcosm/` state and reads it back as cards and a local observatory. Every claim it makes carries an evidence class, a source link, and a scope limit.
 
 ```mermaid
 flowchart LR
-  private["Private working system<br/>(not released)"] --> boundary["Release boundary<br/>(selection, sanitisation, scans)"]
-  boundary --> shell["Public shell<br/>(live now)"]
-  boundary -. "operator-only switch<br/>(not cleared)" .-> body["Populated source<br/>(not live yet)"]
-  shell --> reader["Reader / reporter"]
-  body --> reader
+  A["Your folder"] -->|"hello · tour"| B[".microcosm/ state<br/>catalog · routes · work · events · evidence · explanations"]
+  B -->|"explain"| C["Read it back<br/>cards · local observatory"]
+  B --> D{{"every claim carries:<br/>evidence class · source link · scope limit"}}
+  D -.->|"overclaim fails its own validator"| C
 ```
 
-The second diagram is product-shaped, and describes the loop the populated body *will* expose. It is future tense, not a current affordance:
+**How it is built.** A 10-primitive kernel spine that every component binds to, grouped into seven families.
 
 ```mermaid
-flowchart LR
-  command["Local command"] --> record["Record on disk"]
-  record --> evidence["Evidence class"]
-  evidence --> source["Source link"]
-  source --> limit["Scope limit"]
+flowchart TB
+  subgraph spine["Kernel spine — every component binds to it"]
+    direction LR
+    p["Project"] --> c["Catalog"] --> pa["Pattern"] --> s["Standard"] --> r["Route"]
+    r --> w["Work"] --> e["Event"] --> ev["Evidence"] --> ex["Explanation"] --> as["Assimilation"]
+  end
+  spine --> fam
+  subgraph fam["82 components · 7 families"]
+    direction LR
+    f1["Entry &amp; Reveal · 2"]
+    f2["Architecture &amp; Navigation · 10"]
+    f3["Formal Math &amp; Proof · 18"]
+    f4["Agent Reliability &amp; Safety · 18"]
+    f5["Research &amp; Science · 8"]
+    f6["Import, Projection &amp; Drift · 21"]
+    f7["Work, Landing &amp; Continuity · 5"]
+  end
 ```
 
-The boundary does real work. The private system carries raw operator voice, runtime state, credentials, provider and browser sessions, and internal ledgers. None of that crosses into the shell. What is intended to cross, once the switch is cleared, is a sanitised, source-open research substrate and nothing else.
+The directories in this repository publish the shape of that spine and those families as reserved paths; the component bodies populate them when the source-population switch is cleared.
 
 ## Security
 
