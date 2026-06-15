@@ -66,13 +66,13 @@ flowchart TB
   spine --> fam
   subgraph fam["82 components · 7 families"]
     direction LR
-    f1["Entry &amp; Reveal · 2"]
-    f2["Architecture &amp; Navigation · 10"]
-    f3["Formal Math &amp; Proof · 18"]
-    f4["Agent Reliability &amp; Safety · 18"]
-    f5["Research &amp; Science · 8"]
-    f6["Import, Projection &amp; Drift · 21"]
-    f7["Work, Landing &amp; Continuity · 5"]
+    f1["Entry & Reveal · 2"]
+    f2["Architecture & Navigation · 10"]
+    f3["Formal Math & Proof · 18"]
+    f4["Agent Reliability & Safety · 18"]
+    f5["Research & Science · 8"]
+    f6["Import, Projection & Drift · 21"]
+    f7["Work, Landing & Continuity · 5"]
   end
 ```
 
