@@ -1,0 +1,4 @@
+Public Microcosm stub for a withheld private source module.
+The original control-plane body is intentionally not part of the public slice.
+Matched private ref: tools/agent_trace_structurer/lifecycle_reducer.mjs
+Boundary class: private_body_exact_match

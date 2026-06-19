@@ -1,0 +1,22 @@
+{
+  "body_in_receipt": false,
+  "bundle_id": "self_ignorance_coverage_ledger_runtime_example",
+  "module_count": 0,
+  "modules": [],
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "build_system_atlas_public_safe_body_import",
+      "path": "source_modules/tools/meta/factory/build_system_atlas.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_near_verbatim",
+        "matched_private_ref": "tools/meta/factory/build_system_atlas.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/factory/build_system_atlas.py"
+    }
+  ],
+  "schema_version": "microcosm_self_ignorance_coverage_ledger_source_module_manifest_v1",
+  "source_import_class": "copied_non_secret_macro_body"
+}

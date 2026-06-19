@@ -1,0 +1,113 @@
+{
+  "body_in_receipt": false,
+  "body_storage_policy": "exact_non_secret_macro_reconstruction_receipt_and_boundary_policy_bodies_copied_into_public_reveal_source_module_bundle",
+  "bundle_id": "public_reveal_walkthrough_runtime_example",
+  "classification": "copied_non_secret_macro_body",
+  "manifest_id": "public_reveal_walkthrough_source_open_body_import",
+  "module_count": 1,
+  "modules": [
+    {
+      "anchor_count": 3,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "body_text_in_receipt": false,
+      "byte_count": 55029,
+      "classification": "copied_non_secret_macro_body",
+      "line_count": 1423,
+      "material_class": "public_python_source_body",
+      "module_id": "public_reveal_walkthrough_control_plane_source_body_import",
+      "path": "source_modules/microcosm_core/organs/public_reveal_walkthrough.py",
+      "required_anchors": [
+        "def run_reveal_bundle",
+        "PUBLIC_SAFE_SOURCE_BODY_CLASSES",
+        "synthetic_receipt_standin_allowed"
+      ],
+      "sha256": "sha256:56790214acf1dd2dcf816e0923552246120437acbcb8be4b93a9f9c17b767aab",
+      "sha256_match": true,
+      "source_import_class": "copied_non_secret_macro_body",
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipts_provider_payload_browser_hud_live_access_account_session_private_thread_body_or_credentials",
+      "source_ref": "microcosm-substrate/src/microcosm_core/organs/public_reveal_walkthrough.py",
+      "source_role": "Public Microcosm reveal walkthrough control-plane body that validates runnable public commands, claim ceilings, and body-free receipts.",
+      "source_sha256": "sha256:56790214acf1dd2dcf816e0923552246120437acbcb8be4b93a9f9c17b767aab",
+      "source_to_target_relation": "exact_copy",
+      "target_ref": "microcosm-substrate/examples/public_reveal_walkthrough/exported_public_reveal_bundle/source_modules/microcosm_core/organs/public_reveal_walkthrough.py",
+      "target_sha256": "sha256:56790214acf1dd2dcf816e0923552246120437acbcb8be4b93a9f9c17b767aab",
+      "validation_refs": [
+        "microcosm-substrate/tests/test_public_reveal_walkthrough.py::test_public_reveal_source_modules_are_exact_macro_body_imports",
+        "microcosm-substrate/tests/test_public_reveal_walkthrough.py::test_public_reveal_exported_bundle_validates_runtime_shape"
+      ]
+    }
+  ],
+  "omitted_material": [
+    {
+      "reason": "The current receipt carries a private local sandbox path; importing it exactly would leak host path state into the public reveal body floor.",
+      "replacement_criteria": "Replace with a public-relative observatory legibility receipt or a source-faithful sanitized projection whose source and target digests are recorded.",
+      "source_ref": "state/microcosm_portfolio/reconstruction/public_microcosm_observatory_legibility_receipt_v1.json"
+    },
+    {
+      "reason": "The current receipt records local-path scanning commands that are useful as validation evidence but should not become copied reveal body material.",
+      "replacement_criteria": "Replace with a local-path-free public entry and cold-start navigation receipt, or import a bounded public-relative slice with exact replacement criteria.",
+      "source_ref": "state/microcosm_portfolio/reconstruction/public_entry_docs_and_cold_start_navigation_receipt_v1.json"
+    }
+  ],
+  "public_runtime_policy": "source_modules_are_public_reveal_body_floor_not_live_macro_runtime_dependency",
+  "receipt_body_policy": "target_body_text_is_never_embedded_in_receipts",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "public_reveal_first_slice_execution_receipt_body_import",
+      "path": "source_modules/ai_workflow/state/microcosm_portfolio/reconstruction/public_first_slice_build_execution_receipt_v1.json",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "state/microcosm_portfolio/reconstruction/public_first_slice_build_execution_receipt_v1.json",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "state/microcosm_portfolio/reconstruction/public_first_slice_build_execution_receipt_v1.json"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "public_reveal_runtime_shell_reorientation_receipt_body_import",
+      "path": "source_modules/ai_workflow/state/microcosm_portfolio/reconstruction/public_microcosm_runtime_shell_reorientation_receipt_v1.json",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "state/microcosm_portfolio/reconstruction/public_microcosm_runtime_shell_reorientation_receipt_v1.json",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "state/microcosm_portfolio/reconstruction/public_microcosm_runtime_shell_reorientation_receipt_v1.json"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "public_reveal_clean_clone_state_fixture_receipt_body_import",
+      "path": "source_modules/ai_workflow/state/microcosm_portfolio/reconstruction/public_clean_clone_state_fixture_repair_receipt_v1.json",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "state/microcosm_portfolio/reconstruction/public_clean_clone_state_fixture_repair_receipt_v1.json",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "state/microcosm_portfolio/reconstruction/public_clean_clone_state_fixture_repair_receipt_v1.json"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "public_reveal_public_substrate_boundary_policy_body_import",
+      "path": "source_modules/ai_workflow/state/microcosm_portfolio/reconstruction/public_substrate_boundary_policy_v1.json",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "state/microcosm_portfolio/reconstruction/public_substrate_boundary_policy_v1.json",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "state/microcosm_portfolio/reconstruction/public_substrate_boundary_policy_v1.json"
+    }
+  ],
+  "schema_version": "public_microcosm_source_module_manifest_v1",
+  "secret_exclusion_boundary": "no_keys_credentials_account_session_state_provider_payloads_browser_hud_live_access_raw_operator_voice_recipient_send_state_or_credential_equivalent_material",
+  "source_import_class": "copied_non_secret_macro_body",
+  "source_open_payload_boundary": "source_open_everything_except_keys_credentials_account_session_cookies_provider_payload_bodies_browser_hud_live_access_recipient_send_state_and_credential_equivalent_material",
+  "validation_contract_refs": [
+    "microcosm-substrate/tests/test_public_reveal_walkthrough.py::test_public_reveal_source_modules_are_exact_macro_body_imports",
+    "microcosm-substrate/tests/test_public_reveal_walkthrough.py::test_public_reveal_exported_bundle_validates_runtime_shape"
+  ]
+}

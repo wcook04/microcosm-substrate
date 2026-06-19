@@ -1,0 +1,91 @@
+{
+  "body_copied_material_count": 4,
+  "body_in_receipt": false,
+  "bundle_id": "public_agent_trace_route_repair_runtime_example",
+  "module_count": 1,
+  "modules": [
+    {
+      "anchor_count": 5,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "body_text_in_receipt": false,
+      "byte_count": 50351,
+      "line_count": 679,
+      "material_class": "public_standard_body",
+      "module_id": "agent_execution_trace_standard_body_import",
+      "path": "source_modules/codex/standards/std_agent_execution_trace.json",
+      "required_anchors": [
+        "\"schema_version\"",
+        "\"strict_boundary\"",
+        "\"trace_ontology_contract\"",
+        "\"navigation_reference_sequence_contract\"",
+        "\"types\""
+      ],
+      "sha256": "9997ee8e79bc32a867b72e1c23fbdedd0f24e115135cfba7811fad8b682ca753",
+      "sha256_match": true,
+      "source_import_class": "copied_non_secret_macro_body",
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_provider_payload_browser_hud_live_access_account_session_credentials_live_hook_state_or_recipient_send_state",
+      "source_ref": "codex/standards/std_agent_execution_trace.json",
+      "source_role": "Agent execution trace standard that defines the public trace ontology, strict privacy boundary, navigation-reference sequence contract, and generated artifact types used by the route-repair replay.",
+      "source_sha256": "sha256:9997ee8e79bc32a867b72e1c23fbdedd0f24e115135cfba7811fad8b682ca753",
+      "target_ref": "microcosm-substrate/examples/agent_route_observability_runtime/exported_agent_trace_route_repair_bundle/source_modules/codex/standards/std_agent_execution_trace.json",
+      "target_sha256": "sha256:9997ee8e79bc32a867b72e1c23fbdedd0f24e115135cfba7811fad8b682ca753",
+      "validation_refs": [
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_agent_trace_route_repair_bundle_validates_runtime_shape",
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_agent_trace_route_repair_receipt_is_public_safe",
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_agent_trace_route_repair_imports_public_macro_body_refactor"
+      ]
+    }
+  ],
+  "omitted_material": [
+    "provider payload bodies",
+    "browser/HUD live-access",
+    "account/session state",
+    "cookies",
+    "recipient-send state",
+    "credential-equivalent material",
+    "raw private transcript bodies",
+    "live hook state"
+  ],
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "route_repair_suggestion_source_body_import",
+      "path": "source_modules/system/lib/navigation_route_intervention.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/navigation_route_intervention.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/navigation_route_intervention.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "agent_execution_trace_source_body_import",
+      "path": "source_modules/system/lib/agent_execution_trace.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/agent_execution_trace.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/agent_execution_trace.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "strict_json_source_body_import",
+      "path": "source_modules/system/lib/strict_json.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/strict_json.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/strict_json.py"
+    }
+  ],
+  "schema_version": "agent_route_observability_runtime_agent_trace_route_repair_source_module_manifest_v1",
+  "source_import_class": "copied_non_secret_macro_body",
+  "validation_ref_count": 3
+}

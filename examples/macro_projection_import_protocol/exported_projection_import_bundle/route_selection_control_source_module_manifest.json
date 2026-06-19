@@ -1,0 +1,104 @@
+{
+  "body_storage_policy": "exact_non_secret_route_selection_control_source_modules_copied_into_public_projection_bundle",
+  "bundle_id": "macro_projection_import_protocol_runtime_example",
+  "classification": "copied_non_secret_macro_body",
+  "manifest_id": "route_selection_control_source_modules_import",
+  "module_count": 1,
+  "modules": [
+    {
+      "anchor_count": 5,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "byte_count": 152202,
+      "classification": "copied_non_secret_macro_body",
+      "line_count": 3998,
+      "material_class": "public_macro_tool_body",
+      "module_id": "route_selection_navigation_contract_standard_body_import",
+      "required_anchors": [
+        "\"schema_version\": \"navigation_contract_standard_v1\"",
+        "\"required_contract_fields\"",
+        "\"navigable_bands\"",
+        "\"edge_row_shape\"",
+        "\"validation_probe\""
+      ],
+      "sha256_match": true,
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_or_live_kernel_export",
+      "source_ref": "codex/standards/std_navigation_contract.json",
+      "source_role": "Navigation contract standard defining artifact-kind navigation profiles, band contracts, row shapes, profile gaps, facets, and validation-currentness shape.",
+      "source_sha256": "9edb7ba06fae063bffca4da5cb949c1e18a3952d5a67bdc0f6cae2e031bb1fc6",
+      "target_ref": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/codex/standards/std_navigation_contract.json",
+      "target_sha256": "9edb7ba06fae063bffca4da5cb949c1e18a3952d5a67bdc0f6cae2e031bb1fc6"
+    }
+  ],
+  "public_runtime_policy": "public validation uses exact source digests, anchor checks, syntax compilation into /tmp, and a fixture route-repair call; copied source modules are body evidence, not authority to run the live macro kernel or inspect private state",
+  "receipt_body_policy": "receipts report paths hashes counts and anchor results but never duplicate full source bodies or live private/kernel/provider/session payloads",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "route_selection_intervention_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_route_intervention.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/navigation_route_intervention.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/navigation_route_intervention.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "route_selection_context_pack_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_context_pack.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/navigation_context_pack.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/navigation_context_pack.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "route_selection_entry_packet_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/kernel/commands/comprehension_snapshot.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/kernel/commands/comprehension_snapshot.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/kernel/commands/comprehension_snapshot.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "route_selection_option_surface_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/standard_option_surface.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/standard_option_surface.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/standard_option_surface.py"
+    }
+  ],
+  "schema_version": "macro_projection_route_selection_control_source_module_manifest_v1",
+  "secret_exclusion_boundary": [
+    "api keys",
+    "credentials",
+    "cookies",
+    "account/session state",
+    "provider payload bodies",
+    "browser/HUD live-access material",
+    "operator thread bodies",
+    "recipient-send state",
+    "private account control",
+    "credential-equivalent payloads"
+  ],
+  "source_open_payload_boundary": "open_source_everything_but_keys",
+  "validation_contract_refs": [
+    "microcosm-substrate/tests/test_command_output_projection_runtime.py::test_route_selection_control_source_manifest_matches_exact_macro_sources",
+    "microcosm-substrate/tests/test_command_output_projection_runtime.py::test_route_selection_intervention_source_module_builds_public_route_repair_suggestion",
+    "microcosm-substrate/tests/test_macro_projection_import_protocol.py::test_route_selection_control_source_modules_body_import_is_unified_under_macro_projection_spine"
+  ]
+}

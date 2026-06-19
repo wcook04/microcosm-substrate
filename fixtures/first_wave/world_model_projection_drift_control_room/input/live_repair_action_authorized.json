@@ -1,0 +1,34 @@
+{
+  "schema_version": "world_model_projection_drift_control_negative_case_v1",
+  "case_id": "live_repair_action_authorized",
+  "drift_row": {
+    "drift_row_id": "navigation_hologram_unified_route_plane",
+    "source_signal": "navigation route planes need unified source/ref and omission boundaries",
+    "source_ref": "state/microcosm_portfolio/extracted_patterns_ledger.jsonl::navigation_hologram_unified_route_plane",
+    "repair_route": "microcosm spine -> microcosm route-cleanup -> microcosm drift-control",
+    "validation_ref": "receipts/runtime_shell/public_route_cleanup_contract_lens.json",
+    "target_ref": "fixtures/first_wave/world_model_projection_drift_control_room/input/drift_rows.json::navigation_hologram_unified_route_plane",
+    "body_in_receipt": false,
+    "source_authority_claim": false,
+    "live_repair_authorized": true,
+    "source_mutation_authorized": false,
+    "automatic_doctrine_promotion_authorized": false,
+    "fact_authority": {
+      "authority_ref": "state/microcosm_portfolio/extracted_patterns_ledger.jsonl::navigation_hologram_unified_route_plane",
+      "appearance_refs": [
+        "fixtures/first_wave/world_model_projection_drift_control_room/input/drift_rows.json::navigation_hologram_unified_route_plane",
+        "receipts/runtime_shell/public_route_cleanup_contract_lens.json"
+      ],
+      "derivation_path": [
+        "source_ref",
+        "source_signal",
+        "repair_route",
+        "target_ref",
+        "validation_ref"
+      ],
+      "guard_ref": "receipts/runtime_shell/public_route_cleanup_contract_lens.json",
+      "treatment": "guarded_public_projection",
+      "residual_route": "microcosm spine -> microcosm route-cleanup -> microcosm drift-control"
+    }
+  }
+}

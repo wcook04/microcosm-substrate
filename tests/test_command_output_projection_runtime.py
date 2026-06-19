@@ -1,0 +1,3972 @@
+from __future__ import annotations
+
+import hashlib
+import importlib.util
+import json
+import os
+import subprocess
+import sys
+import types
+from pathlib import Path
+
+from microcosm_core.macro_tools.command_output_projection import (
+    ENVELOPE_KIND,
+    REQUIRED_FIELDS,
+    command_projection,
+    envelope_field_present,
+    make_currentness,
+    make_omission_receipt,
+    make_validation_contract,
+)
+from microcosm_core.macro_tools.command_output_read import (
+    KIND as COMMAND_OUTPUT_READ_KIND,
+    body_import_verification as command_output_read_body_import_verification,
+    main as command_output_read_main,
+    read_command_output,
+)
+from microcosm_core.macro_tools.command_output_sidecar import (
+    ENV_VAR,
+    RECEIPT_KIND,
+    RECEIPT_SCHEMA_VERSION,
+    SIDECAR_ROOT,
+    maybe_route_to_sidecar,
+)
+
+
+MICROCOSM_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = MICROCOSM_ROOT.parent
+BUNDLE_INPUT = (
+    MICROCOSM_ROOT
+    / "examples/macro_projection_import_protocol/exported_projection_import_bundle"
+)
+TRACE_CAPSULE_MANIFEST = BUNDLE_INPUT / "trace_capsule_source_module_manifest.json"
+ROUTE_SELECTION_CONTROL_MANIFEST = (
+    BUNDLE_INPUT / "route_selection_control_source_module_manifest.json"
+)
+ROUTE_WORKER_PACKET_MANIFEST = (
+    BUNDLE_INPUT / "route_worker_packet_source_module_manifest.json"
+)
+ROUTE_OPERATOR_COURT_MANIFEST = (
+    BUNDLE_INPUT / "route_operator_court_source_module_manifest.json"
+)
+ROUTE_DISCOVERY_CONFIRMATION_MANIFEST = (
+    BUNDLE_INPUT / "route_discovery_confirmation_source_module_manifest.json"
+)
+PROJECTION_LOSS_AUDIT_MANIFEST = (
+    BUNDLE_INPUT / "projection_loss_audit_source_module_manifest.json"
+)
+SEMANTIC_ROUTE_QUALITY_AUDIT_MANIFEST = (
+    BUNDLE_INPUT / "semantic_route_quality_audit_source_module_manifest.json"
+)
+REACTION_WIRING_MANIFEST = (
+    BUNDLE_INPUT / "reaction_wiring_source_module_manifest.json"
+)
+NAVIGATION_CONTEXT_ROSETTA_MANIFEST = (
+    BUNDLE_INPUT / "navigation_context_rosetta_source_module_manifest.json"
+)
+BOOTSTRAP_ROUTE_SURFACE_MANIFEST = (
+    BUNDLE_INPUT / "bootstrap_route_surface_source_module_manifest.json"
+)
+AGENT_OPERATING_PACKET_MANIFEST = (
+    BUNDLE_INPUT / "agent_operating_packet_source_module_manifest.json"
+)
+ACTIVE_EXECUTION_CONSTELLATION_MANIFEST = (
+    BUNDLE_INPUT / "active_execution_constellation_source_module_manifest.json"
+)
+TASK_LEDGER_STARTUP_PRESSURE_MANIFEST = (
+    BUNDLE_INPUT / "task_ledger_startup_pressure_source_module_manifest.json"
+)
+NAVIGATION_COVERAGE_MATRIX_MANIFEST = (
+    BUNDLE_INPUT / "navigation_coverage_matrix_source_module_manifest.json"
+)
+NAVIGATION_METABOLISM_LEDGER_MANIFEST = (
+    BUNDLE_INPUT / "navigation_metabolism_ledger_source_module_manifest.json"
+)
+NAVIGATION_SURFACE_AUDIT_MANIFEST = (
+    BUNDLE_INPUT / "navigation_surface_audit_source_module_manifest.json"
+)
+COMMAND_NODE_CACHE_MANIFEST = (
+    BUNDLE_INPUT / "command_node_cache_source_module_manifest.json"
+)
+WORK_ADMISSION_MANIFEST = (
+    BUNDLE_INPUT / "work_admission_source_module_manifest.json"
+)
+NAVIGATION_CLUSTERABILITY_MANIFEST = (
+    BUNDLE_INPUT / "navigation_clusterability_source_module_manifest.json"
+)
+ANNEX_ROUTING_COVERAGE_MANIFEST = (
+    BUNDLE_INPUT / "annex_routing_coverage_source_module_manifest.json"
+)
+ANNEX_CURRENTNESS_MANIFEST = (
+    BUNDLE_INPUT / "annex_currentness_source_module_manifest.json"
+)
+ENTRYPOINT_HEALTH_MANIFEST = (
+    BUNDLE_INPUT / "entrypoint_health_source_module_manifest.json"
+)
+AGENT_ENTRYPOINT_AUDIT_MANIFEST = (
+    BUNDLE_INPUT / "agent_entrypoint_audit_source_module_manifest.json"
+)
+NAVIGATION_FITNESS_MANIFEST = (
+    BUNDLE_INPUT / "navigation_fitness_source_module_manifest.json"
+)
+DYNAMIC_PAPER_LATTICE_MANIFEST = (
+    BUNDLE_INPUT / "dynamic_paper_lattice_source_module_manifest.json"
+)
+KIND_ATLAS_MANIFEST = BUNDLE_INPUT / "kind_atlas_source_module_manifest.json"
+SEMANTIC_ROUTING_MANIFEST = (
+    BUNDLE_INPUT / "semantic_routing_source_module_manifest.json"
+)
+EMBEDDING_SUBSTRATE_MANIFEST = (
+    BUNDLE_INPUT / "embedding_substrate_source_module_manifest.json"
+)
+NVIDIA_NIM_PROVIDER_BOUNDARY_MANIFEST = (
+    BUNDLE_INPUT / "nvidia_nim_provider_boundary_source_module_manifest.json"
+)
+AGENT_PROVIDER_ROUTER_MANIFEST = (
+    BUNDLE_INPUT / "agent_provider_router_source_module_manifest.json"
+)
+BRIDGE_ROUTE_CONFIG_MANIFEST = (
+    BUNDLE_INPUT / "bridge_route_config_source_module_manifest.json"
+)
+KERNEL_BRIDGE_CONFIG_MANIFEST = (
+    BUNDLE_INPUT / "kernel_bridge_config_source_module_manifest.json"
+)
+OBSERVE_RUNTIME_MANIFEST = (
+    BUNDLE_INPUT / "observe_runtime_source_module_manifest.json"
+)
+KERNEL_STATE_REGISTRY_MANIFEST = (
+    BUNDLE_INPUT / "kernel_state_registry_source_module_manifest.json"
+)
+AGENT_EXECUTION_TRACE_MANIFEST = (
+    BUNDLE_INPUT / "agent_execution_trace_source_module_manifest.json"
+)
+AGENT_OBSERVABILITY_MANIFEST = (
+    BUNDLE_INPUT / "agent_observability_source_module_manifest.json"
+)
+AGENT_OBSERVABILITY_ANIMATION_MANIFEST = (
+    BUNDLE_INPUT / "agent_observability_animation_source_module_manifest.json"
+)
+AGENT_OBSERVABILITY_CLASSIFICATION_MANIFEST = (
+    BUNDLE_INPUT / "agent_observability_classification_source_module_manifest.json"
+)
+AGENT_MISSION_STATUS_MANIFEST = (
+    BUNDLE_INPUT / "agent_mission_status_source_module_manifest.json"
+)
+OPERATOR_HANDOFF_LINKAGE_MANIFEST = (
+    BUNDLE_INPUT / "operator_handoff_linkage_source_module_manifest.json"
+)
+PROMPT_SHELF_MOVEMENT_MANIFEST = (
+    BUNDLE_INPUT / "prompt_shelf_movement_source_module_manifest.json"
+)
+PROMPT_SHELF_UPPROPAGATION_MANIFEST = (
+    BUNDLE_INPUT / "prompt_shelf_uppropagation_source_module_manifest.json"
+)
+PROMPT_SHELF_UPPROPAGATION_DIGEST_MANIFEST = (
+    BUNDLE_INPUT / "prompt_shelf_uppropagation_digest_source_module_manifest.json"
+)
+PROMPT_SHELF_RUNS_INDEX_MANIFEST = (
+    BUNDLE_INPUT / "prompt_shelf_runs_index_source_module_manifest.json"
+)
+STANDARD_OPTION_SURFACE_MANIFEST = (
+    BUNDLE_INPUT / "standard_option_surface_source_module_manifest.json"
+)
+BRIDGE_RUNTIME_CONTINUITY_MANIFEST = (
+    BUNDLE_INPUT / "bridge_runtime_continuity_source_module_manifest.json"
+)
+SESSION_HEARTBEAT_MANIFEST = (
+    BUNDLE_INPUT / "session_heartbeat_source_module_manifest.json"
+)
+ORCHESTRATION_OVERNIGHT_CONTROL_MANIFEST = (
+    BUNDLE_INPUT / "orchestration_overnight_control_source_module_manifest.json"
+)
+SEED_DISTILLATION_DEPENDENCY_MANIFEST = (
+    BUNDLE_INPUT / "seed_distillation_dependency_source_module_manifest.json"
+)
+ARTIFACT_PROJECTION_DEBT_MANIFEST = (
+    BUNDLE_INPUT / "artifact_projection_debt_source_module_manifest.json"
+)
+NAVIGATION_TRACE_MANIFEST = (
+    BUNDLE_INPUT / "navigation_trace_source_module_manifest.json"
+)
+GENERATED_PROJECTION_CONTROL_MANIFEST = (
+    BUNDLE_INPUT / "generated_projection_control_source_module_manifest.json"
+)
+SHARED_WORKTREE_GUARD_MANIFEST = (
+    BUNDLE_INPUT / "shared_worktree_guard_source_module_manifest.json"
+)
+RAW_GIT_COMMIT_GUARD_MANIFEST = (
+    BUNDLE_INPUT / "raw_git_commit_guard_source_module_manifest.json"
+)
+FORMAL_MATH_PROOFLINE_SPINE_MANIFEST = (
+    BUNDLE_INPUT / "formal_math_proofline_spine_source_module_manifest.json"
+)
+EXECUTABLE_GRAMMAR_METABOLISM_MANIFEST = (
+    BUNDLE_INPUT / "executable_grammar_metabolism_source_module_manifest.json"
+)
+
+
+def test_command_output_projection_macro_tool_emits_required_projection_envelope() -> None:
+    envelope = command_projection(
+        command="--demo",
+        band="card",
+        selector="public-fixture",
+        summary={"row_count": 1},
+        currentness=make_currentness(
+            generated_at="2026-05-25T00:00:00Z",
+            source_refs_checked=["microcosm-substrate/tests"],
+        ),
+        drilldown_command="microcosm command-output-projection-fixture --band full",
+        evidence_command="microcosm command-output-projection-fixture --band full",
+        omission_receipt=make_omission_receipt(
+            omitted=["rows"],
+            reason="card band keeps only count-level command-output evidence",
+            drilldown="microcosm command-output-projection-fixture --band full",
+        ),
+        validation_contract=make_validation_contract(
+            freshness_probe="pytest microcosm-substrate/tests/test_command_output_projection_runtime.py",
+        ),
+    )
+
+    assert envelope["kind"] == ENVELOPE_KIND
+    assert envelope["row_id"] == "kernel:demo:public-fixture::card"
+    for field in REQUIRED_FIELDS:
+        assert envelope_field_present(envelope, field), field
+    assert envelope["omission_receipt"]["omitted"] == ["rows"]
+
+
+def test_command_output_sidecar_macro_tool_writes_bounded_receipt(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(ENV_VAR, "0")
+    payload = {
+        "kind": "public_command_output_fixture",
+        "schema_version": "public_command_output_fixture_v0",
+        "summary": {"row_count": 3},
+        "rows": [{"id": "a"}, {"id": "b"}, {"id": "c"}],
+    }
+
+    receipt = maybe_route_to_sidecar(
+        payload,
+        surface="microcosm.command_output_projection.fixture",
+        repo_root=tmp_path,
+    )
+
+    assert receipt is not None
+    assert receipt["kind"] == RECEIPT_KIND
+    assert receipt["schema_version"] == RECEIPT_SCHEMA_VERSION
+    assert receipt["status"] == "written_to_sidecar"
+    assert receipt["payload_summary"]["summary"] == {"row_count": 3}
+    sidecar_path = tmp_path / receipt["output_path"]
+    assert sidecar_path.is_file()
+    assert sidecar_path.parent.parent == tmp_path / SIDECAR_ROOT
+    assert json.loads(sidecar_path.read_text(encoding="utf-8")) == payload
+    assert all("--command-output" in command for command in receipt["read_next"])
+
+
+def test_public_command_output_read_refactor_preserves_summary_card_and_full_bands(
+    tmp_path: Path,
+) -> None:
+    sidecar = tmp_path / "state/command_outputs/run/demo.json"
+    sidecar.parent.mkdir(parents=True)
+    payload = {
+        "kind": "public_command_output_fixture",
+        "schema_version": "public_command_output_fixture_v0",
+        "summary": {"row_count": 2},
+        "rows": [{"id": "a"}, {"id": "b"}],
+        "extra": {"kept_for_card": True},
+        "ninth": "truncated in card band",
+    }
+    sidecar.write_text(json.dumps(payload), encoding="utf-8")
+    rel = "state/command_outputs/run/demo.json"
+
+    summary = read_command_output(tmp_path, rel, band="summary")
+    assert summary["kind"] == COMMAND_OUTPUT_READ_KIND
+    assert summary["payload_kind"] == "public_command_output_fixture"
+    assert summary["payload_summary"] == {"row_count": 2}
+    assert "rows" in summary["top_keys"]
+
+    card = read_command_output(tmp_path, rel, band="card")
+    assert card["payload"]["rows"] == [{"id": "a"}, {"id": "b"}]
+    assert card["truncated_keys"] == []
+
+    full = read_command_output(tmp_path, sidecar, band="full")
+    assert full["payload"] == payload
+
+
+def test_public_command_output_read_uses_file_size_without_text_reread(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    sidecar = tmp_path / "state/command_outputs/run/demo.json"
+    sidecar.parent.mkdir(parents=True)
+    payload = {"kind": "fixture", "summary": {"row_count": 1}}
+    body = json.dumps(payload, indent=2)
+    sidecar.write_text(body, encoding="utf-8")
+
+    def guarded_read_text(self: Path, *args, **kwargs):
+        if self == sidecar:
+            raise AssertionError("read_command_output should parse through open()")
+        return original_read_text(self, *args, **kwargs)
+
+    original_read_text = Path.read_text
+    monkeypatch.setattr(Path, "read_text", guarded_read_text)
+
+    result = read_command_output(tmp_path, sidecar, band="summary")
+
+    assert result["source_bytes"] == sidecar.stat().st_size
+    assert result["payload_summary"] == {"row_count": 1}
+
+
+def test_public_command_output_read_refactor_rejects_unsafe_or_invalid_inputs(
+    tmp_path: Path,
+) -> None:
+    outside = tmp_path / "outside.json"
+    outside.write_text("{}", encoding="utf-8")
+    invalid = tmp_path / "state/command_outputs/invalid.json"
+    invalid.parent.mkdir(parents=True)
+    invalid.write_text("{not json", encoding="utf-8")
+
+    assert read_command_output(tmp_path, "")["status"] == "missing_path"
+    assert read_command_output(tmp_path, outside)["status"] == (
+        "path_outside_command_outputs"
+    )
+    assert read_command_output(tmp_path, "state/command_outputs/missing.json")[
+        "status"
+    ] == "not_found"
+    assert read_command_output(tmp_path, invalid)["status"] == "invalid_json"
+    assert read_command_output(
+        tmp_path,
+        invalid,
+        band="everything",
+    )["status"] == "unsupported_band"
+
+
+def test_public_command_output_read_refactor_cli_emits_json_and_exit_codes(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sidecar = tmp_path / "state/command_outputs/run/demo.json"
+    sidecar.parent.mkdir(parents=True)
+    sidecar.write_text(
+        json.dumps({"kind": "fixture", "summary": {"row_count": 1}}),
+        encoding="utf-8",
+    )
+
+    assert command_output_read_main(
+        [
+            "--root",
+            str(tmp_path),
+            "state/command_outputs/run/demo.json",
+            "--band",
+            "summary",
+        ]
+    ) == 0
+    success = json.loads(capsys.readouterr().out)
+    assert success["kind"] == COMMAND_OUTPUT_READ_KIND
+    assert success["payload_summary"] == {"row_count": 1}
+
+    assert command_output_read_main(
+        [
+            "--root",
+            str(tmp_path),
+            "state/command_outputs/missing.json",
+        ]
+    ) == 2
+    failure = json.loads(capsys.readouterr().out)
+    assert failure["status"] == "not_found"
+
+
+def test_public_command_output_read_refactor_carries_body_import_verification() -> None:
+    verification = command_output_read_body_import_verification()
+
+    assert verification["verification_mode"] == "verified_light_edit_recipe"
+    assert verification["source_to_target_relation"] == (
+        "source_faithful_public_light_edit"
+    )
+    assert verification["source_ref"] == "system/lib/kernel/commands/navigate.py"
+    assert verification["target_ref"] == (
+        "microcosm-substrate/src/microcosm_core/macro_tools/command_output_read.py"
+    )
+    assert verification["target_body_digest"].startswith("sha256:")
+    assert "cmd_command_output_read" in verification["source_symbol_refs"][0]
+    assert verification["body_in_receipt"] is False
+
+
+def test_command_output_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(
+        (BUNDLE_INPUT / "command_output_source_module_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert manifest["manifest_id"] == "command_output_projection_source_modules_import"
+    assert manifest["module_count"] == 4
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        if row.get("source_to_target_relation") == "public_light_edit_private_path_redaction":
+            assert row["sha256_match"] is False
+            assert row["public_light_edit_recipe_ref"].endswith("::_strong_private_path_hits")
+        else:
+            assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_trace_capsule_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(TRACE_CAPSULE_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "trace_capsule_prompt_edit_capture_source_modules_import"
+    assert manifest["module_count"] == 4
+    assert manifest["public_runtime_policy"].startswith("public validation uses fixture")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        if row.get("source_to_target_relation") == "public_light_edit_private_path_redaction":
+            assert row["sha256_match"] is False
+            assert row["public_light_edit_recipe_ref"].endswith("::_strong_private_path_hits")
+        else:
+            assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_route_selection_control_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(ROUTE_SELECTION_CONTROL_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "route_selection_control_source_modules_import"
+    assert manifest["module_count"] == 5
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        if row.get("source_to_target_relation") == "public_light_edit_private_path_redaction":
+            assert row["sha256_match"] is False
+            assert row["public_light_edit_recipe_ref"].endswith("::_strong_private_path_hits")
+        else:
+            assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_navigation_context_rosetta_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(NAVIGATION_CONTEXT_ROSETTA_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "navigation_context_rosetta_source_modules_import"
+    assert manifest["module_count"] == 5
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        if row.get("source_to_target_relation") == "public_light_edit_private_path_redaction":
+            assert row["sha256_match"] is False
+            assert row["public_light_edit_recipe_ref"].endswith("::_strong_private_path_hits")
+        else:
+            assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_navigation_context_rosetta_sources_compile_and_preserve_rosetta_contract() -> None:
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+    rosetta_source = source_modules_root / "system/lib/navigation_context_rosetta.py"
+    audit_source = source_modules_root / "system/lib/kind_band_contract_audit.py"
+    test_source = (
+        source_modules_root / "system/server/tests/test_navigation_context_rosetta.py"
+    )
+    standard_source = (
+        source_modules_root / "codex/standards/std_navigation_rosetta_grammar.json"
+    )
+    paper_source = (
+        source_modules_root
+        / "codex/doctrine/paper_modules/navigation_rosetta_math.md"
+    )
+
+    rosetta_text = rosetta_source.read_text(encoding="utf-8")
+    audit_text = audit_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+    standard = json.loads(standard_source.read_text(encoding="utf-8"))
+    paper_text = paper_source.read_text(encoding="utf-8")
+
+    compile(rosetta_text, str(rosetta_source), "exec")
+    compile(audit_text, str(audit_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "def build_navigation_context_rosetta(" in rosetta_text
+    assert "\"schema_version\": \"navigation_context_rosetta_packet_v0\"" in rosetta_text
+    assert "semantic_grammar" in rosetta_text
+    assert "def build_kind_band_contract_audit(" in audit_text
+    assert "axis_split_declared" in audit_text
+    assert (
+        "test_rosetta_packet_covers_all_kind_atlas_rows_before_query"
+        in test_text
+    )
+    assert standard["id"] == "std_navigation_rosetta_grammar"
+    assert "context_atom_shape" in standard
+    assert "relation_verb_shape" in standard
+    assert "proof_obligations" in standard
+    assert "Coverage before depth" in paper_text
+    assert "## Mathematical Core" in paper_text
+
+
+def test_bootstrap_route_surface_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(BOOTSTRAP_ROUTE_SURFACE_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "bootstrap_route_surface_source_modules_import"
+    assert manifest["module_count"] == 4
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_bootstrap_route_surface_projection_sources_have_route_rows() -> None:
+    bootstrap_payload = json.loads(
+        (
+            BUNDLE_INPUT
+            / "source_modules/codex/doctrine/agent_bootstrap_live.json"
+        ).read_text(encoding="utf-8")
+    )
+    routing_payload = json.loads(
+        (
+            BUNDLE_INPUT
+            / "source_modules/codex/doctrine/routing_hologram.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    route_ids = {
+        row["situation_id"]
+        for row in bootstrap_payload["situation_routes"]
+        if isinstance(row, dict)
+    }
+    assert "entry_control_packet" in route_ids
+    assert "task_conditioned_context_pack_entry" in route_ids
+    assert len(bootstrap_payload["situation_routes"]) >= 40
+    assert len(routing_payload["situation_rows"]) == 10
+    assert str(routing_payload["entry_protocol"][0]).startswith(
+        "`./repo-python kernel.py --info`"
+    )
+    for source_rel in (
+        "source_modules/system/lib/agent_bootstrap_projection.py",
+        "source_modules/system/lib/routing_projection.py",
+    ):
+        source_path = BUNDLE_INPUT / source_rel
+        compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+
+def test_agent_operating_packet_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(AGENT_OPERATING_PACKET_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "agent_operating_packet_source_modules_import"
+    assert manifest["module_count"] == 2
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_agent_operating_packet_sources_have_runtime_principle_packet() -> None:
+    packet = json.loads(
+        (
+            BUNDLE_INPUT
+            / "source_modules/codex/doctrine/agent_operating_packet.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert packet["kind"] == "agent_operating_packet"
+    assert packet["authority_posture"] == "generated_projection_not_source_authority"
+    assert len(packet["global_runtime_capsule"]["principles"]) >= 7
+    assert len(packet["agent_principles"]["rows"]) >= 16
+    assert packet["candidate_axiom_pressure"]["authority_posture"].startswith(
+        "candidate"
+    )
+    assert packet["budget_metrics"]["entry_strip_bytes"] > 0
+
+    source_path = (
+        BUNDLE_INPUT / "source_modules/system/lib/agent_operating_packet.py"
+    )
+    source_text = source_path.read_text(encoding="utf-8")
+    compile(source_text, str(source_path), "exec")
+    assert "def build_agent_operating_packet_strip(" in source_text
+
+
+def test_active_execution_constellation_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(ACTIVE_EXECUTION_CONSTELLATION_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "active_execution_constellation_source_modules_import"
+    assert manifest["module_count"] == 2
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_active_execution_constellation_sources_compile_and_carry_liveness_contract() -> None:
+    projection_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/lib/active_execution_constellation.py"
+    )
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_active_execution_constellation.py"
+    )
+
+    projection_text = projection_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(projection_text, str(projection_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "SCHEMA_VERSION = \"active_execution_constellation_v0\"" in projection_text
+    assert "def build_active_execution_constellation(" in projection_text
+    assert "def compact_active_execution_constellation_for_entry(" in projection_text
+    assert "\"demotion_guard\"" in projection_text
+    assert "\"claim_topology\"" in projection_text
+    assert "test_pulse_snapshot_includes_active_execution_constellation" in test_text
+
+
+def test_task_ledger_startup_pressure_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(TASK_LEDGER_STARTUP_PRESSURE_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "task_ledger_startup_pressure_source_modules_import"
+    assert manifest["module_count"] == 4
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+        if target.suffix == ".py":
+            compile(target_text, str(target), "exec")
+
+
+def test_navigation_coverage_matrix_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(NAVIGATION_COVERAGE_MATRIX_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "navigation_coverage_matrix_source_modules_import"
+    assert manifest["module_count"] == 2
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_navigation_coverage_matrix_sources_compile_and_carry_coverage_contract() -> None:
+    projection_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/lib/navigation_coverage_matrix.py"
+    )
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_navigation_coverage_matrix.py"
+    )
+
+    projection_text = projection_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(projection_text, str(projection_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "def build_coverage_enforcement_matrix(" in projection_text
+    assert "\"schema_version\": \"coverage_enforcement_matrix_v0" in projection_text
+    assert "process_audit_fast_path" in projection_text
+    assert "type_plane_resolution" in projection_text
+    assert "latency_profile" in projection_text
+    assert (
+        "test_coverage_enforcement_matrix_marks_skill_find_as_drilldown_only"
+        in test_text
+    )
+    assert "test_coverage_enforcement_matrix_cli_emits_json" in test_text
+
+
+def test_navigation_metabolism_ledger_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(NAVIGATION_METABOLISM_LEDGER_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "navigation_metabolism_ledger_source_modules_import"
+    assert manifest["module_count"] == 2
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_navigation_metabolism_ledger_sources_compile_and_carry_metabolism_contract() -> None:
+    projection_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/lib/navigation_metabolism_ledger.py"
+    )
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_navigation_metabolism_ledger.py"
+    )
+
+    projection_text = projection_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(projection_text, str(projection_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "def build_navigation_metabolism_ledger(" in projection_text
+    assert "\"schema_version\": \"navigation_metabolism_ledger_v0\"" in projection_text
+    assert "behavior_debt" in projection_text
+    assert "actor_delivery_debt" in projection_text
+    assert "route_lifecycle" in projection_text
+    assert "test_navigation_metabolism_ledger_unifies_debt_classes" in test_text
+    assert "test_actor_delivery_debt_rows_include_decision_coverage_gaps" in test_text
+
+
+def test_navigation_surface_audit_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(NAVIGATION_SURFACE_AUDIT_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "navigation_surface_audit_source_modules_import"
+    assert manifest["module_count"] == 3
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_navigation_surface_audit_sources_compile_and_carry_surface_contract() -> None:
+    audit_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/lib/navigation_surface_audit.py"
+    )
+    contracts_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/lib/navigation_surface_contracts.py"
+    )
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_navigation_surface_audit.py"
+    )
+
+    audit_text = audit_source.read_text(encoding="utf-8")
+    contracts_text = contracts_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(audit_text, str(audit_source), "exec")
+    compile(contracts_text, str(contracts_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "def build_navigation_surface_audit(" in audit_text
+    assert "\"kind\": \"navigation_surface_audit\"" in audit_text
+    assert "contract_status" in audit_text
+    assert "CONTROL_ENTRY = \"CONTROL_ENTRY\"" in contracts_text
+    assert "def debug_trace_contract(" in contracts_text
+    assert (
+        "test_navigation_surface_audit_separates_size_measurement_from_contract_status"
+        in test_text
+    )
+
+
+def test_command_node_cache_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = json.loads(COMMAND_NODE_CACHE_MANIFEST.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == "command_node_cache_source_modules_import"
+    assert manifest["module_count"] == 3
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert source.is_file()
+        assert target.is_file()
+        source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["source_sha256"] == source_digest
+        assert row["target_sha256"] == target_digest
+        assert source_digest == target_digest
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+
+
+def test_command_node_cache_sources_compile_and_carry_cache_contract() -> None:
+    cache_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/lib/command_node_cache.py"
+    )
+    pulse_cache_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/lib/kernel/pulse_cache.py"
+    )
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_command_node_cache.py"
+    )
+
+    cache_text = cache_source.read_text(encoding="utf-8")
+    pulse_cache_text = pulse_cache_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(cache_text, str(cache_source), "exec")
+    compile(pulse_cache_text, str(pulse_cache_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "SCHEMA_VERSION = \"command_node_cache_v1\"" in cache_text
+    assert "def cached_command_node(" in cache_text
+    assert "def peek_cached_command_node(" in cache_text
+    assert "AIW_COMMAND_CACHE_REFRESH" in cache_text
+    assert "PULSE_CLOSEOUT_AUDIT_NODE_ID" in pulse_cache_text
+    assert "PULSE_CLOSEOUT_AUDIT_INPUT_PATHS" in pulse_cache_text
+    assert "PULSE_CLOSEOUT_AUDIT_FRESHNESS_POLICY" in pulse_cache_text
+    assert "PULSE_PROVIDER_PLANE_LIVENESS_NODE_ID" in pulse_cache_text
+    assert "def refresh_provider_plane_liveness_cache(" in pulse_cache_text
+    assert (
+        "test_command_node_cache_singleflights_across_processes"
+        in test_text
+    )
+    assert "dynamic_inputs_manifested" in test_text
+
+
+def test_work_admission_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        WORK_ADMISSION_MANIFEST,
+        manifest_id="work_admission_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_work_admission_sources_compile_and_carry_admission_contract() -> None:
+    admission_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/lib/work_admission.py"
+    )
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_work_admission.py"
+    )
+
+    admission_text = admission_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(admission_text, str(admission_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "WORK_ADMISSION_SCHEMA = \"work_creation_admission_decision_v0\"" in admission_text
+    assert "def classify_work_creation_request(" in admission_text
+    assert "not validation launches" in admission_text
+    assert "def build_session_yield_control_surface(" in admission_text
+    assert "def build_pressure_budget_relief_decision(" in admission_text
+    assert (
+        "test_test_path_claim_classifies_as_light_edit_not_validation_launch"
+        in test_text
+    )
+    assert "test_explicit_test_plane_still_classifies_as_validation_work" in test_text
+    assert "test_heavy_work_queues_under_synthetic_host_pressure" in test_text
+    assert "front_door_gate_sufficient_for_recovery" in test_text
+
+
+def test_pulse_cache_source_imports_and_refreshes_with_copied_command_cache(
+    tmp_path: Path,
+) -> None:
+    source_root = BUNDLE_INPUT / "source_modules"
+    script = """
+import importlib
+import json
+import os
+import sys
+
+source_root = os.environ["SOURCE_ROOT"]
+cache_root = os.environ["CACHE_ROOT"]
+repo_root = os.environ["REPO_ROOT"]
+sys.path = [source_root] + [
+    item
+    for item in sys.path
+    if item and not os.path.abspath(item).startswith(repo_root)
+]
+
+pulse_cache = importlib.import_module("system.lib.kernel.pulse_cache")
+command_cache = importlib.import_module("system.lib.command_node_cache")
+
+def build_provider_plane_liveness(root, *, scan_mode):
+    return {"status": "pass", "root": str(root), "scan_mode": scan_mode}
+
+payload, cache_status = pulse_cache.refresh_provider_plane_liveness_cache(
+    cache_root,
+    ttl_s=60.0,
+    builder=build_provider_plane_liveness,
+)
+print(json.dumps({
+    "payload": payload,
+    "cache_status": cache_status,
+    "pulse_cache_file": os.path.abspath(pulse_cache.__file__),
+    "command_cache_file": os.path.abspath(command_cache.__file__),
+}))
+"""
+    env = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in {"PYTHONHOME", "PYTHONPATH"}
+    }
+    env.update(
+        {
+            "CACHE_ROOT": str(tmp_path),
+            "PYTHONNOUSERSITE": "1",
+            "REPO_ROOT": str(REPO_ROOT.resolve()),
+            "SOURCE_ROOT": str(source_root.resolve()),
+        }
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        cwd="/tmp",
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout.strip().splitlines()[-1])
+    assert payload["payload"]["scan_mode"] == "bounded_scan"
+    assert payload["cache_status"]["status"] == "miss_built"
+    assert payload["pulse_cache_file"].startswith(str(source_root.resolve()))
+    assert payload["command_cache_file"].startswith(str(source_root.resolve()))
+
+
+def _assert_source_manifest_matches_exact_macro_sources(
+    manifest_path: Path,
+    *,
+    manifest_id: str,
+    module_count: int,
+) -> dict:
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert manifest["manifest_id"] == manifest_id
+    assert manifest["module_count"] == module_count
+    assert manifest["public_runtime_policy"].startswith("public validation uses exact")
+    for row in manifest["modules"]:
+        source = REPO_ROOT / row["source_ref"]
+        target_ref = str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        target = MICROCOSM_ROOT / target_ref
+        assert target.is_file()
+        target_digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert row["target_sha256"] == target_digest
+        if source.is_file():
+            source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
+            assert row["source_sha256"] == source_digest
+            if row.get("source_to_target_relation") == "public_light_edit_private_path_redaction":
+                assert row["sha256_match"] is False
+                assert row["public_light_edit_recipe_ref"].endswith("::_strong_private_path_hits")
+            else:
+                assert source_digest == target_digest
+        else:
+            assert str(row["source_ref"]).startswith("private-macro-source/")
+            assert row["source_sha256"] == target_digest
+            assert row["sha256_match"] is True
+        target_text = target.read_text(encoding="utf-8")
+        for anchor in row["required_anchors"]:
+            assert anchor in target_text
+    return manifest
+
+
+def test_navigation_clusterability_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        NAVIGATION_CLUSTERABILITY_MANIFEST,
+        manifest_id="navigation_clusterability_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_route_worker_packet_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = _assert_source_manifest_matches_exact_macro_sources(
+        ROUTE_WORKER_PACKET_MANIFEST,
+        manifest_id="route_worker_packet_source_modules_import",
+        module_count=7,
+    )
+
+    nvidia_hint_row = next(
+        row
+        for row in manifest["modules"]
+        if row["module_id"] == "route_worker_nvidia_hints_body_import"
+    )
+    assert "no_live_provider_call" in nvidia_hint_row["source_open_payload_boundary"]
+
+
+def test_route_worker_packet_sources_compile_and_preserve_provider_boundary() -> None:
+    manifest = json.loads(ROUTE_WORKER_PACKET_MANIFEST.read_text(encoding="utf-8"))
+    source_paths = [
+        MICROCOSM_ROOT / str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        for row in manifest["modules"]
+    ]
+
+    for source_path in source_paths:
+        compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+    hints_text = (
+        BUNDLE_INPUT / "source_modules/system/lib/nvidia_route_hints.py"
+    ).read_text(encoding="utf-8")
+    packet_test_text = (
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_route_worker_packet.py"
+    ).read_text(encoding="utf-8")
+
+    assert "def build_route_hints(" in hints_text
+    assert "candidate_selection_only" in hints_text
+    assert "def test_route_hint_passages_are_neutral(" in packet_test_text
+    assert "provider payload bodies" in manifest["receipt_body_policy"]
+    assert "not authority to execute live providers" in manifest["public_runtime_policy"]
+    assert "provider response bodies" in manifest["secret_exclusion_boundary"]
+
+
+def test_route_operator_court_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = _assert_source_manifest_matches_exact_macro_sources(
+        ROUTE_OPERATOR_COURT_MANIFEST,
+        manifest_id="route_operator_court_source_modules_import",
+        module_count=3,
+    )
+
+    harness_row = next(
+        row
+        for row in manifest["modules"]
+        if row["module_id"] == "routing_pilot_harness_body_import"
+    )
+    assert "no_live_provider_call" in harness_row["source_open_payload_boundary"]
+
+
+def test_route_operator_court_sources_compile_and_preserve_provider_boundary() -> None:
+    manifest = json.loads(ROUTE_OPERATOR_COURT_MANIFEST.read_text(encoding="utf-8"))
+    source_paths = [
+        MICROCOSM_ROOT / str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        for row in manifest["modules"]
+    ]
+
+    for source_path in source_paths:
+        compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+    court_text = (
+        BUNDLE_INPUT / "source_modules/system/lib/route_operator_court.py"
+    ).read_text(encoding="utf-8")
+    harness_text = (
+        BUNDLE_INPUT / "source_modules/tools/meta/control/routing_pilot_harness.py"
+    ).read_text(encoding="utf-8")
+    court_test_text = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_route_operator_court.py"
+    ).read_text(encoding="utf-8")
+
+    assert "def build_operator_court_prompt(" in court_text
+    assert "def score_operator_court_output(" in court_text
+    assert "def build_prompt(" in harness_text
+    assert "def run_benchmark(" in harness_text
+    assert (
+        "def test_operator_court_does_not_include_manual_baseline_evidence("
+        in court_test_text
+    )
+    assert "provider payload bodies" in manifest["receipt_body_policy"]
+    assert "not authority to execute live providers" in manifest["public_runtime_policy"]
+    assert "provider response bodies" in manifest["secret_exclusion_boundary"]
+
+
+def test_route_discovery_confirmation_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = _assert_source_manifest_matches_exact_macro_sources(
+        ROUTE_DISCOVERY_CONFIRMATION_MANIFEST,
+        manifest_id="route_discovery_confirmation_source_modules_import",
+        module_count=1,
+    )
+
+    confirmation_row = manifest["modules"][0]
+    assert "no_accepted_edge_mutation_authority" in confirmation_row[
+        "source_open_payload_boundary"
+    ]
+
+
+def test_route_discovery_confirmation_source_compiles_and_preserves_mutation_boundary() -> None:
+    manifest = json.loads(ROUTE_DISCOVERY_CONFIRMATION_MANIFEST.read_text(encoding="utf-8"))
+    source_paths = [
+        MICROCOSM_ROOT / str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        for row in manifest["modules"]
+    ]
+
+    for source_path in source_paths:
+        compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+    confirmation_text = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/control/route_discovery_confirmation.py"
+    ).read_text(encoding="utf-8")
+
+    assert "def confirm_proposals(" in confirmation_text
+    assert "def _support_score(" in confirmation_text
+    assert "CONFIRMATION_ROOT_REL" in confirmation_text
+    assert "accepted_appended" in confirmation_text
+    assert "route_discovery_confirmation_batch_v1" in confirmation_text
+    assert "provider payload bodies" in manifest["receipt_body_policy"]
+    assert "not authority to mutate accepted edges" in manifest["public_runtime_policy"]
+    assert "update the canonical route graph" in manifest["public_runtime_policy"]
+    assert "provider response bodies" in manifest["secret_exclusion_boundary"]
+    assert "accepted-edge private state" in manifest["secret_exclusion_boundary"]
+
+
+def test_projection_loss_audit_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = _assert_source_manifest_matches_exact_macro_sources(
+        PROJECTION_LOSS_AUDIT_MANIFEST,
+        manifest_id="projection_loss_audit_source_modules_import",
+        module_count=1,
+    )
+
+    audit_row = manifest["modules"][0]
+    assert "no_write_receipt_authority" in audit_row["source_open_payload_boundary"]
+
+
+def test_projection_loss_audit_source_compiles_and_preserves_read_only_boundary() -> None:
+    manifest = json.loads(PROJECTION_LOSS_AUDIT_MANIFEST.read_text(encoding="utf-8"))
+    source_paths = [
+        MICROCOSM_ROOT / str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        for row in manifest["modules"]
+    ]
+
+    for source_path in source_paths:
+        compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+    audit_text = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/control/projection_loss_audit.py"
+    ).read_text(encoding="utf-8")
+
+    assert "def audit_projection_loss(" in audit_text
+    assert "def _verb_recoverable_from_slim(" in audit_text
+    assert "STATE_REL" in audit_text
+    assert "projection_loss_audit_v1" in audit_text
+    assert "provider payload bodies" in manifest["receipt_body_policy"]
+    assert "not authority to write projection-loss audit receipts" in manifest[
+        "public_runtime_policy"
+    ]
+    assert "mutate route graphs" in manifest["public_runtime_policy"]
+    assert "provider response bodies" in manifest["secret_exclusion_boundary"]
+    assert "projection-loss audit output bodies" in manifest["secret_exclusion_boundary"]
+
+
+def test_semantic_route_quality_audit_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = _assert_source_manifest_matches_exact_macro_sources(
+        SEMANTIC_ROUTE_QUALITY_AUDIT_MANIFEST,
+        manifest_id="semantic_route_quality_audit_source_modules_import",
+        module_count=1,
+    )
+
+    audit_row = manifest["modules"][0]
+    assert "no_live_provider_call_in_validation" in audit_row[
+        "source_open_payload_boundary"
+    ]
+    assert "no_route_graph_direct_write_authority" in audit_row[
+        "source_open_payload_boundary"
+    ]
+
+
+def test_semantic_route_quality_audit_source_compiles_and_preserves_provider_and_route_mutation_boundary(
+    monkeypatch,
+) -> None:
+    manifest = json.loads(
+        SEMANTIC_ROUTE_QUALITY_AUDIT_MANIFEST.read_text(encoding="utf-8")
+    )
+    source_paths = [
+        MICROCOSM_ROOT / str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        for row in manifest["modules"]
+    ]
+
+    for source_path in source_paths:
+        compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+    audit_path = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/control/semantic_route_quality_audit.py"
+    )
+    audit_text = audit_path.read_text(encoding="utf-8")
+
+    assert "def run_audit(" in audit_text
+    assert "def audit_node_with_k2(" in audit_text
+    assert "def persist_evidence(" in audit_text
+    assert "nvidia_nim.chat_completion(" in audit_text
+    assert "semantic_routing.confirm_route(" in audit_text
+    assert "if dry_run:" in audit_text
+    assert "route_graph.json" in audit_text
+    assert "provider payload bodies" in manifest["receipt_body_policy"]
+    assert "not authority to call live providers" in manifest["public_runtime_policy"]
+    assert "mutate route graphs directly" in manifest["public_runtime_policy"]
+    assert "provider response bodies" in manifest["secret_exclusion_boundary"]
+    assert "route-quality audit output bodies" in manifest["secret_exclusion_boundary"]
+
+    source_modules = BUNDLE_INPUT / "source_modules"
+    monkeypatch.syspath_prepend(str(source_modules))
+
+    nvidia_nim_stub = types.ModuleType("system.lib.nvidia_nim")
+    nvidia_nim_stub.DEFAULT_ROUTING_AUDIT_MODEL = "moonshotai/kimi-k2-thinking"
+
+    def unexpected_provider_call(*args: object, **kwargs: object) -> str:
+        raise AssertionError("dry-run must not call NVIDIA NIM")
+
+    def unexpected_route_write(*args: object, **kwargs: object) -> None:
+        raise AssertionError("dry-run must not write route evidence")
+
+    nvidia_nim_stub.chat_completion = unexpected_provider_call
+    semantic_routing_stub = types.ModuleType("system.lib.semantic_routing")
+    semantic_routing_stub.route_drift_snapshot_digest = lambda drift: "dry_run_digest"
+    semantic_routing_stub.confirm_route = unexpected_route_write
+    monkeypatch.setitem(sys.modules, "system.lib.nvidia_nim", nvidia_nim_stub)
+    monkeypatch.setitem(sys.modules, "system.lib.semantic_routing", semantic_routing_stub)
+
+    spec = importlib.util.spec_from_file_location(
+        "microcosm_semantic_route_quality_audit",
+        audit_path,
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    decision = module.audit_node_with_k2(
+        {"candidate_neighbors": []},
+        model=module.DEFAULT_MODEL,
+        max_tokens=1,
+        dry_run=True,
+    )
+    assert decision["_dry_run"] is True
+    assert decision["confirm_edges"] == []
+    assert decision["weak_edges"] == []
+
+
+def test_reaction_wiring_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = _assert_source_manifest_matches_exact_macro_sources(
+        REACTION_WIRING_MANIFEST,
+        manifest_id="reaction_wiring_source_modules_import",
+        module_count=3,
+    )
+
+    by_id = {row["module_id"]: row for row in manifest["modules"]}
+    assert "single_flight_dedupe_barrier" in by_id[
+        "reaction_wiring_engine_body_import"
+    ]["source_open_payload_boundary"]
+    assert "no_live_provider_dispatch_in_validation" in by_id[
+        "reaction_wiring_config_body_import"
+    ]["source_open_payload_boundary"]
+    assert "no_targeted_fire_in_public_validation" in by_id[
+        "reaction_wiring_proof_cli_body_import"
+    ]["source_open_payload_boundary"]
+
+
+def test_reaction_wiring_sources_compile_and_preserve_single_flight_boundary() -> None:
+    manifest = json.loads(REACTION_WIRING_MANIFEST.read_text(encoding="utf-8"))
+    source_paths = [
+        MICROCOSM_ROOT / str(row["target_ref"]).removeprefix("microcosm-substrate/")
+        for row in manifest["modules"]
+    ]
+
+    for source_path in source_paths:
+        if source_path.suffix == ".py":
+            compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+    config_text = (source_modules_root / "reactions.yaml").read_text(encoding="utf-8")
+    engine_text = (
+        source_modules_root / "tools/meta/control/reactions_engine.py"
+    ).read_text(encoding="utf-8")
+    proof_text = (
+        source_modules_root / "tools/meta/control/reaction_proof.py"
+    ).read_text(encoding="utf-8")
+
+    assert "reaction_id: routing_quality_audit_after_refresh" in config_text
+    assert "dedupe_by: signal_digest" in config_text
+    assert "barrier_kind: operation_completion" in config_text
+    assert "operation_id: semantic_route_quality_audit" in config_text
+    assert "enabled_by_default: true" in config_text
+    assert 'REACTIONS_CONFIG_REL = "reactions.yaml"' in engine_text
+    assert "def preview_reaction(" in engine_text
+    assert "def fire_reaction(" in engine_text
+    assert "def tick_engine_targeted(" in engine_text
+    assert "def _finalize_action_state(" in engine_text
+    assert 'state["awaiting_barriers"] = [barrier]' in engine_text
+    assert "dedupe_by" in engine_text
+    assert "def cmd_preview(" in proof_text
+    assert "def cmd_fire(" in proof_text
+    assert "def cmd_tick(" in proof_text
+    assert "tick_engine_targeted(" in proof_text
+    assert "not authority to execute live providers" in manifest[
+        "public_runtime_policy"
+    ]
+    assert "provider payload bodies" in manifest["receipt_body_policy"]
+    assert "browser/HUD live-access material" in manifest["receipt_body_policy"]
+    assert "automatic_source_mutation_state" in manifest["secret_exclusion_boundary"]
+
+
+def test_executable_grammar_metabolism_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = _assert_source_manifest_matches_exact_macro_sources(
+        EXECUTABLE_GRAMMAR_METABOLISM_MANIFEST,
+        manifest_id="executable_grammar_metabolism_source_modules_import",
+        module_count=3,
+    )
+
+    material_classes = {row["material_class"] for row in manifest["modules"]}
+    assert material_classes == {"public_macro_tool_body", "public_macro_receipt_body"}
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+    board = json.loads(
+        (
+            source_modules_root
+            / "private-macro-source/microcosms/executable_grammar_metabolism/grammar_board.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert board["schema_version"] == "executable_grammar_metabolism_specimen_v0"
+    assert board["status"] == "ok"
+    assert len(board["grammar_rules"]) == 5
+    assert len(board["provider_replay_bridge"]) == 4
+    assert len(board["source_capsule_provenance"]) == 10
+
+
+def test_navigation_clusterability_sources_compile_and_carry_clusterability_contract() -> None:
+    clusterability_source = (
+        BUNDLE_INPUT / "source_modules/system/lib/navigation_clusterability.py"
+    )
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_navigation_clusterability.py"
+    )
+
+    clusterability_text = clusterability_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(clusterability_text, str(clusterability_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "def build_navigation_clusterability_audit(" in clusterability_text
+    assert '"kind": "navigation_clusterability_audit"' in clusterability_text
+    assert "HIGH_CARDINALITY_THRESHOLD" in clusterability_text
+    assert "cluster_flag_status" in clusterability_text
+    assert (
+        "test_clusterability_quick_profile_defers_measuring_implemented_cluster_payloads"
+        in test_text
+    )
+
+
+def test_annex_routing_coverage_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        ANNEX_ROUTING_COVERAGE_MANIFEST,
+        manifest_id="annex_routing_coverage_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_annex_routing_coverage_sources_compile_and_carry_routing_contract() -> None:
+    routing_source = BUNDLE_INPUT / "source_modules/system/lib/annex_routing_coverage.py"
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_annex_routing_coverage.py"
+    )
+
+    routing_text = routing_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(routing_text, str(routing_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "DEFAULT_UNROUTED_RATE_THRESHOLD" in routing_text
+    assert "def build_annex_routing_coverage(" in routing_text
+    assert '"kind": "annex_routing_coverage"' in routing_text
+    assert "routing_coverage:annex_patterns:unrouted" in routing_text
+    assert "test_annex_routing_coverage_cli_emits_json" in test_text
+
+
+def test_annex_currentness_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        ANNEX_CURRENTNESS_MANIFEST,
+        manifest_id="annex_currentness_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_annex_currentness_sources_compile_and_carry_currentness_contract() -> None:
+    currentness_source = BUNDLE_INPUT / "source_modules/system/lib/annex_currentness.py"
+    test_source = (
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_annex_currentness.py"
+    )
+
+    currentness_text = currentness_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(currentness_text, str(currentness_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert 'SCHEMA_VERSION = "annex_currentness_v0"' in currentness_text
+    assert "def build_annex_currentness(" in currentness_text
+    assert "annex_sync_digest" in currentness_text
+    assert "movement_to_row_job" in currentness_text
+    assert "test_kernel_annex_currentness_cli_emits_packet" in test_text
+
+
+def test_entrypoint_health_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        ENTRYPOINT_HEALTH_MANIFEST,
+        manifest_id="entrypoint_health_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_entrypoint_health_sources_compile_and_carry_entrypoint_contract() -> None:
+    entrypoint_source = BUNDLE_INPUT / "source_modules/system/lib/entrypoint_health.py"
+    test_source = (
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_entrypoint_health.py"
+    )
+
+    entrypoint_text = entrypoint_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(entrypoint_text, str(entrypoint_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert '"schema_version": "entrypoint_health_v0"' in entrypoint_text
+    assert "def build_entrypoint_health(" in entrypoint_text
+    assert "def project_entry_surface_diagnostics(" in entrypoint_text
+    assert "FORBIDDEN_ROUTE_PATTERNS" in entrypoint_text
+    assert (
+        "test_repo_entrypoint_health_is_budget_safe_and_route_clean"
+        in test_text
+    )
+    assert (
+        "test_entry_surface_diagnostic_first_contact_uses_fast_source_coupling_receipt"
+        in test_text
+    )
+
+
+def test_agent_entrypoint_audit_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        AGENT_ENTRYPOINT_AUDIT_MANIFEST,
+        manifest_id="agent_entrypoint_audit_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_agent_entrypoint_audit_sources_compile_and_carry_audit_contract() -> None:
+    audit_source = BUNDLE_INPUT / "source_modules/system/lib/agent_entrypoint_audit.py"
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_agent_entrypoint_audit.py"
+    )
+
+    audit_text = audit_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(audit_text, str(audit_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "GENERATED_BLOCK_MARKERS = (" in audit_text
+    assert "def build_agent_entrypoint_audit(" in audit_text
+    assert "def write_agent_entrypoint_audit(" in audit_text
+    assert '"kind": "agent_entrypoint_audit"' in audit_text
+    assert "test_kernel_route_emits_audit_shape" in test_text
+    assert "test_generated_block_drift_compares_against_rendered_projection" in test_text
+
+
+def test_navigation_fitness_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        NAVIGATION_FITNESS_MANIFEST,
+        manifest_id="navigation_fitness_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_navigation_fitness_sources_compile_and_carry_fitness_contract() -> None:
+    fitness_source = BUNDLE_INPUT / "source_modules/system/lib/navigation_fitness.py"
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_navigation_fitness.py"
+    )
+
+    fitness_text = fitness_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(fitness_text, str(fitness_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "FITNESS_TASKS: tuple[FitnessTask, ...] = (" in fitness_text
+    assert "HELDOUT_TASKS: tuple[FitnessTask, ...] = (" in fitness_text
+    assert "ADVERSARIAL_TASKS: tuple[FitnessTask, ...] = (" in fitness_text
+    assert "def build_navigation_fitness(" in fitness_text
+    assert '"schema_version": "navigation_fitness_v0"' in fitness_text
+    assert (
+        "test_navigation_fitness_smoke_proves_expected_ids_without_legacy_first_routes"
+        in test_text
+    )
+    assert "test_navigation_fitness_cli_and_semantic_modes_are_explicit" in test_text
+
+
+def test_dynamic_paper_lattice_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        DYNAMIC_PAPER_LATTICE_MANIFEST,
+        manifest_id="dynamic_paper_lattice_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_dynamic_paper_lattice_sources_compile_and_carry_lattice_contract() -> None:
+    lattice_source = (
+        BUNDLE_INPUT / "source_modules/system/lib/dynamic_paper_lattice.py"
+    )
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_dynamic_paper_lattice.py"
+    )
+
+    lattice_text = lattice_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(lattice_text, str(lattice_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert 'DEFAULT_SLUG = "navigation_hologram_theory"' in lattice_text
+    assert "RAW_SEED_PATH = Path(" in lattice_text
+    assert "def build_dynamic_paper_lattice(" in lattice_text
+    assert '"schema_version": "dynamic_paper_lattice_v0"' in lattice_text
+    assert '"paper_module_profile_id": paper_contract.get("profile_id")' in lattice_text
+    assert (
+        "test_dynamic_paper_lattice_projects_source_anchored_affordance_rows"
+        in test_text
+    )
+    assert "test_dynamic_paper_lattice_cli_emits_budgeted_json" in test_text
+    assert (
+        "test_dynamic_paper_lattice_unknown_slug_is_structured_selection_error"
+        in test_text
+    )
+
+
+def test_kind_atlas_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        KIND_ATLAS_MANIFEST,
+        manifest_id="kind_atlas_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_kind_atlas_sources_compile_and_carry_option_surface_contract() -> None:
+    atlas_source = BUNDLE_INPUT / "source_modules/system/lib/kind_atlas.py"
+    test_source = (
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_kind_atlas.py"
+    )
+
+    atlas_text = atlas_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(atlas_text, str(atlas_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "PAPER_MODULE_INDEX = Path(" in atlas_text
+    assert 'SUPPORTED_BANDS = {"flag", "card"}' in atlas_text
+    assert "def build_kind_atlas(" in atlas_text
+    assert '"schema_version": "kind_atlas_v0"' in atlas_text
+    assert '"not_keyword_search": True' in atlas_text
+    assert "test_kind_atlas_marks_supported_rows_and_projection_gaps" in test_text
+    assert "test_kind_atlas_kernel_command_emits_json" in test_text
+    assert "test_option_surface_kinds_alias_uses_kind_atlas" in test_text
+
+
+def test_semantic_routing_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        SEMANTIC_ROUTING_MANIFEST,
+        manifest_id="semantic_routing_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_semantic_routing_sources_compile_and_carry_route_contract() -> None:
+    routing_source = BUNDLE_INPUT / "source_modules/system/lib/semantic_routing.py"
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_semantic_routing.py"
+    )
+
+    routing_text = routing_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(routing_text, str(routing_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert (
+        'STANDARD_PATH = "codex/standards/std_semantic_routing.json"'
+        in routing_text
+    )
+    assert 'STATE_DIR = "state/semantic_routing"' in routing_text
+    assert (
+        'EVIDENCE_LEDGER_PATH = "codex/ledger/semantic_routing/route_evidence.jsonl"'
+        in routing_text
+    )
+    assert "def default_activation_ladder(" in routing_text
+    assert "def refresh_routes(" in routing_text
+    assert "def query_routes(" in routing_text
+    assert "def confirm_route(" in routing_text
+    assert "def append_operation_route_evidence(" in routing_text
+    assert "test_refresh_routes_builds_deterministic_bounded_graph" in test_text
+    assert (
+        "test_incremental_refresh_tracks_changed_ids_and_impacted_neighbors"
+        in test_text
+    )
+    assert "test_query_routes_falls_back_when_python_routes_are_stale" in test_text
+    assert "test_run_action_appends_operation_route_evidence_results" in test_text
+    assert (
+        "test_routing_metabolism_status_reports_digest_cache_and_runner_health"
+        in test_text
+    )
+
+
+def test_embedding_substrate_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        EMBEDDING_SUBSTRATE_MANIFEST,
+        manifest_id="embedding_substrate_source_modules_import",
+        module_count=3,
+    )
+
+
+def test_embedding_substrate_sources_compile_and_carry_faceted_embedding_contract() -> None:
+    substrate_source = (
+        BUNDLE_INPUT / "source_modules/system/lib/embedding_substrate.py"
+    )
+    sources_source = BUNDLE_INPUT / "source_modules/system/lib/embedding_sources.py"
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_embedding_substrate.py"
+    )
+
+    substrate_text = substrate_source.read_text(encoding="utf-8")
+    sources_text = sources_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(substrate_text, str(substrate_source), "exec")
+    compile(sources_text, str(sources_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert 'SCHEMA_VERSION = "embedding_substrate_v2_faceted"' in substrate_text
+    assert 'OVERLAY_SCHEMA_VERSION = "embedding_substrate_overlay_v1"' in substrate_text
+    assert "class EmbeddingSubstrate:" in substrate_text
+    assert "def embed_texts_default(" in substrate_text
+    assert "def refresh(" in substrate_text
+    assert "def search_ladder(" in substrate_text
+    assert "def alignment(" in substrate_text
+    assert "class DoctrineSource(SourceAdapter):" in sources_text
+    assert "class PaperModuleSource(SourceAdapter):" in sources_text
+    assert "class RawSeedNavigationSource(SourceAdapter):" in sources_text
+    assert "def parse_std_python_atoms(" in sources_text
+    assert "class PythonHolographicSource(SourceAdapter):" in sources_text
+    assert "SOURCE_ADAPTERS: dict[str, type[SourceAdapter]] = {" in sources_text
+    assert "def build_adapter(" in sources_text
+    assert "test_refresh_embeds_all_facet_rows" in test_text
+    assert "test_search_ladder_narrows_via_activation_gradient" in test_text
+    assert "test_raw_seed_navigation_source_indexes_runtime_groups" in test_text
+    assert "test_std_python_atom_parser_splits_contract_atoms" in test_text
+
+
+def test_nvidia_nim_provider_boundary_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        NVIDIA_NIM_PROVIDER_BOUNDARY_MANIFEST,
+        manifest_id="nvidia_nim_provider_boundary_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_nvidia_nim_provider_boundary_sources_compile_and_expose_no_live_probe_status() -> None:
+    nvidia_source = BUNDLE_INPUT / "source_modules/system/lib/nvidia_nim.py"
+    registry_source = BUNDLE_INPUT / "source_modules/system/lib/model_profile_registry.py"
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+
+    nvidia_text = nvidia_source.read_text(encoding="utf-8")
+    registry_text = registry_source.read_text(encoding="utf-8")
+
+    compile(nvidia_text, str(nvidia_source), "exec")
+    compile(registry_text, str(registry_source), "exec")
+    assert "def runtime_status(" in nvidia_text
+    assert "def chat_completion(" in nvidia_text
+    assert "def embed_texts(" in nvidia_text
+    assert "def rerank_passages(" in nvidia_text
+    assert "def nvidia_model_id(" in registry_text
+    assert "def build_free_claude_code_env(" in registry_text
+
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            (
+                "import json, sys; "
+                f"sys.path.insert(0, {str(source_modules_root)!r}); "
+                "from system.lib import nvidia_nim; "
+                "status = nvidia_nim.runtime_status("
+                "config={'api_key': 'public-test-redacted', 'model': 'glm5'}, "
+                "probe_live=False); "
+                "print(json.dumps(status, sort_keys=True))"
+            ),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    status = json.loads(probe.stdout)
+    assert status["live_probe"] == {
+        "status": "not_run",
+        "reason": "probe_live_disabled",
+    }
+    assert status["configured"]["api_key_present"] is True
+    assert status["configured"]["chat_model"] == "z-ai/glm5"
+
+
+def test_agent_provider_router_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        AGENT_PROVIDER_ROUTER_MANIFEST,
+        manifest_id="agent_provider_router_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_agent_provider_router_sources_compile_and_expose_no_live_probe_dispatch() -> None:
+    provider_source = BUNDLE_INPUT / "source_modules/system/lib/agent_providers.py"
+    openrouter_source = (
+        BUNDLE_INPUT / "source_modules/system/lib/openrouter_free_runtime.py"
+    )
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+
+    provider_text = provider_source.read_text(encoding="utf-8")
+    openrouter_text = openrouter_source.read_text(encoding="utf-8")
+
+    compile(provider_text, str(provider_source), "exec")
+    compile(openrouter_text, str(openrouter_source), "exec")
+    assert "def resolve_provider_callable(" in provider_text
+    assert "def ask_openrouter(" in provider_text
+    assert "def runtime_status(" in openrouter_text
+    assert "DEFAULT_CHAT_MODEL = FREE_ROUTER_MODEL_ID = \"openrouter/free\"" in openrouter_text
+
+    code = f"""
+import json
+import sys
+
+sys.path.insert(0, {str(source_modules_root)!r})
+from system.lib import agent_providers, openrouter_free_runtime
+
+status = openrouter_free_runtime.runtime_status(
+    config={{"api_key": "public-test-redacted"}},
+    probe_live=False,
+)
+resolved = {{
+    name: agent_providers.resolve_provider_callable(name).__name__
+    for name in ["claude", "codex", "nvidia", "openrouter-free"]
+}}
+paid_blocked = False
+try:
+    openrouter_free_runtime.chat_completion_packet(
+        "fixture",
+        config={{"api_key": "public-test-redacted", "model": "openai/gpt-4o"}},
+    )
+except RuntimeError as exc:
+    paid_blocked = "paid model call blocked" in str(exc)
+
+print(
+    json.dumps(
+        {{"status": status, "resolved": resolved, "paid_blocked": paid_blocked}},
+        sort_keys=True,
+    )
+)
+"""
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            code,
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(probe.stdout)
+    status = payload["status"]
+    assert status["live_probe"] == {
+        "status": "not_run",
+        "reason": "probe_live_disabled",
+    }
+    assert status["configured"]["api_key_present"] is True
+    assert status["policy"]["no_spend_default"] is True
+    assert status["policy"]["chat_completion"]["default_model"] == "openrouter/free"
+    assert payload["resolved"] == {
+        "claude": "ask_claude",
+        "codex": "ask_codex",
+        "nvidia": "ask_nvidia",
+        "openrouter-free": "ask_openrouter",
+    }
+    assert payload["paid_blocked"] is True
+
+
+def test_bridge_route_config_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        BRIDGE_ROUTE_CONFIG_MANIFEST,
+        manifest_id="bridge_route_config_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_bridge_route_config_sources_compile_and_preserve_route_overlay_behavior() -> None:
+    bridge_source = BUNDLE_INPUT / "source_modules/system/lib/bridge_routes.py"
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_bridge_routes.py"
+    )
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+
+    bridge_text = bridge_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(bridge_text, str(bridge_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "def merge_bridge_config_with_route(" in bridge_text
+    assert "def bridge_timeout_seconds(" in bridge_text
+    assert "test_merge_bridge_config_with_route_merges_timings_and_meta" in test_text
+    assert "test_bridge_timeout_seconds_prefers_route_override" in test_text
+
+    code = f"""
+import json
+import sys
+
+sys.path.insert(0, {str(source_modules_root)!r})
+from system.lib import bridge_routes
+
+config = {{
+    "platform": "gemini",
+    "meta": {{"launch_profile": "experimental"}},
+    "bridge": {{
+        "monitor_timeout_s": {{"value": 1500}},
+        "timings": {{
+            "post_paste_sleep": {{"value": 1.5}},
+            "transport_retry_sleep": {{"value": 0.75}},
+        }},
+        "routes": {{
+            "kernel_probe": {{
+                "meta": {{"lane": "kernel_probe"}},
+                "monitor_timeout_s": {{"value": 2400}},
+                "timings": {{
+                    "post_paste_sleep": {{"value": 1.75}},
+                }},
+            }}
+        }},
+    }},
+}}
+merged, route_name = bridge_routes.merge_bridge_config_with_route(
+    config,
+    explicit_route="kernel_probe",
+)
+payload = {{
+    "route_name": route_name,
+    "bridge_route": merged["bridge_route"],
+    "meta": merged["meta"],
+    "timings": merged["bridge"]["timings"],
+    "timeout": bridge_routes.bridge_timeout_seconds(
+        config,
+        default=1500.0,
+        route_name="kernel_probe",
+    ),
+    "original_post_paste_sleep": config["bridge"]["timings"]["post_paste_sleep"]["value"],
+}}
+print(json.dumps(payload, sort_keys=True))
+"""
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            code,
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(probe.stdout)
+    assert payload["route_name"] == "kernel_probe"
+    assert payload["bridge_route"] == "kernel_probe"
+    assert payload["meta"] == {
+        "lane": "kernel_probe",
+        "launch_profile": "experimental",
+    }
+    assert payload["timings"]["post_paste_sleep"]["value"] == 1.75
+    assert payload["timings"]["transport_retry_sleep"]["value"] == 0.75
+    assert payload["timeout"] == 2400.0
+    assert payload["original_post_paste_sleep"] == 1.5
+
+
+def test_kernel_bridge_config_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        KERNEL_BRIDGE_CONFIG_MANIFEST,
+        manifest_id="kernel_bridge_config_source_modules_import",
+        module_count=3,
+    )
+
+
+def test_kernel_bridge_config_sources_compile_and_preserve_master_config_runtime_contract() -> None:
+    config_source = BUNDLE_INPUT / "source_modules/system/lib/kernel/config.py"
+    state_source = BUNDLE_INPUT / "source_modules/system/lib/kernel/state.py"
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_master_config_loader_parity.py"
+    )
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+
+    config_text = config_source.read_text(encoding="utf-8")
+    state_text = state_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(config_text, str(config_source), "exec")
+    compile(state_text, str(state_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "def load_master_config_at(" in config_text
+    assert "def resolve_bridge_runtime_config(" in config_text
+    assert "def coerce_bridge_workers_arg(" in config_text
+    assert "DEFAULT_BRIDGE_TIMEOUT_S = 1500.0" in state_text
+    assert "def init(repo_root: Path) -> None:" in state_text
+    assert "test_master_config_loader_parity" in test_text
+
+    code = f"""
+import json
+import sys
+import tempfile
+from pathlib import Path
+
+sys.path.insert(0, {str(source_modules_root)!r})
+from system.lib.kernel import config as kernel_config
+from system.lib.kernel import state as kernel_state
+
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp).resolve()
+    kernel_state.REPO_ROOT = root
+    (root / "master_config.json").write_text(
+        json.dumps({{
+            "bridge": {{
+                "default_target": {{"value": "gemini"}},
+                "monitor_timeout_s": {{"value": 1200}},
+                "routes": {{
+                    "kernel_probe": {{
+                        "default_target": {{"value": "codex"}},
+                        "monitor_timeout_s": {{"value": 44}},
+                        "timings": {{"post_paste_sleep": {{"value": 1.25}}}},
+                    }}
+                }},
+            }}
+        }}),
+        encoding="utf-8",
+    )
+    runtime_config, provider = kernel_config.resolve_bridge_runtime_config(
+        provider="",
+        timeout_s=33,
+        bridge_route="kernel_probe",
+    )
+    invalid_workers = "not_checked"
+    try:
+        kernel_config.coerce_bridge_workers_arg("0")
+    except ValueError:
+        invalid_workers = "rejected"
+    payload = {{
+        "loaded_default_target": kernel_config.load_master_config()["bridge"]["default_target"]["value"],
+        "missing_fallback": kernel_config.config_value(None, "fallback"),
+        "workers_auto": kernel_config.coerce_bridge_workers_arg("auto"),
+        "workers_two": kernel_config.coerce_bridge_workers_arg("2"),
+        "invalid_workers": invalid_workers,
+        "route_timeout": kernel_config.default_bridge_timeout_s(bridge_route="kernel_probe"),
+        "provider": provider,
+        "runtime_platform": runtime_config["platform"],
+        "runtime_timeout": runtime_config["bridge"]["monitor_timeout_s"],
+        "route_name": runtime_config["bridge_route"],
+        "route_timing": runtime_config["bridge"]["timings"]["post_paste_sleep"]["value"],
+    }}
+    print(json.dumps(payload, sort_keys=True))
+"""
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            code,
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(probe.stdout)
+    assert payload == {
+        "invalid_workers": "rejected",
+        "loaded_default_target": "gemini",
+        "missing_fallback": "fallback",
+        "provider": "codex",
+        "route_name": "kernel_probe",
+        "route_timeout": 44.0,
+        "route_timing": 1.25,
+        "runtime_platform": "codex",
+        "runtime_timeout": 33,
+        "workers_auto": "auto",
+        "workers_two": "2",
+    }
+
+
+def test_observe_runtime_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        OBSERVE_RUNTIME_MANIFEST,
+        manifest_id="observe_runtime_source_modules_import",
+        module_count=5,
+    )
+
+
+def test_observe_runtime_sources_compile_and_preserve_grouped_runtime_contract() -> None:
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+    source_paths = [
+        source_modules_root / "system/lib/codex_paths.py",
+        source_modules_root / "system/lib/markdown_routing.py",
+        source_modules_root / "system/lib/observe_memory.py",
+        source_modules_root / "system/lib/observe_surfaces.py",
+        source_modules_root / "system/lib/observe_runtime.py",
+    ]
+    for source_path in source_paths:
+        compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+    observe_runtime_text = source_paths[-1].read_text(encoding="utf-8")
+    observe_surfaces_text = source_paths[-2].read_text(encoding="utf-8")
+    assert "def resolve_group_evidence_contract(" in observe_runtime_text
+    assert "def grouped_runtime_status_payload(" in observe_runtime_text
+    assert "def request_grouped_runtime_cancel(" in observe_runtime_text
+    assert "def build_observe_resume_surface(" in observe_surfaces_text
+
+    code = f"""
+import json
+import sys
+import tempfile
+from pathlib import Path
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, {str(source_modules_root)!r})
+from system.lib import observe_runtime, observe_surfaces
+
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp)
+    (root / "master_config.json").write_text(
+        json.dumps({{
+            "observe": {{
+                "max_recommended_prompt_chars": {{"value": 12345}},
+                "max_hard_prompt_chars": {{"value": 45678}},
+            }},
+            "execution": {{"max_workers": {{"value": 4}}}},
+        }}),
+        encoding="utf-8",
+    )
+    budget = observe_runtime.resolve_bridge_prompt_budget(root)
+    workers = observe_runtime.resolve_effective_workers(
+        repo_root=root,
+        requested_workers="auto",
+        launch_profile="safe",
+        wave_size=10,
+    )
+    evidence = observe_runtime.resolve_group_evidence_contract(
+        root,
+        plan_context_files=["docs/plan.md", "src/app.py"],
+        group_context_files=["docs/group.md"],
+        targets=[{{"file": "src/app.py", "scope": "full"}}],
+    )
+    waves, wave_by_label = observe_runtime.grouped_observe_waves([
+        {{"label": "first"}},
+        {{"label": "second", "depends_on": ["first"]}},
+    ])
+    history_dir = root / "tools/meta/apply/observe_history"
+    history_entry = history_dir / "entries/OBS_PUBLIC.json"
+    history_entry.parent.mkdir(parents=True, exist_ok=True)
+    history_entry.write_text(
+        json.dumps({{
+            "observe_id": "OBS_PUBLIC",
+            "result_note": {{"path": "obsidian/results/final.md"}},
+            "continuation": {{"read_paths": ["obsidian/results/final.md"]}},
+            "groups": [
+                {{
+                    "label": "done",
+                    "role": "probe",
+                    "response_file": "responses/done.md",
+                    "response_status": "success",
+                }}
+            ],
+        }}),
+        encoding="utf-8",
+    )
+    observe_runtime.write_grouped_runtime_manifest(
+        history_dir,
+        {{
+            "kind": "grouped_observe",
+            "observe_id": "OBS_PUBLIC",
+            "state": "dispatching",
+            "launch_profile": "safe",
+            "requested_workers": "auto",
+            "effective_workers": 2,
+            "wave_index": 0,
+            "wave_total": 1,
+            "total_groups": 2,
+            "completed_groups": 1,
+            "pid": None,
+            "updated_at": "2026-05-25T00:00:00+00:00",
+            "groups": [
+                {{"label": "done", "runtime_state": "success", "response_status": "success"}},
+                {{"label": "pending", "runtime_state": "running"}},
+            ],
+            "artifacts": {{
+                "history_entry": "tools/meta/apply/observe_history/entries/OBS_PUBLIC.json",
+                "latest_stable_artifact": "obsidian/results/final.md",
+            }},
+        }},
+    )
+    status = observe_runtime.grouped_runtime_status_payload(root, history_dir, "OBS_PUBLIC")
+    continuation = observe_surfaces.build_grouped_observe_continuation(
+        result_note_rel="obsidian/results/final.md",
+        synthesis_summary={{"path": "obsidian/results/_synthesis.md"}},
+        groups_payload=[
+            {{
+                "label": "done",
+                "response_surface_file": "responses/done.surface.json",
+                "response_file": "responses/done.md",
+            }}
+        ],
+    )
+    payload = {{
+        "budget": budget,
+        "workers": workers,
+        "evidence": evidence,
+        "waves": waves,
+        "wave_by_label": wave_by_label,
+        "status": status,
+        "continuation": continuation,
+    }}
+    print(json.dumps(payload, sort_keys=True))
+"""
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            code,
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(probe.stdout)
+    assert payload["budget"] == {
+        "recommended_prompt_chars": 12345,
+        "hard_prompt_chars": 45678,
+    }
+    assert payload["workers"]["effective_workers"] == 4
+    assert payload["workers"]["launch_profile"] == "safe"
+    assert payload["evidence"]["effective_context_files"] == [
+        "docs/plan.md",
+        "docs/group.md",
+    ]
+    assert payload["evidence"]["context_target_overlaps"] == ["src/app.py"]
+    assert payload["waves"] == [["first"], ["second"]]
+    assert payload["wave_by_label"] == {"first": 0, "second": 1}
+    assert payload["status"]["state"] == "dispatching"
+    assert payload["status"]["latest_stable_artifact"] == "obsidian/results/final.md"
+    assert payload["status"]["can_continue"] is True
+    assert payload["status"]["continue_mode"] == "resume_pending"
+    assert payload["status"]["pending_group_labels"] == ["pending"]
+    assert payload["status"]["progress"]["percent_complete"] == 50
+    assert payload["status"]["resume_surface"]["preferred_artifact"] == (
+        "obsidian/results/final.md"
+    )
+    assert payload["continuation"]["read_paths"] == [
+        "obsidian/results/final.md",
+        "obsidian/results/_synthesis.md",
+        "responses/done.surface.json",
+        "responses/done.md",
+    ]
+
+
+def test_kernel_state_registry_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        KERNEL_STATE_REGISTRY_MANIFEST,
+        manifest_id="kernel_state_registry_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_kernel_state_registry_sources_compile_and_preserve_path_and_registry_contract() -> None:
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+    source_paths = [
+        source_modules_root / "system/lib/observe_assets.py",
+        source_modules_root / "system/lib/standards_registry.py",
+    ]
+    for source_path in source_paths:
+        compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+    observe_assets_text = source_paths[0].read_text(encoding="utf-8")
+    standards_registry_text = source_paths[1].read_text(encoding="utf-8")
+    assert "def observe_asset_paths(" in observe_assets_text
+    assert "OBSERVE_TREE_RUNTIME_RELS = (" in observe_assets_text
+    assert "def build_standards_catalog(" in standards_registry_text
+    assert "STANDARDS_REGISTRY_PATH" in standards_registry_text
+
+    code = f"""
+import json
+import sys
+import tempfile
+from pathlib import Path
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, {str(source_modules_root)!r})
+from system.lib import observe_assets, standards_registry
+
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp).resolve()
+    authority_index = root / "codex/standards/observe/authority_index.json"
+    authority_index.parent.mkdir(parents=True, exist_ok=True)
+    authority_index.write_text(
+        json.dumps({{
+            "artifacts": {{
+                "observe_plan": {{
+                    "description": "fixture observe plan",
+                    "json_standard": "codex/standards/observe/std_observe_general.json",
+                    "path_globs": ["tools/meta/apply/observe_plans/*.json"],
+                    "lifecycle": "runtime_fixture",
+                    "authority_rule": "source_only_fixture",
+                }}
+            }},
+            "supporting_assets": {{"template": {{"path": "templates/observe.json"}}}},
+        }}),
+        encoding="utf-8",
+    )
+    registry = root / standards_registry.STANDARDS_REGISTRY_PATH
+    registry.parent.mkdir(parents=True, exist_ok=True)
+    registry.write_text(
+        json.dumps({{
+            "root": "codex/standards",
+            "purpose": "fixture registry",
+            "kernel_navigation_hints": ["fixture"],
+            "groups": [
+                {{
+                    "group_id": "observe",
+                    "title": "Observe",
+                    "group_root": "codex/standards/observe",
+                    "authority_index": "codex/standards/observe/authority_index.json",
+                    "summary": "fixture group",
+                    "storage_status": "local_fixture",
+                    "kernel_navigation_hints": ["observe"],
+                }}
+            ],
+        }}),
+        encoding="utf-8",
+    )
+    assets = observe_assets.observe_asset_paths(root)
+    catalog = standards_registry.build_standards_catalog(repo_root=root)
+    payload = {{
+        "observe_plan": str(assets.observe_plan.relative_to(root)),
+        "tree_manifest": str(assets.tree_manifest.relative_to(root)),
+        "runtime_rel_count": len(observe_assets.OBSERVE_TREE_RUNTIME_RELS),
+        "canonical_doc_count": len(observe_assets.OBSERVE_TREE_CANONICAL_DOC_RELS),
+        "registry_path": catalog["registry_path"],
+        "group_count": len(catalog["groups"]),
+        "artifact_count": catalog["groups"][0]["artifact_count"],
+        "supporting_asset_count": catalog["groups"][0]["supporting_asset_count"],
+        "artifact_kind": catalog["groups"][0]["artifacts"][0]["artifact_kind"],
+    }}
+    print(json.dumps(payload, sort_keys=True))
+"""
+    probe = subprocess.run(
+        [sys.executable, "-c", code],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(probe.stdout)
+    assert payload == {
+        "artifact_count": 1,
+        "artifact_kind": "observe_plan",
+        "canonical_doc_count": 13,
+        "group_count": 1,
+        "observe_plan": "tools/meta/apply/observe_plan.json",
+        "registry_path": "codex/standards/standards_registry.json",
+        "runtime_rel_count": 14,
+        "supporting_asset_count": 1,
+        "tree_manifest": "codex/derived/observe/tree_manifest.json",
+    }
+
+
+def test_agent_execution_trace_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        AGENT_EXECUTION_TRACE_MANIFEST,
+        manifest_id="agent_execution_trace_source_modules_import",
+        module_count=4,
+    )
+
+
+def test_agent_execution_trace_sources_compile_and_preserve_privacy_boundary_contract() -> None:
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+    source_paths = [
+        source_modules_root / "system/lib/agent_execution_trace.py",
+        source_modules_root / "system/lib/strict_json.py",
+        source_modules_root / "system/server/tests/test_agent_execution_trace.py",
+        source_modules_root / "codex/standards/std_agent_execution_trace.json",
+    ]
+    for source_path in source_paths:
+        source_text = source_path.read_text(encoding="utf-8")
+        if source_path.suffix == ".py":
+            compile(source_text, str(source_path), "exec")
+        else:
+            json.loads(source_text)
+
+    trace_text = source_paths[0].read_text(encoding="utf-8")
+    strict_json_text = source_paths[1].read_text(encoding="utf-8")
+    test_text = source_paths[2].read_text(encoding="utf-8")
+    standard = json.loads(source_paths[3].read_text(encoding="utf-8"))
+    assert "def build_agent_execution_trace(" in trace_text
+    assert "def build_process_trace_route_packet(" in trace_text
+    assert "TRACE_OUTPUT_PRIVACY_BOUNDARY" in trace_text
+    assert "PROCESS_METADATA_PRIVACY_BOUNDARY" in trace_text
+    assert "class StrictJsonError" in strict_json_text
+    assert "def loads_json_strict(" in strict_json_text
+    assert "without depending on live `~/.claude` or `~/.codex` state" in test_text
+    assert standard["schema_version"] == "std_agent_execution_trace_v2"
+    assert "hidden chain-of-thought" in standard["purpose"]
+    assert (
+        standard["trace_ontology_contract"]["authority_posture"][
+            "hidden_reasoning_excluded"
+        ]
+        is True
+    )
+
+    code = f"""
+import json
+import sys
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, {str(source_modules_root)!r})
+from system.lib import agent_execution_trace as trace
+
+levels = trace.build_trace_compactness_levels(
+    [],
+    session_id="public-fixture",
+    selected_level="outline",
+)
+payload = {{
+    "action_kind": trace._bash_action_kind("./repo-python kernel.py --entry demo --pulse"),
+    "flags": trace._extract_kernel_flags("./repo-python kernel.py --entry demo --pulse"),
+    "levels": levels,
+    "metadata_boundary": trace.PROCESS_METADATA_PRIVACY_BOUNDARY,
+    "trace_boundary": trace.TRACE_OUTPUT_PRIVACY_BOUNDARY,
+}}
+print(json.dumps(payload, sort_keys=True))
+"""
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            code,
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(probe.stdout)
+    assert payload["action_kind"] == "kernel_command"
+    assert set(payload["flags"]) == {"--entry", "--pulse"}
+    assert "not raw task-output bodies" in payload["metadata_boundary"]
+    assert "prompt bodies, and hidden reasoning remain omitted" in payload["trace_boundary"]
+    assert payload["levels"]["selected_level"] == "outline"
+
+
+def test_agent_observability_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        AGENT_OBSERVABILITY_MANIFEST,
+        manifest_id="agent_observability_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_agent_observability_sources_compile_and_preserve_payload_boundary_contract(
+    tmp_path: Path,
+) -> None:
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+    observability_source = source_modules_root / "system/lib/agent_observability.py"
+    test_source = (
+        source_modules_root / "system/server/tests/test_agent_observability.py"
+    )
+
+    observability_text = observability_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+
+    compile(observability_text, str(observability_source), "exec")
+    compile(test_text, str(test_source), "exec")
+    assert "class AgentTraceStore:" in observability_text
+    assert "def _compact_event_if_oversized(" in observability_text
+    assert "DEFAULT_TRACE_RELATIVE_PATH" in observability_text
+    assert "compacted_payload_value" in observability_text
+    assert (
+        "test_agent_trace_store_compacts_oversized_payloads_before_persisting"
+        in test_text
+    )
+    assert "test_sampler_emits_backend_heartbeat_without_provider_activity" in test_text
+
+    code = f"""
+import json
+import sys
+from pathlib import Path
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, {str(source_modules_root)!r})
+from system.lib import agent_observability as obs
+
+store = obs.AgentTraceStore(Path({str(tmp_path)!r}), trace_path=Path({str(tmp_path / 'events.jsonl')!r}))
+event = store.emit(
+    source_runtime="public_fixture",
+    source_event_name="large_payload",
+    canonical_type="runtime.event",
+    session_id="public-fixture",
+    payload={{"content": "x" * 200000, "tool_name": "Bash"}},
+)
+payload = {{
+    "canonical_type": event["canonical_type"],
+    "payload_compacted": bool(event.get("payload_compaction")),
+    "content_compacted": event["payload"]["content"]["compacted_payload_value"],
+    "live_access_disallowed": True,
+}}
+print(json.dumps(payload, sort_keys=True))
+"""
+    probe = subprocess.run(
+        [sys.executable, "-c", code],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(probe.stdout)
+    assert payload == {
+        "canonical_type": "runtime.event",
+        "content_compacted": True,
+        "live_access_disallowed": True,
+        "payload_compacted": True,
+    }
+
+
+def test_agent_observability_animation_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        AGENT_OBSERVABILITY_ANIMATION_MANIFEST,
+        manifest_id="agent_observability_animation_source_modules_import",
+        module_count=6,
+    )
+
+
+def test_agent_observability_animation_sources_compile_and_preserve_semantic_camera_contract() -> None:
+    source_modules_root = BUNDLE_INPUT / "source_modules"
+    source_refs = [
+        "system/lib/agent_observability_animation.py",
+        "system/lib/agent_observability_animation_coverage.py",
+        "system/lib/agent_session_attribution.py",
+        "system/server/tests/test_agent_observability_animation.py",
+        "system/server/tests/test_agent_observability_animation_coverage.py",
+        "system/server/tests/test_agent_session_attribution.py",
+    ]
+    source_text_by_ref = {}
+    for source_ref in source_refs:
+        source = source_modules_root / source_ref
+        text = source.read_text(encoding="utf-8")
+        compile(text, str(source), "exec")
+        source_text_by_ref[source_ref] = text
+
+    assert "def build_agent_observability_animation_scene(" in source_text_by_ref[
+        "system/lib/agent_observability_animation.py"
+    ]
+    assert "def build_agent_observability_animation_delta(" in source_text_by_ref[
+        "system/lib/agent_observability_animation.py"
+    ]
+    assert "def build_agent_observability_animation_coverage(" in source_text_by_ref[
+        "system/lib/agent_observability_animation_coverage.py"
+    ]
+    assert "def attribute_sessions(" in source_text_by_ref[
+        "system/lib/agent_session_attribution.py"
+    ]
+    assert "def identify_self_session(" in source_text_by_ref[
+        "system/lib/agent_session_attribution.py"
+    ]
+
+    code = f"""
+import json
+import sys
+from datetime import datetime, timezone
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, {str(source_modules_root)!r})
+
+from system.lib import agent_observability_animation as animation
+from system.lib import agent_observability_animation_coverage as coverage_mod
+from system.lib import agent_session_attribution as attribution
+
+now = datetime(2026, 5, 20, 22, 0, 10, tzinfo=timezone.utc)
+
+def event(seq, canonical_type, summary, tool_use_id=None, payload=None):
+    at = f"2026-05-20T22:00:{{seq:02d}}+00:00"
+    return {{
+        "id": f"ev-{{seq}}",
+        "seq": seq,
+        "schema": "1.0.0",
+        "trace_id": "s1",
+        "source_runtime": "claude_code",
+        "source_event_name": canonical_type,
+        "canonical_type": canonical_type,
+        "session_id": "s1",
+        "tool_use_id": tool_use_id,
+        "artifact_refs": [],
+        "observed_at": at,
+        "occurred_at": at,
+        "summary": summary,
+        "payload": payload or {{}},
+    }}
+
+events = [
+    event(
+        2,
+        "tool.started",
+        "Edit system/server/main.py",
+        "tool-edit",
+        {{"tool_name": "Edit", "tool_input": {{"file_path": "system/server/main.py"}}}},
+    ),
+    event(3, "tool.completed", "edit ok", "tool-edit"),
+    event(
+        4,
+        "tool.started",
+        "Bash: pytest system/server/tests/test_agent_observability_animation.py",
+        "tool-test",
+        {{
+            "tool_name": "Bash",
+            "tool_input": {{
+                "command": "pytest system/server/tests/test_agent_observability_animation.py"
+            }},
+        }},
+    ),
+    event(5, "tool.completed", "pytest passed", "tool-test"),
+]
+status = {{
+    "schema": "1.0.0",
+    "api_revision": "agent_observability_backend_v2",
+    "trace_path": "state/observability/agent_trace/events.jsonl",
+    "seq": 99,
+    "history_size": 99,
+    "max_history": 2000,
+    "dropped_count": 0,
+    "gap_count": 0,
+    "persistence": {{"enabled": True, "dropped_count": 0}},
+    "source_status": [],
+    "active_sessions": [
+        {{
+            "session_id": "s1",
+            "source_runtime": "claude_code",
+            "title": "Fix trace viewer",
+            "current_activity": "Bash: pytest",
+            "last_observed_at": "2026-05-20T22:00:05+00:00",
+            "last_canonical_type": "tool.completed",
+            "cwd": "/repo",
+            "lag_s": 5,
+            "touched_files": ["system/server/main.py"],
+        }}
+    ],
+    "canonical_counts": {{}},
+    "source_counts": {{}},
+}}
+mission_status = {{
+    "missions": [
+        {{
+            "session_id": "other-agent",
+            "active_claims": [
+                {{
+                    "claim_id": "claim-main",
+                    "path": "system/server/main.py",
+                    "scope_kind": "path",
+                }}
+            ],
+        }}
+    ],
+    "demoted_missions": [],
+}}
+
+scene = animation.build_agent_observability_animation_scene(
+    events=events,
+    status=status,
+    mission_status=mission_status,
+    now=now,
+    window_ms=60_000,
+)
+delta = animation.build_agent_observability_animation_delta(
+    events=events,
+    status=status,
+    mission_status=mission_status,
+    now=now,
+    window_ms=60_000,
+)
+coverage = coverage_mod.build_agent_observability_animation_coverage(
+    scene=scene,
+    delta=delta,
+)
+attribution_view = attribution.attribute_sessions(
+    ats_active_sessions=[
+        {{
+            "session_id": "s1",
+            "source_runtime": "claude_code",
+            "last_observed_at": "2026-05-20T22:00:05+00:00",
+            "last_activity_at": "2026-05-20T22:00:05+00:00",
+            "last_canonical_type": "tool.completed",
+            "title": "Fix trace viewer",
+            "current_activity": "Bash: pytest",
+            "cwd": "/repo",
+            "transcript_path": None,
+            "touched_files": ["system/server/main.py"],
+        }}
+    ],
+    work_ledger_status={{
+        "sessions": {{
+            "s1": {{
+                "session_id": "s1",
+                "actor": "claude_code",
+                "phase_id": "09_54_1",
+                "family_id": "microcosm_substrate_flagship_population",
+                "last_activity_at": "2026-05-20T22:00:04+00:00",
+                "stale": False,
+                "stale_reason": None,
+                "claims": [
+                    {{
+                        "scope_kind": "path",
+                        "path": "system/server/main.py",
+                        "claim_id": "claim-main",
+                    }}
+                ],
+                "touched_td_ids": ["cap_microcosm_truth_floor_body_import_09_54_1"],
+            }}
+        }}
+    }},
+    now=now,
+)
+payload = {{
+    "scene_kind": scene["kind"],
+    "scene_schema": scene["schema_version"],
+    "delta_kind": delta["kind"],
+    "coverage_ready": coverage["readiness"]["ready_for_first_live_visual_consumer"],
+    "frontend_heuristics_required": coverage["readiness"][
+        "frontend_string_heuristics_required"
+    ],
+    "matched_session_count": attribution_view["summary"]["by_attribution_status"][
+        "matched"
+    ],
+    "attributed_phase_id": attribution_view["sessions"][0]["phase_id"],
+    "span_count": scene["summary"]["span_count"],
+    "file_impact_count": scene["summary"]["file_impact_count"],
+    "proof_receipt_count": scene["summary"]["proof_receipt_count"],
+    "delta_ops": sorted({{op["op"] for op in delta["ops"]}}),
+}}
+print(json.dumps(payload, sort_keys=True))
+"""
+    probe = subprocess.run(
+        [sys.executable, "-c", code],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(probe.stdout)
+    assert payload["scene_kind"] == "agent_observability.animation_scene"
+    assert payload["scene_schema"] == "agent_observability_animation_v0"
+    assert payload["delta_kind"] == "agent_observability.animation_delta"
+    assert payload["coverage_ready"] is True
+    assert payload["frontend_heuristics_required"] is False
+    assert payload["matched_session_count"] == 1
+    assert payload["attributed_phase_id"] == "09_54_1"
+    assert payload["span_count"] >= 4
+    assert payload["file_impact_count"] >= 1
+    assert payload["proof_receipt_count"] >= 1
+    assert {
+        "event_append",
+        "span_upsert",
+        "flow_upsert",
+        "file_impact_upsert",
+        "proof_receipt_upsert",
+        "quality_update",
+    } <= set(payload["delta_ops"])
+
+
+def test_agent_observability_classification_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        AGENT_OBSERVABILITY_CLASSIFICATION_MANIFEST,
+        manifest_id="agent_observability_classification_source_modules_import",
+        module_count=1,
+    )
+
+
+def test_agent_observability_classification_source_compiles_and_preserves_auth_failure_loop_contract() -> None:
+    module_path = (
+        BUNDLE_INPUT
+        / "source_modules/system/lib/agent_observability_classification.py"
+    )
+    source_text = module_path.read_text(encoding="utf-8")
+    compile(source_text, str(module_path), "exec")
+    assert "CLASS_ID_AUTH_FAILURE_LOOP" in source_text
+    assert "def classify_auth_failure_loop(" in source_text
+    assert "def classify_telemetry_quality(" in source_text
+
+    spec = importlib.util.spec_from_file_location(
+        "microcosm_agent_observability_classification_source_module",
+        module_path,
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    previous = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.dont_write_bytecode = previous
+
+    from datetime import datetime, timezone
+
+    def assistant_event(seq: int, *, session_id: str, cwd: str, source_runtime: str = "claude_code") -> dict:
+        return {
+            "seq": seq,
+            "canonical_type": "message.assistant",
+            "source_runtime": source_runtime,
+            "session_id": session_id,
+            "cwd": cwd,
+            "observed_at": f"2026-05-25T10:0{seq}:00+00:00",
+            "payload": {
+                "content": "Failed to authenticate request: 401 authentication_error"
+            },
+        }
+
+    events = [
+        assistant_event(
+            1,
+            session_id="observer-noise",
+            cwd="/tmp/.claude-mem/observer-sessions/run-a",
+        ),
+        assistant_event(
+            2,
+            session_id="observer-noise",
+            cwd="/tmp/.claude-mem/observer-sessions/run-a",
+        ),
+        assistant_event(
+            3,
+            session_id="infrastructure",
+            cwd="/tmp/.claude-mem/observer-sessions/run-b",
+            source_runtime="metabolism",
+        ),
+        {
+            "seq": 4,
+            "canonical_type": "message.assistant",
+            "source_runtime": "claude_code",
+            "session_id": "healthy",
+            "cwd": "/repo",
+            "payload": {"content": "401 appears in a normal discussion"},
+        },
+    ]
+
+    noise_class = module.classify_auth_failure_loop(events)
+    assert noise_class["class_id"] == module.CLASS_ID_AUTH_FAILURE_LOOP
+    assert noise_class["affected_session_count"] == 1
+    assert noise_class["event_count"] == 2
+    assert noise_class["raw_refs"] == ["agent_event:1", "agent_event:2"]
+    assert module.noisy_session_ids_from_classes([noise_class]) == {"observer-noise"}
+
+    now = datetime(2026, 5, 25, 10, 10, tzinfo=timezone.utc)
+    telemetry_quality = module.classify_telemetry_quality(
+        events=events,
+        source_status=[
+            {
+                "source_runtime": "claude_code",
+                "last_observed_at": "2026-05-25T10:00:00+00:00",
+                "event_count": 2,
+            }
+        ],
+        persistence_status={"error_count": 1, "last_error": "disk full"},
+        gap_count=1,
+        dropped_count=1,
+        history_limit_used=50,
+        now=now,
+        stale_source_after_s=60.0,
+    )
+    assert telemetry_quality["schema_version"] == "agent_observability_classification_v0"
+    assert telemetry_quality["noise_classes"] == [noise_class]
+    assert telemetry_quality["stale_sources"][0]["source_runtime"] == "claude_code"
+    assert {row["kind"] for row in telemetry_quality["projection_warnings"]} == {
+        "persistence_errors",
+        "events_dropped",
+        "stream_gaps",
+    }
+    assert telemetry_quality["history_limit_used"] == 50
+
+
+def test_agent_mission_status_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        AGENT_MISSION_STATUS_MANIFEST,
+        manifest_id="agent_mission_status_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_agent_mission_status_sources_compile_and_preserve_noise_demotion_contract() -> None:
+    module_path = BUNDLE_INPUT / "source_modules/system/lib/agent_mission_status.py"
+    test_path = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_agent_mission_status.py"
+    )
+    source_text = module_path.read_text(encoding="utf-8")
+    test_text = test_path.read_text(encoding="utf-8")
+    compile(source_text, str(module_path), "exec")
+    compile(test_text, str(test_path), "exec")
+    assert "ACTIVITY_CANONICAL_TYPES" in source_text
+    assert "def build_agent_mission_status(" in source_text
+    assert '"demoted_missions"' in source_text
+    assert "class _FakeStore" in test_text
+    assert "test_build_agent_mission_status_acceptance_specimen" in test_text
+
+    spec = importlib.util.spec_from_file_location(
+        "microcosm_agent_mission_status_source_module",
+        module_path,
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    previous = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.dont_write_bytecode = previous
+
+    from datetime import datetime, timedelta, timezone
+
+    now = datetime(2026, 5, 25, 10, 30, tzinfo=timezone.utc)
+
+    def event(
+        seq: int,
+        *,
+        session_id: str,
+        source_runtime: str = "claude_code",
+        canonical_type: str = "tool.completed",
+        cwd: str | None = "/repo",
+        summary: str | None = None,
+    ) -> dict:
+        observed = now - timedelta(seconds=max(1, 60 - seq))
+        return {
+            "id": f"event-{seq}",
+            "seq": seq,
+            "source_runtime": source_runtime,
+            "canonical_type": canonical_type,
+            "session_id": session_id,
+            "observed_at": observed.isoformat(),
+            "occurred_at": observed.isoformat(),
+            "cwd": cwd,
+            "summary": summary or canonical_type,
+            "payload": {"content": summary or canonical_type},
+        }
+
+    def auth_failure_event(seq: int, *, session_id: str) -> dict:
+        return event(
+            seq,
+            session_id=session_id,
+            canonical_type="message.assistant",
+            cwd=f"/tmp/.claude-mem/observer-sessions/{session_id}.jsonl",
+            summary=(
+                "Failed to authenticate request: 401 authentication_error"
+            ),
+        )
+
+    events = [
+        *(auth_failure_event(seq, session_id="obs-noise") for seq in range(1, 5)),
+        event(100, session_id="claude-real", canonical_type="message.user"),
+        event(101, session_id="claude-real", canonical_type="tool.proposed"),
+        event(102, session_id="claude-real", canonical_type="tool.completed"),
+        event(
+            200,
+            session_id="codex-real",
+            source_runtime="codex_app",
+            canonical_type="turn.prompt",
+            cwd=None,
+            summary="codex prompt",
+        ),
+        event(
+            201,
+            session_id="codex-real",
+            source_runtime="codex_app",
+            canonical_type="tool.completed",
+            cwd=None,
+            summary="function_call_output",
+        ),
+    ]
+    status = {
+        "seq": 201,
+        "history_size": len(events),
+        "max_history": 2000,
+        "gap_count": 0,
+        "dropped_count": 0,
+        "persistence": {
+            "enabled": True,
+            "retry_in_s": 0.0,
+            "dropped_count": 0,
+            "error_count": 0,
+            "last_error": None,
+        },
+        "source_status": [
+            {
+                "source_runtime": "claude_code",
+                "last_observed_at": now.isoformat(),
+                "event_count": 7,
+                "last_canonical_type": "tool.completed",
+            },
+            {
+                "source_runtime": "codex_app",
+                "last_observed_at": now.isoformat(),
+                "event_count": 2,
+                "last_canonical_type": "tool.completed",
+            },
+            {
+                "source_runtime": "metabolism",
+                "last_observed_at": (now - timedelta(seconds=1200)).isoformat(),
+                "event_count": 1,
+                "last_canonical_type": "runtime.heartbeat",
+            },
+        ],
+        "active_sessions": [
+            {
+                "session_id": "obs-noise",
+                "source_runtime": "claude_code",
+                "last_observed_at": now.isoformat(),
+                "last_canonical_type": "message.assistant",
+                "cwd": "/tmp/.claude-mem/observer-sessions/obs-noise.jsonl",
+                "title": "Failed to authenticate. API Error: 401",
+                "activity_count": 4,
+                "touched_files": [],
+            },
+            {
+                "session_id": "claude-real",
+                "source_runtime": "claude_code",
+                "last_observed_at": now.isoformat(),
+                "last_canonical_type": "tool.completed",
+                "cwd": "/repo",
+                "title": "real claude session",
+                "activity_count": 3,
+                "touched_files": ["system/lib/agent_mission_status.py"],
+            },
+            {
+                "session_id": "codex-real",
+                "source_runtime": "codex_app",
+                "last_observed_at": now.isoformat(),
+                "last_canonical_type": "tool.completed",
+                "cwd": None,
+                "title": None,
+                "activity_count": 2,
+                "touched_files": [],
+            },
+        ],
+    }
+
+    class FakeStore:
+        def status(self) -> dict:
+            return dict(status)
+
+        def replay(self, *, limit: int = 100, **_kwargs) -> list:
+            return list(events[-limit:])
+
+    payload = module.build_agent_mission_status(
+        store=FakeStore(),
+        work_ledger_status={},
+        history_limit=200,
+        now=now,
+    )
+
+    assert payload["kind"] == module.KIND
+    assert payload["schema_version"] == module.SCHEMA_VERSION
+    mission_session_ids = {row["session_id"] for row in payload["missions"]}
+    assert "claude-real" in mission_session_ids
+    assert "codex-real" in mission_session_ids
+    assert "obs-noise" not in mission_session_ids
+    assert payload["raw_drilldown_refs"]["endpoint_events"] == (
+        "/api/agent-observability/events"
+    )
+    auth_class = next(
+        row
+        for row in payload["telemetry_quality"]["noise_classes"]
+        if row["class_id"] == "auth_failure_loop"
+    )
+    assert auth_class["affected_session_count"] == 1
+    assert auth_class["raw_refs"]
+    demoted = {row["session_id"]: row for row in payload["demoted_missions"]}
+    assert demoted["obs-noise"]["demote_reason"] == "auth_failure_loop"
+    assert "message.assistant" in payload["constants"]["activity_canonical_types"]
+
+
+def test_operator_handoff_linkage_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        OPERATOR_HANDOFF_LINKAGE_MANIFEST,
+        manifest_id="operator_handoff_linkage_source_modules_import",
+        module_count=3,
+    )
+
+
+def test_operator_handoff_linkage_sources_compile_and_preserve_confidence_edge_contract() -> None:
+    module_path = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/observability/operator_handoff_linkage.py"
+    )
+    dependency_path = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/observability/prompt_shelf_fingerprints.py"
+    )
+    test_path = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_operator_handoff_linkage.py"
+    )
+    source_text = module_path.read_text(encoding="utf-8")
+    dependency_text = dependency_path.read_text(encoding="utf-8")
+    test_text = test_path.read_text(encoding="utf-8")
+    compile(source_text, str(module_path), "exec")
+    compile(dependency_text, str(dependency_path), "exec")
+    compile(test_text, str(test_path), "exec")
+    assert "SCHEMA_VERSION = \"operator_handoff_linkage_projection_v0\"" in source_text
+    assert "SOFT_SELECTION_POLICY" in source_text
+    assert "def compute_edges(" in source_text
+    assert "def conversation_links(" in source_text
+    assert "def _normalize(" in dependency_text
+    assert "Synthetic fixtures only" in test_text
+
+    spec = importlib.util.spec_from_file_location(
+        "microcosm_operator_handoff_linkage_source_module",
+        module_path,
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    previous_dont_write = sys.dont_write_bytecode
+    previous_prompt_fingerprints = sys.modules.pop(
+        "prompt_shelf_fingerprints", None
+    )
+    previous_path = list(sys.path)
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.dont_write_bytecode = previous_dont_write
+        sys.path[:] = previous_path
+        if previous_prompt_fingerprints is not None:
+            sys.modules["prompt_shelf_fingerprints"] = previous_prompt_fingerprints
+        else:
+            sys.modules.pop("prompt_shelf_fingerprints", None)
+
+    module._clear_norm_cache()
+    assistant_text = (
+        "Here is the handoff linkage rule. A Type B assistant response should "
+        "be matched to the Type A paste by containment, anchor position, token "
+        "overlap, and bounded time proximity. The edge remains probabilistic, "
+        "and ambiguous candidate sessions must stay visible instead of being "
+        "promoted to a false single source of truth."
+    )
+    type_b = module.TypeBCapture(
+        prompt_run_id="rid_microcosm_operator_handoff",
+        prompt_slot="B6",
+        prompt_slug="autonomous_seed",
+        captured_at="2026-05-25T11:00:00+00:00",
+        conversation_id="conv_microcosm_handoff",
+        conversation_url="https://chatgpt.com/c/conv_microcosm_handoff",
+        assistant_sha256=hashlib.sha256(
+            assistant_text.encode("utf-8")
+        ).hexdigest(),
+        assistant_raw_text=assistant_text,
+    )
+    type_a = module.TypeAUserInput(
+        surface="codex",
+        session_id="codex_microcosm_seed1",
+        session_started_at="2026-05-25T10:59:00+00:00",
+        session_ended_at="2026-05-25T11:30:00+00:00",
+        source_path="/synthetic/rollouts/codex_microcosm_seed1.jsonl",
+        cwd="/synthetic/ai_workflow",
+        timestamp="2026-05-25T11:01:00+00:00",
+        raw_text=assistant_text + "\n\nOperator delta: land the import.",
+        turn_uuid="turn_microcosm_seed1",
+    )
+    edges = module.compute_edges([type_b], [type_a])
+    assert edges
+    top = edges[0]
+    assert top.confidence_band == "strong"
+    assert top.evidence.containment is True
+    assert top.evidence.anchor_match is True
+    assert top.evidence.operator_delta_detected is True
+
+    projection = module.build_projection([type_b], [type_a], edges)
+    assert projection["schema_version"] == module.SCHEMA_VERSION
+    assert projection["counts"]["strong"] == 1
+    links = module.conversation_links(projection, "conv_microcosm_handoff")
+    assert len(links) == 1
+    assert links[0]["surface_label"] == "Codex"
+    assert links[0]["confidence_band"] == "strong"
+
+
+def test_prompt_shelf_movement_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        PROMPT_SHELF_MOVEMENT_MANIFEST,
+        manifest_id="prompt_shelf_movement_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_prompt_shelf_movement_sources_compile_and_preserve_terminal_cluster_contract() -> None:
+    source_path = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/observability/prompt_shelf_movement_index.py"
+    )
+    test_path = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_prompt_shelf_movement_index.py"
+    )
+    source_text = source_path.read_text(encoding="utf-8")
+    test_text = test_path.read_text(encoding="utf-8")
+    compile(source_text, str(source_path), "exec")
+    compile(test_text, str(test_path), "exec")
+    assert "ARTIFACT_KIND = \"prompt_shelf_movement_index\"" in source_text
+    assert "REQUIRED_FIELDS_V1 = (" in source_text
+    assert "def _classify_blocks(" in source_text
+    assert "def collect_semantic_violations(" in source_text
+    assert "prompt bodies" not in source_text.lower()
+    assert "def test_v3_uppropagation_index_unchanged_by_movement_pipeline(" in test_text
+    assert "def test_validate_since_after_historical_capture_passes(" in test_text
+
+
+def test_prompt_shelf_uppropagation_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        PROMPT_SHELF_UPPROPAGATION_MANIFEST,
+        manifest_id="prompt_shelf_uppropagation_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_prompt_shelf_uppropagation_sources_compile_and_preserve_versioned_block_contract() -> None:
+    source_path = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/observability/prompt_shelf_uppropagation_index.py"
+    )
+    test_path = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_prompt_shelf_uppropagation_index.py"
+    )
+    source_text = source_path.read_text(encoding="utf-8")
+    test_text = test_path.read_text(encoding="utf-8")
+    compile(source_text, str(source_path), "exec")
+    compile(test_text, str(test_path), "exec")
+    assert "ARTIFACT_KIND = \"prompt_shelf_uppropagation_index\"" in source_text
+    assert "BLOCK_SCHEMA_VERSION = \"v1_v2_v3\"" in source_text
+    assert "FIELD_NAMES_BY_VERSION = {" in source_text
+    assert "def _canonical_assistant_block_matches(" in source_text
+    assert "provider payload" not in source_text.lower()
+    assert "def test_v3_block_parses_new_fields_and_rollups(" in test_text
+    assert "def test_quarantined_raw_event_does_not_count(" in test_text
+
+
+def test_prompt_shelf_uppropagation_digest_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        PROMPT_SHELF_UPPROPAGATION_DIGEST_MANIFEST,
+        manifest_id="prompt_shelf_uppropagation_digest_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_prompt_shelf_uppropagation_digest_sources_compile_and_preserve_digest_projection_contract() -> None:
+    source_path = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/observability/prompt_shelf_uppropagation_digest.py"
+    )
+    test_path = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_prompt_shelf_uppropagation_digest.py"
+    )
+    source_text = source_path.read_text(encoding="utf-8")
+    test_text = test_path.read_text(encoding="utf-8")
+    compile(source_text, str(source_path), "exec")
+    compile(test_text, str(test_path), "exec")
+    assert "ARTIFACT_KIND = \"prompt_shelf_uppropagation_digest\"" in source_text
+    assert "ADOPTION_STATES = (" in source_text
+    assert "def _candidate_rows(" in source_text
+    assert "def _build_schema_loose_distillation_section(" in source_text
+    assert "provider payload" not in source_text.lower()
+    assert "def test_v3_run_indexes_into_digest_candidate_rows(" in test_text
+    assert "def test_digest_counts_prompt_ledger_adoption_receipts(" in test_text
+
+
+def test_prompt_shelf_runs_index_source_manifest_matches_exact_macro_sources() -> None:
+    manifest = _assert_source_manifest_matches_exact_macro_sources(
+        PROMPT_SHELF_RUNS_INDEX_MANIFEST,
+        manifest_id="prompt_shelf_runs_index_source_modules_import",
+        module_count=3,
+    )
+    assert manifest["support_fixture_count"] == 1
+    fixture = manifest["support_fixtures"][0]
+    source = REPO_ROOT / fixture["source_ref"]
+    target_ref = str(fixture["target_ref"]).removeprefix("microcosm-substrate/")
+    target = MICROCOSM_ROOT / target_ref
+    assert source.is_file()
+    assert target.is_file()
+    assert hashlib.sha256(source.read_bytes()).hexdigest() == fixture["source_sha256"]
+    assert hashlib.sha256(target.read_bytes()).hexdigest() == fixture["target_sha256"]
+    assert fixture["source_sha256"] == fixture["target_sha256"]
+    assert fixture["counted_as_product_substrate"] is False
+
+
+def test_prompt_shelf_runs_index_sources_compile_and_preserve_metadata_boundary_contract() -> None:
+    source_path = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/observability/prompt_shelf_runs_index.py"
+    )
+    dependency_path = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/observability/b3_packet_lint.py"
+    )
+    test_path = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_prompt_shelf_runs_index.py"
+    )
+    fixture_path = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/fixtures/b3_packet_lint/"
+        "bad_role_and_evidence_packet.txt"
+    )
+    source_text = source_path.read_text(encoding="utf-8")
+    dependency_text = dependency_path.read_text(encoding="utf-8")
+    test_text = test_path.read_text(encoding="utf-8")
+    compile(source_text, str(source_path), "exec")
+    compile(dependency_text, str(dependency_path), "exec")
+    compile(test_text, str(test_path), "exec")
+    assert "SCHEMA_VERSION = \"1.2.0\"" in source_text
+    assert "DEFAULT_REQUIRED_COVERAGE_SLOTS = [\"A0\", \"B1\", \"B2\", \"B3\"]" in source_text
+    assert "def _b3_lint_from_raw_event(" in source_text
+    assert "def render_coverage(" in source_text
+    assert "metadata-only; raw prompt/provider bodies stay in source refs" in source_text
+    assert "SCHEMA_VERSION = \"b3_packet_lint_v0\"" in dependency_text
+    assert "def lint_packet_text(" in dependency_text
+    assert "def _lint_authority_projection(" in dependency_text
+    assert "def test_index_surfaces_b3_packet_lint_status_from_raw_event(" in test_text
+    assert "def test_metadata_only_index_stats_raw_event_without_reading_body(" in test_text
+    assert fixture_path.is_file()
+
+
+def test_standard_option_surface_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        STANDARD_OPTION_SURFACE_MANIFEST,
+        manifest_id="standard_option_surface_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_standard_option_surface_sources_compile_and_preserve_option_surface_boundary_contract() -> None:
+    source_path = BUNDLE_INPUT / "source_modules/system/lib/standard_option_surface.py"
+    test_path = (
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_standard_option_surface.py"
+    )
+    source_text = source_path.read_text(encoding="utf-8")
+    test_text = test_path.read_text(encoding="utf-8")
+    compile(source_text, str(source_path), "exec")
+    compile(test_text, str(test_path), "exec")
+
+    assert "def build_option_surface(" in source_text
+    assert "def _task_ledger_cluster_rows(" in source_text
+    assert "def build_python_files_option_surface(" in source_text
+    assert "def build_python_scopes_option_surface(" in source_text
+    assert "def _option_surface_lens_packet(" in source_text
+    assert "_RUNTIME_PRESSURE_AUTONOMY_PHRASES" in source_text
+    assert "source_coupling_status" in source_text
+    assert "routing_scent_not_authority" in source_text
+    assert "def test_task_ledger_cluster_flag_groups_workitem_views(" in test_text
+    assert "def test_python_files_cluster_flag_groups_before_row_expansion(" in test_text
+    assert "def test_principles_card_all_redirects_to_cluster_flag(" in test_text
+    assert "provider payload" in source_text.lower()
+
+
+def test_bridge_runtime_continuity_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        BRIDGE_RUNTIME_CONTINUITY_MANIFEST,
+        manifest_id="bridge_runtime_continuity_source_modules_import",
+        module_count=6,
+    )
+
+
+def test_bridge_runtime_continuity_sources_compile_and_preserve_dispatch_yield_resume_contract() -> None:
+    bridge_source = BUNDLE_INPUT / "source_modules/tools/meta/bridge/bridge_resume.py"
+    heartbeat_source = (
+        BUNDLE_INPUT / "source_modules/system/lib/controller_heartbeat.py"
+    )
+    continuation_source = (
+        BUNDLE_INPUT / "source_modules/system/lib/continuation_packet.py"
+    )
+    bridge_test = (
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_bridge_resume.py"
+    )
+    heartbeat_test = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_controller_heartbeat.py"
+    )
+    continuation_test = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_continuation_packet.py"
+    )
+
+    bridge_text = bridge_source.read_text(encoding="utf-8")
+    heartbeat_text = heartbeat_source.read_text(encoding="utf-8")
+    continuation_text = continuation_source.read_text(encoding="utf-8")
+    bridge_test_text = bridge_test.read_text(encoding="utf-8")
+    heartbeat_test_text = heartbeat_test.read_text(encoding="utf-8")
+    continuation_test_text = continuation_test.read_text(encoding="utf-8")
+
+    for source_path, text in [
+        (bridge_source, bridge_text),
+        (heartbeat_source, heartbeat_text),
+        (continuation_source, continuation_text),
+        (bridge_test, bridge_test_text),
+        (heartbeat_test, heartbeat_test_text),
+        (continuation_test, continuation_test_text),
+    ]:
+        compile(text, str(source_path), "exec")
+
+    assert 'RESUME_SCHEMA_VERSION = "1.1.0"' in bridge_text
+    assert 'DEFAULT_SENTINEL_PREFIX = "[bridge resume]"' in bridge_text
+    assert "Raw bridge transcripts NEVER hit the chat" in bridge_text
+    assert "class BridgeResumeManager:" in bridge_text
+    assert "def bridge_dispatch_and_yield(" in bridge_text
+    assert (
+        'CONTROLLER_HEARTBEAT_SCHEMA_VERSION = "controller_heartbeat_v1"'
+        in heartbeat_text
+    )
+    assert "class ControllerHeartbeatDeduper:" in heartbeat_text
+    assert "def build_controller_heartbeat(" in heartbeat_text
+    assert 'CONTINUATION_PACKET_KIND = "continuation_packet"' in continuation_text
+    assert "WAIT_KINDS = frozenset(" in continuation_text
+    assert "def build_continuation_packet(" in continuation_text
+    assert "test_bridge_dispatch_and_yield_happy_path" in bridge_test_text
+    assert "test_assess_session_activity_foreign_user_blocks" in bridge_test_text
+    assert (
+        "test_build_controller_heartbeat_emits_exactly_five_sentences_per_field"
+        in heartbeat_test_text
+    )
+    assert (
+        "test_build_continuation_packet_for_pipeline_signal_includes_family_continuity"
+        in continuation_test_text
+    )
+
+
+def test_session_heartbeat_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        SESSION_HEARTBEAT_MANIFEST,
+        manifest_id="session_heartbeat_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_session_heartbeat_sources_compile_and_preserve_live_state_boundary() -> None:
+    heartbeat_source = BUNDLE_INPUT / "source_modules/system/lib/session_heartbeat.py"
+    test_source = (
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_session_heartbeat.py"
+    )
+    heartbeat_text = heartbeat_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+    manifest = json.loads(SESSION_HEARTBEAT_MANIFEST.read_text(encoding="utf-8"))
+
+    compile(heartbeat_text, str(heartbeat_source), "exec")
+    compile(test_text, str(test_source), "exec")
+
+    assert '"schema_version": "session_heartbeat_v1"' in heartbeat_text
+    assert "def snapshot(repo_root: Path) -> dict[str, Any]:" in heartbeat_text
+    assert "def write_snapshot(" in heartbeat_text
+    assert "tools/meta/bridge/claude_session_transport.json" in heartbeat_text
+    assert "tools/meta/bridge/codex_session_transport.json" in heartbeat_text
+    assert "test_snapshot_handles_missing_files_without_raising" in test_text
+    assert "test_main_snapshot_prints_path_and_writes_file" in test_text
+    assert "live session jsonl transcript bodies" in manifest["secret_exclusion_boundary"]
+    assert "not authority to read live transport JSON" in manifest["public_runtime_policy"]
+
+
+def test_orchestration_overnight_control_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        ORCHESTRATION_OVERNIGHT_CONTROL_MANIFEST,
+        manifest_id="orchestration_overnight_control_source_modules_import",
+        module_count=7,
+    )
+
+
+def test_orchestration_overnight_control_sources_compile_and_preserve_runtime_boundary() -> None:
+    source_paths = [
+        BUNDLE_INPUT / "source_modules/system/control/orchestration.py",
+        BUNDLE_INPUT / "source_modules/pipeline_advance.py",
+        BUNDLE_INPUT / "source_modules/pipeline_overnight.py",
+        BUNDLE_INPUT / "source_modules/overnight_control.py",
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_pipeline_advance.py",
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_pipeline_overnight.py",
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_overnight_control.py",
+    ]
+    texts = {path.name: path.read_text(encoding="utf-8") for path in source_paths}
+    manifest = json.loads(
+        ORCHESTRATION_OVERNIGHT_CONTROL_MANIFEST.read_text(encoding="utf-8")
+    )
+
+    for source_path in source_paths:
+        compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+    assert "def build_orchestration_state(" in texts["orchestration.py"]
+    assert "def run_selected_action(" in texts["orchestration.py"]
+    assert "def find_state(" in texts["pipeline_advance.py"]
+    assert "def build_resume_packet(" in texts["pipeline_advance.py"]
+    assert "def arm_overnight(" in texts["pipeline_overnight.py"]
+    assert "SYNTH_REFRESH_DEFER_FILENAME" in texts["pipeline_overnight.py"]
+    assert "def build_brief(" in texts["overnight_control.py"]
+    assert "test_build_orchestration_state_hard_stops_when_no_active_runtime_phase" in (
+        texts["test_overnight_control.py"]
+    )
+    assert "test_install_launch_agent_soft_skips_sandbox_permission_failure" in (
+        texts["test_pipeline_overnight.py"]
+    )
+    assert "test_next_action_retries_unmaterialized_bridge_dispatch" in (
+        texts["test_pipeline_advance.py"]
+    )
+    assert "raw seed bodies" in manifest["receipt_body_policy"]
+    assert "launchd live control state" in manifest["secret_exclusion_boundary"]
+    assert "not authority to run launch agents" in manifest["public_runtime_policy"]
+
+
+def test_seed_distillation_dependency_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        SEED_DISTILLATION_DEPENDENCY_MANIFEST,
+        manifest_id="seed_distillation_dependency_source_modules_import",
+        module_count=7,
+    )
+
+
+def test_seed_distillation_dependency_sources_compile_and_preserve_source_boundary() -> None:
+    source_paths = [
+        BUNDLE_INPUT / "source_modules/system/lib/seed_atomization.py",
+        BUNDLE_INPUT / "source_modules/system/lib/seed_distillation.py",
+        BUNDLE_INPUT / "source_modules/system/lib/seed_registry.py",
+        BUNDLE_INPUT / "source_modules/system/lib/seed_distillation_validator.py",
+        BUNDLE_INPUT / "source_modules/system/lib/seed_paragraph_ledger.py",
+        BUNDLE_INPUT / "source_modules/system/lib/seed_attempt_recovery.py",
+        (
+            BUNDLE_INPUT
+            / "source_modules/system/server/tests/test_seed_attempt_recovery.py"
+        ),
+    ]
+    manifest = json.loads(
+        SEED_DISTILLATION_DEPENDENCY_MANIFEST.read_text(encoding="utf-8")
+    )
+
+    for source_path in source_paths:
+        compile(source_path.read_text(encoding="utf-8"), str(source_path), "exec")
+
+    atomization_text = source_paths[0].read_text(encoding="utf-8")
+    distillation_text = source_paths[1].read_text(encoding="utf-8")
+    registry_text = source_paths[2].read_text(encoding="utf-8")
+    validator_text = source_paths[3].read_text(encoding="utf-8")
+    ledger_text = source_paths[4].read_text(encoding="utf-8")
+    recovery_text = source_paths[5].read_text(encoding="utf-8")
+    test_text = source_paths[6].read_text(encoding="utf-8")
+
+    assert 'ATOMIZATION_SOURCE = "raw_seed_atomization_local_v1"' in atomization_text
+    assert "def ingest_family_raw_seed_distillations(" in atomization_text
+    assert (
+        'DISTILLATION_SUBAGENT_SOURCE = "raw_seed_distillation_subagent_sonnet_v1"'
+        in distillation_text
+    )
+    assert "def import_distilled_shards(" in distillation_text
+    assert 'RAW_SEED_SCHEMA_VERSION = "raw_seed_v1"' in registry_text
+    assert "SUBSTRATE_PROFILES" in registry_text
+    assert "def validate_distillation_bundle(" in validator_text
+    assert "ARCHITECTURE_LEAK_PATTERN" in validator_text
+    assert 'LEDGER_SCHEMA = "raw_seed_paragraph_ledger_v1"' in ledger_text
+    assert "def next_claim_epoch_for_paragraph(" in ledger_text
+    assert 'RECOVERY_REPORT_SCHEMA = "raw_seed_attempt_recovery_v1"' in recovery_text
+    assert "def log_late_import_rejection(" in recovery_text
+    assert "test_late_import_rejected_on_packet_digest_mismatch" in test_text
+    assert "operator raw-seed voice bodies" in manifest["secret_exclusion_boundary"]
+    assert "not authority to export raw operator seed" in manifest[
+        "public_runtime_policy"
+    ]
+
+
+def test_artifact_projection_debt_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        ARTIFACT_PROJECTION_DEBT_MANIFEST,
+        manifest_id="artifact_projection_debt_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_artifact_projection_debt_sources_compile_and_carry_receipt_theater_debt_contract() -> None:
+    debt_source = BUNDLE_INPUT / "source_modules/system/lib/artifact_projection_debt.py"
+    test_source = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_artifact_projection_debt.py"
+    )
+    debt_text = debt_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+    manifest = json.loads(ARTIFACT_PROJECTION_DEBT_MANIFEST.read_text(encoding="utf-8"))
+
+    compile(debt_text, str(debt_source), "exec")
+    compile(test_text, str(test_source), "exec")
+
+    assert 'KIND_ID = "artifact_projection_debt"' in debt_text
+    assert "def build_artifact_projection_debt_row_jobs(" in debt_text
+    assert "def _projection_gap_rows(" in debt_text
+    assert "receipt_or_row_patch_only" in debt_text
+    assert "test_zero_row_surface_creates_artifact_projection_debt_row" in test_text
+    assert "test_artifact_projection_debt_cluster_is_microcosm_safe" in test_text
+    assert "not authority to mutate live ledgers" in manifest["public_runtime_policy"]
+    assert "generated projection output bodies treated as source authority" in manifest[
+        "secret_exclusion_boundary"
+    ]
+
+
+def test_navigation_trace_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        NAVIGATION_TRACE_MANIFEST,
+        manifest_id="navigation_trace_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_navigation_trace_sources_compile_and_preserve_trace_boundary_contract() -> None:
+    trace_source = BUNDLE_INPUT / "source_modules/system/lib/navigation_trace.py"
+    test_source = (
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_navigation_trace.py"
+    )
+    trace_text = trace_source.read_text(encoding="utf-8")
+    test_text = test_source.read_text(encoding="utf-8")
+    manifest = json.loads(NAVIGATION_TRACE_MANIFEST.read_text(encoding="utf-8"))
+
+    compile(trace_text, str(trace_source), "exec")
+    compile(test_text, str(test_source), "exec")
+
+    assert 'SCHEMA_VERSION = "navigation_trace_event_v1"' in trace_text
+    assert "def record_navigation_event(" in trace_text
+    assert "def build_replay(" in trace_text
+    assert "def record_attention_event(" in trace_text
+    assert "def test_attention_event_reduces_option_surface_lens_packet(" in test_text
+    assert "def test_task_frame_alias_resolution_is_exact_and_append_safe(" in test_text
+    assert (
+        "def test_mutation_boundary_acted_on_requires_commit_and_recorded_receipt("
+        in test_text
+    )
+    assert "not authority to read live navigation trace logs" in manifest[
+        "public_runtime_policy"
+    ]
+    assert "live navigation trace event bodies" in manifest[
+        "secret_exclusion_boundary"
+    ]
+
+
+def test_generated_projection_control_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        GENERATED_PROJECTION_CONTROL_MANIFEST,
+        manifest_id="generated_projection_control_source_modules_import",
+        module_count=4,
+    )
+
+
+def test_generated_projection_control_sources_compile_and_preserve_generated_state_boundary() -> None:
+    registry_source = (
+        BUNDLE_INPUT / "source_modules/system/lib/generated_projection_registry.py"
+    )
+    drainer_source = (
+        BUNDLE_INPUT / "source_modules/system/lib/generated_state_drainer.py"
+    )
+    drainer_test = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_generated_state_drainer.py"
+    )
+    cli_compact_test = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/"
+        "test_generated_state_drainer_cli_compact.py"
+    )
+    manifest = json.loads(
+        GENERATED_PROJECTION_CONTROL_MANIFEST.read_text(encoding="utf-8")
+    )
+
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "py_compile",
+            str(registry_source),
+            str(drainer_source),
+            str(drainer_test),
+            str(cli_compact_test),
+        ],
+        check=True,
+    )
+
+    registry_text = registry_source.read_text(encoding="utf-8")
+    drainer_text = drainer_source.read_text(encoding="utf-8")
+    cli_text = cli_compact_test.read_text(encoding="utf-8")
+
+    assert "manual_edit_boundary" in registry_text
+    assert "def projection_registry_payload()" in registry_text
+    assert "generated_projection_registry.get_projection_owner" in drainer_text
+    assert "def build_generated_projection_settlement_plan(" in drainer_text
+    assert "generated_state_drainer_status_compact_v0" in cli_text
+    assert "dirty_generated_paths_omission_receipt" in cli_text
+    assert "not authority to mutate generated state" in manifest[
+        "public_runtime_policy"
+    ]
+    assert "generated projection output bodies" in manifest[
+        "secret_exclusion_boundary"
+    ]
+
+
+def test_shared_worktree_guard_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        SHARED_WORKTREE_GUARD_MANIFEST,
+        manifest_id="shared_worktree_guard_source_modules_import",
+        module_count=2,
+    )
+
+
+def test_shared_worktree_guard_sources_compile_and_preserve_shared_git_boundary() -> None:
+    guard_source = BUNDLE_INPUT / "source_modules/system/lib/shared_worktree_guard.py"
+    guard_test = (
+        BUNDLE_INPUT / "source_modules/system/server/tests/test_work_ledger_core.py"
+    )
+    manifest = json.loads(SHARED_WORKTREE_GUARD_MANIFEST.read_text(encoding="utf-8"))
+
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "py_compile",
+            str(guard_source),
+            str(guard_test),
+        ],
+        check=True,
+    )
+
+    guard_text = guard_source.read_text(encoding="utf-8")
+    test_text = guard_test.read_text(encoding="utf-8")
+
+    assert 'SCHEMA = "shared_worktree_git_guard_v1"' in guard_text
+    assert "def classify_git_argv(" in guard_text
+    assert "def detect_git_risks_in_text(" in guard_text
+    assert "def assess_git_argv(" in guard_text
+    assert "shared_git_stash" in guard_text
+    assert "shared_git_reset_hard" in guard_text
+    assert "test_cli_session_preflight_flags_shared_worktree_git_stash" in test_text
+    assert "test_shared_worktree_guard_blocks_destructive_git_in_dirty_tree" in test_text
+    assert "not authority to mutate git state" in manifest["public_runtime_policy"]
+    assert "live .git index state" in manifest["secret_exclusion_boundary"]
+
+
+def test_raw_git_commit_guard_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        RAW_GIT_COMMIT_GUARD_MANIFEST,
+        manifest_id="raw_git_commit_guard_source_modules_import",
+        module_count=5,
+    )
+
+
+def test_raw_git_commit_guard_sources_compile_and_preserve_guard_boundary() -> None:
+    runtime_hook = BUNDLE_INPUT / "source_modules/.claude/hooks/runtime_hook.py"
+    run_git = BUNDLE_INPUT / "source_modules/run_git.py"
+    guard_test = (
+        BUNDLE_INPUT / "source_modules/tools/meta/control/test_raw_git_commit_guard.py"
+    )
+    pre_commit = BUNDLE_INPUT / "source_modules/.githooks/pre-commit"
+    prepare_commit_msg = BUNDLE_INPUT / "source_modules/.githooks/prepare-commit-msg"
+    manifest = json.loads(RAW_GIT_COMMIT_GUARD_MANIFEST.read_text(encoding="utf-8"))
+
+    for source in (runtime_hook, run_git, guard_test):
+        compile(source.read_text(encoding="utf-8"), str(source), "exec")
+
+    runtime_text = runtime_hook.read_text(encoding="utf-8")
+    run_git_text = run_git.read_text(encoding="utf-8")
+    test_text = guard_test.read_text(encoding="utf-8")
+    pre_commit_text = pre_commit.read_text(encoding="utf-8")
+    prepare_text = prepare_commit_msg.read_text(encoding="utf-8")
+
+    assert 'BANNED_RAW_GIT_SUBCOMMANDS = ("add", "commit")' in runtime_text
+    assert "def _segment_has_explicit_override(" in runtime_text
+    assert "def _raw_shared_index_git_guard(" in runtime_text
+    assert "block_reason = _raw_shared_index_git_guard(payload)" in runtime_text
+    assert "def run_hook_prepare_commit_msg(" in run_git_text
+    assert "def run_hook_pre_commit(" in run_git_text
+    assert "AIW_ALLOW_RAW_GIT_COMMIT" in run_git_text
+    assert "exec ./repo-python run_git.py hook pre-commit" in pre_commit_text
+    assert "prepare-commit-msg backstop for the raw shared-index commit guard" in prepare_text
+    assert "exec ./repo-python run_git.py hook prepare-commit-msg" in prepare_text
+    assert "test_pretool_blocks_plain_git_commit_dash_m" in test_text
+    assert (
+        "test_prepare_commit_msg_refuses_no_verify_commit_without_override"
+        in test_text
+    )
+    assert "not authority to mutate git state" in manifest["public_runtime_policy"]
+    assert "live .git index state" in manifest["secret_exclusion_boundary"]
+
+
+def test_formal_math_proofline_spine_source_manifest_matches_exact_macro_sources() -> None:
+    _assert_source_manifest_matches_exact_macro_sources(
+        FORMAL_MATH_PROOFLINE_SPINE_MANIFEST,
+        manifest_id="formal_math_proofline_spine_source_modules_import",
+        module_count=4,
+    )
+
+
+def test_formal_math_proofline_spine_sources_compile_and_preserve_body_safe_lineage_contract() -> None:
+    proofline_source = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/factory/build_formal_math_proofline_spine.py"
+    )
+    repair_lane_source = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/factory/build_formal_math_proof_repair_lane.py"
+    )
+    proofline_test = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_formal_math_proofline_spine.py"
+    )
+    repair_lane_test = (
+        BUNDLE_INPUT
+        / "source_modules/system/server/tests/test_formal_math_proof_repair_lane.py"
+    )
+
+    proofline_text = proofline_source.read_text(encoding="utf-8")
+    repair_lane_text = repair_lane_source.read_text(encoding="utf-8")
+    proofline_test_text = proofline_test.read_text(encoding="utf-8")
+    repair_lane_test_text = repair_lane_test.read_text(encoding="utf-8")
+
+    for source_path, text in [
+        (proofline_source, proofline_text),
+        (repair_lane_source, repair_lane_text),
+        (proofline_test, proofline_test_text),
+        (repair_lane_test, repair_lane_test_text),
+    ]:
+        compile(text, str(source_path), "exec")
+
+    assert 'SCHEMA_VERSION = "formal_math_proofline_spine_v0"' in proofline_text
+    assert "FORBIDDEN_BODY_KEYS = {" in proofline_text
+    assert "def build_spine(" in proofline_text
+    assert "def validate_spine(" in proofline_text
+    assert "ground_truth_proof" in proofline_text
+    assert "provider_output" in proofline_text
+    assert (
+        'INPUT_SCHEMA_VERSION = "formal_math_proof_repair_input_packet_v0"'
+        in repair_lane_text
+    )
+    assert "FORBIDDEN_INLINE_KEYS = {" in repair_lane_text
+    assert "def build_input_packet(" in repair_lane_text
+    assert "def validate_input_packet(" in repair_lane_text
+    assert "test_proofline_spine_classifies_lineage_without_body_leakage" in (
+        proofline_test_text
+    )
+    assert "test_proofline_check_flags_forbidden_body_keys" in proofline_test_text
+    assert "test_proof_repair_lane_lands_contract_without_dispatch" in (
+        repair_lane_test_text
+    )
+    assert "test_proof_repair_lane_check_flags_body_leakage" in repair_lane_test_text
+
+
+def _load_trace_capsule_source_module():
+    module_path = (
+        BUNDLE_INPUT
+        / "source_modules/tools/meta/observability/cli_prompt_trace.py"
+    )
+    spec = importlib.util.spec_from_file_location(
+        "microcosm_trace_capsule_source_module",
+        module_path,
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    previous = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.dont_write_bytecode = previous
+    return module
+
+
+def _load_route_selection_intervention_source_module():
+    module_path = (
+        BUNDLE_INPUT
+        / "source_modules/system/lib/navigation_route_intervention.py"
+    )
+    spec = importlib.util.spec_from_file_location(
+        "microcosm_route_selection_intervention_source_module",
+        module_path,
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    previous = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.dont_write_bytecode = previous
+    return module
+
+
+def test_trace_capsule_cli_prompt_trace_source_module_renders_public_fixture() -> None:
+    module = _load_trace_capsule_source_module()
+    output = "Process exited with code 0\nOutput:\ncompiled fixture"
+    turn = module.Turn(
+        provider="codex",
+        session_id="public-fixture-session",
+        session_file="public-fixture-session.jsonl",
+        turn_id="turn_public_fixture",
+        turn_index=1,
+        cwd="microcosm-substrate",
+        started_at="2026-05-25T00:00:00Z",
+        completed_at="2026-05-25T00:01:00Z",
+        prompt_text="Render a public Trace Capsule fixture.",
+        prompt_char_count=len("Render a public Trace Capsule fixture."),
+        prompt_sha256_16="fixturepromptsha",
+        tool_events=[
+            module.ToolEvent(
+                index=1,
+                name="functions.exec_command",
+                input={"cmd": "./repo-python -m py_compile public_fixture.py"},
+                tool_call_id="call_public_fixture",
+                started_at="2026-05-25T00:00:01Z",
+                completed_at="2026-05-25T00:00:02Z",
+                duration_ms=1000,
+                is_error=False,
+                output_text=output,
+                output_char_count=len(output),
+                output_sha256_16=module._sha16(output),
+                exit_code=0,
+                source_record_indices=[10, 11],
+            )
+        ],
+        assistant_text="Validation passed.",
+        assistant_events=[module.AssistantEvent("Validation passed.", 12)],
+        is_complete=True,
+        source_record_indices=[1, 2, 10, 11, 12],
+        source_ref={"raw_authority": "public_fixture"},
+    )
+
+    text, meta = module.render_trace_capsule_text(
+        turn,
+        title="Public Trace Capsule Fixture",
+    )
+
+    assert text.startswith("TRACE CAPSULE v3\n")
+    assert "final_validation: passed" in text
+    assert "terminal_checks: pass=1 fail=0 other=0 total=1" in text
+    assert "not_included: server_hidden_reasoning" in text
+    assert meta["terminal_validation_pass_count"] == 1
+    assert meta["closeout_present"] is True
+    assert "/Users/" not in text
+
+
+def test_route_selection_intervention_source_module_builds_public_route_repair_suggestion() -> None:
+    module = _load_route_selection_intervention_source_module()
+
+    suggestion = module.route_repair_for(
+        anti_pattern_id="anti_pattern_grep_before_kernel"
+    )
+
+    assert suggestion is not None
+    payload = suggestion.to_dict()
+    assert payload["repair_class"] == "hook_steering_plus_context_pack_first_contact"
+    assert payload["suggested_sequence"][0].startswith("./repo-python kernel.py --entry")
+    assert "skills:navigation_metabolism" in payload["expected_artifacts"]
+
+
+def test_agent_trace_structurer_parser_source_module_runs_node_fixture_tests() -> None:
+    parser_test = (
+        BUNDLE_INPUT
+        / "source_modules/tools/agent_trace_structurer/parser.test.mjs"
+    )
+
+    result = subprocess.run(
+        ["node", "--test", str(parser_test.name)],
+        cwd=parser_test.parent,
+        check=False,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr

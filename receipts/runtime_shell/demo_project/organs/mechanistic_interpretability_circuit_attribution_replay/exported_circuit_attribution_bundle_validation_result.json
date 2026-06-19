@@ -1,0 +1,1028 @@
+{
+  "anti_claim": "Mechanistic interpretability circuit-attribution replay validates public runtime receipt rows plus copied public-safe macro source bodies: toy prompt refs, sparse feature ids, machine-readable graph edges, replacement-model approximation scores, causal inhibition and injection deltas, sufficiency and faithfulness limits, contradiction cases, target refs, cold replay refs, Oracle attribution nodes, pattern-ledger rows, projection IR, readiness checker code, mission transaction code, trace code, and standards bodies. Receipts carry refs, digests, counts, and verdicts only; they do not export private model weights, raw activation dumps, proprietary prompt bodies, hidden chain-of-thought, provider payloads, private model internals, benchmark scores, or release authority.",
+  "attribution_replays": [
+    {
+      "attribution_graph_ref": "graphs/circuit_attribution_graph_01.json",
+      "body_in_receipt": false,
+      "causal_inhibition_delta_ref": "interventions/inhibition_delta_01.json",
+      "causal_injection_delta_ref": "interventions/injection_delta_01.json",
+      "causal_intervention_receipt_ref": "interventions/causal_receipt_01.json",
+      "cold_replay_ref": "cold_replays/cold_replay_01.json",
+      "contradiction_case_ref": "contradictions/contradiction_case_01.json",
+      "faithfulness_claim": true,
+      "faithfulness_label": "bounded_proxy_not_model_truth",
+      "faithfulness_limit_ref": "limits/faithfulness_limit_01.json",
+      "feature_visualization_summary_refs": [
+        "feature_visualizations/feat_public_001.summary.json",
+        "feature_visualizations/feat_public_002.summary.json"
+      ],
+      "graph_edges": [
+        {
+          "evidence_ref": "edges/01_a.json",
+          "source": "feat_public_001",
+          "target": "feat_public_002",
+          "weight": 0.45
+        },
+        {
+          "evidence_ref": "edges/01_b.json",
+          "source": "feat_public_002",
+          "target": "feat_public_003",
+          "weight": 0.23
+        }
+      ],
+      "graph_nodes": [
+        {
+          "node_id": "feat_public_001",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_002",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_003",
+          "node_kind": "public_error_node"
+        }
+      ],
+      "graph_screenshot_only": false,
+      "hidden_chain_of_thought_exported": false,
+      "machine_readable_edges_present": true,
+      "private_model_weights_exported": false,
+      "proprietary_prompt_exported": false,
+      "raw_activation_dump_exported": false,
+      "release_authorized": false,
+      "replacement_model_approximation_score": 0.69,
+      "replay_id": "circuit_attribution_replay_01",
+      "sparse_feature_ids": [
+        "feat_public_001",
+        "feat_public_002"
+      ],
+      "sufficiency_label": "sufficient_for_fixture_replay",
+      "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/attribution_replays.json::circuit_attribution_replay_01",
+      "toy_prompt_ref": "toy_prompts/circuit_prompt_01.json",
+      "transparency_claim": true,
+      "uninterpretable_error_node_budget": 2,
+      "unverifiable_feature_name_claim": false
+    },
+    {
+      "attribution_graph_ref": "graphs/circuit_attribution_graph_02.json",
+      "body_in_receipt": false,
+      "causal_inhibition_delta_ref": "interventions/inhibition_delta_02.json",
+      "causal_injection_delta_ref": "interventions/injection_delta_02.json",
+      "causal_intervention_receipt_ref": "interventions/causal_receipt_02.json",
+      "cold_replay_ref": "cold_replays/cold_replay_02.json",
+      "contradiction_case_ref": "contradictions/contradiction_case_02.json",
+      "faithfulness_claim": true,
+      "faithfulness_label": "bounded_proxy_not_model_truth",
+      "faithfulness_limit_ref": "limits/faithfulness_limit_02.json",
+      "feature_visualization_summary_refs": [
+        "feature_visualizations/feat_public_002.summary.json",
+        "feature_visualizations/feat_public_003.summary.json"
+      ],
+      "graph_edges": [
+        {
+          "evidence_ref": "edges/02_a.json",
+          "source": "feat_public_002",
+          "target": "feat_public_003",
+          "weight": 0.48
+        },
+        {
+          "evidence_ref": "edges/02_b.json",
+          "source": "feat_public_003",
+          "target": "feat_public_004",
+          "weight": 0.25
+        }
+      ],
+      "graph_nodes": [
+        {
+          "node_id": "feat_public_002",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_003",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_004",
+          "node_kind": "public_error_node"
+        }
+      ],
+      "graph_screenshot_only": false,
+      "hidden_chain_of_thought_exported": false,
+      "machine_readable_edges_present": true,
+      "private_model_weights_exported": false,
+      "proprietary_prompt_exported": false,
+      "raw_activation_dump_exported": false,
+      "release_authorized": false,
+      "replacement_model_approximation_score": 0.72,
+      "replay_id": "circuit_attribution_replay_02",
+      "sparse_feature_ids": [
+        "feat_public_002",
+        "feat_public_003"
+      ],
+      "sufficiency_label": "sufficient_for_fixture_replay",
+      "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/attribution_replays.json::circuit_attribution_replay_02",
+      "toy_prompt_ref": "toy_prompts/circuit_prompt_02.json",
+      "transparency_claim": true,
+      "uninterpretable_error_node_budget": 2,
+      "unverifiable_feature_name_claim": false
+    },
+    {
+      "attribution_graph_ref": "graphs/circuit_attribution_graph_03.json",
+      "body_in_receipt": false,
+      "causal_inhibition_delta_ref": "interventions/inhibition_delta_03.json",
+      "causal_injection_delta_ref": "interventions/injection_delta_03.json",
+      "causal_intervention_receipt_ref": "interventions/causal_receipt_03.json",
+      "cold_replay_ref": "cold_replays/cold_replay_03.json",
+      "contradiction_case_ref": "contradictions/contradiction_case_03.json",
+      "faithfulness_claim": true,
+      "faithfulness_label": "bounded_proxy_not_model_truth",
+      "faithfulness_limit_ref": "limits/faithfulness_limit_03.json",
+      "feature_visualization_summary_refs": [
+        "feature_visualizations/feat_public_003.summary.json",
+        "feature_visualizations/feat_public_004.summary.json"
+      ],
+      "graph_edges": [
+        {
+          "evidence_ref": "edges/03_a.json",
+          "source": "feat_public_003",
+          "target": "feat_public_004",
+          "weight": 0.51
+        },
+        {
+          "evidence_ref": "edges/03_b.json",
+          "source": "feat_public_004",
+          "target": "feat_public_005",
+          "weight": 0.27
+        }
+      ],
+      "graph_nodes": [
+        {
+          "node_id": "feat_public_003",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_004",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_005",
+          "node_kind": "public_error_node"
+        }
+      ],
+      "graph_screenshot_only": false,
+      "hidden_chain_of_thought_exported": false,
+      "machine_readable_edges_present": true,
+      "private_model_weights_exported": false,
+      "proprietary_prompt_exported": false,
+      "raw_activation_dump_exported": false,
+      "release_authorized": false,
+      "replacement_model_approximation_score": 0.75,
+      "replay_id": "circuit_attribution_replay_03",
+      "sparse_feature_ids": [
+        "feat_public_003",
+        "feat_public_004"
+      ],
+      "sufficiency_label": "sufficient_for_fixture_replay",
+      "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/attribution_replays.json::circuit_attribution_replay_03",
+      "toy_prompt_ref": "toy_prompts/circuit_prompt_03.json",
+      "transparency_claim": true,
+      "uninterpretable_error_node_budget": 2,
+      "unverifiable_feature_name_claim": false
+    },
+    {
+      "attribution_graph_ref": "graphs/circuit_attribution_graph_04.json",
+      "body_in_receipt": false,
+      "causal_inhibition_delta_ref": "interventions/inhibition_delta_04.json",
+      "causal_injection_delta_ref": "interventions/injection_delta_04.json",
+      "causal_intervention_receipt_ref": "interventions/causal_receipt_04.json",
+      "cold_replay_ref": "cold_replays/cold_replay_04.json",
+      "contradiction_case_ref": "contradictions/contradiction_case_04.json",
+      "faithfulness_claim": true,
+      "faithfulness_label": "bounded_proxy_not_model_truth",
+      "faithfulness_limit_ref": "limits/faithfulness_limit_04.json",
+      "feature_visualization_summary_refs": [
+        "feature_visualizations/feat_public_004.summary.json",
+        "feature_visualizations/feat_public_005.summary.json"
+      ],
+      "graph_edges": [
+        {
+          "evidence_ref": "edges/04_a.json",
+          "source": "feat_public_004",
+          "target": "feat_public_005",
+          "weight": 0.54
+        },
+        {
+          "evidence_ref": "edges/04_b.json",
+          "source": "feat_public_005",
+          "target": "feat_public_006",
+          "weight": 0.29
+        }
+      ],
+      "graph_nodes": [
+        {
+          "node_id": "feat_public_004",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_005",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_006",
+          "node_kind": "public_error_node"
+        }
+      ],
+      "graph_screenshot_only": false,
+      "hidden_chain_of_thought_exported": false,
+      "machine_readable_edges_present": true,
+      "private_model_weights_exported": false,
+      "proprietary_prompt_exported": false,
+      "raw_activation_dump_exported": false,
+      "release_authorized": false,
+      "replacement_model_approximation_score": 0.78,
+      "replay_id": "circuit_attribution_replay_04",
+      "sparse_feature_ids": [
+        "feat_public_004",
+        "feat_public_005"
+      ],
+      "sufficiency_label": "sufficient_for_fixture_replay",
+      "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/attribution_replays.json::circuit_attribution_replay_04",
+      "toy_prompt_ref": "toy_prompts/circuit_prompt_04.json",
+      "transparency_claim": true,
+      "uninterpretable_error_node_budget": 2,
+      "unverifiable_feature_name_claim": false
+    },
+    {
+      "attribution_graph_ref": "graphs/circuit_attribution_graph_05.json",
+      "body_in_receipt": false,
+      "causal_inhibition_delta_ref": "interventions/inhibition_delta_05.json",
+      "causal_injection_delta_ref": "interventions/injection_delta_05.json",
+      "causal_intervention_receipt_ref": "interventions/causal_receipt_05.json",
+      "cold_replay_ref": "cold_replays/cold_replay_05.json",
+      "contradiction_case_ref": "contradictions/contradiction_case_05.json",
+      "faithfulness_claim": true,
+      "faithfulness_label": "bounded_proxy_not_model_truth",
+      "faithfulness_limit_ref": "limits/faithfulness_limit_05.json",
+      "feature_visualization_summary_refs": [
+        "feature_visualizations/feat_public_005.summary.json",
+        "feature_visualizations/feat_public_006.summary.json"
+      ],
+      "graph_edges": [
+        {
+          "evidence_ref": "edges/05_a.json",
+          "source": "feat_public_005",
+          "target": "feat_public_006",
+          "weight": 0.57
+        },
+        {
+          "evidence_ref": "edges/05_b.json",
+          "source": "feat_public_006",
+          "target": "feat_public_001",
+          "weight": 0.31
+        }
+      ],
+      "graph_nodes": [
+        {
+          "node_id": "feat_public_005",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_006",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_001",
+          "node_kind": "public_error_node"
+        }
+      ],
+      "graph_screenshot_only": false,
+      "hidden_chain_of_thought_exported": false,
+      "machine_readable_edges_present": true,
+      "private_model_weights_exported": false,
+      "proprietary_prompt_exported": false,
+      "raw_activation_dump_exported": false,
+      "release_authorized": false,
+      "replacement_model_approximation_score": 0.81,
+      "replay_id": "circuit_attribution_replay_05",
+      "sparse_feature_ids": [
+        "feat_public_005",
+        "feat_public_006"
+      ],
+      "sufficiency_label": "sufficient_for_fixture_replay",
+      "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/attribution_replays.json::circuit_attribution_replay_05",
+      "toy_prompt_ref": "toy_prompts/circuit_prompt_05.json",
+      "transparency_claim": true,
+      "uninterpretable_error_node_budget": 2,
+      "unverifiable_feature_name_claim": false
+    },
+    {
+      "attribution_graph_ref": "graphs/circuit_attribution_graph_06.json",
+      "body_in_receipt": false,
+      "causal_inhibition_delta_ref": "interventions/inhibition_delta_06.json",
+      "causal_injection_delta_ref": "interventions/injection_delta_06.json",
+      "causal_intervention_receipt_ref": "interventions/causal_receipt_06.json",
+      "cold_replay_ref": "cold_replays/cold_replay_06.json",
+      "contradiction_case_ref": "contradictions/contradiction_case_06.json",
+      "faithfulness_claim": true,
+      "faithfulness_label": "bounded_proxy_not_model_truth",
+      "faithfulness_limit_ref": "limits/faithfulness_limit_06.json",
+      "feature_visualization_summary_refs": [
+        "feature_visualizations/feat_public_006.summary.json",
+        "feature_visualizations/feat_public_001.summary.json"
+      ],
+      "graph_edges": [
+        {
+          "evidence_ref": "edges/06_a.json",
+          "source": "feat_public_006",
+          "target": "feat_public_001",
+          "weight": 0.6
+        },
+        {
+          "evidence_ref": "edges/06_b.json",
+          "source": "feat_public_001",
+          "target": "feat_public_002",
+          "weight": 0.33
+        }
+      ],
+      "graph_nodes": [
+        {
+          "node_id": "feat_public_006",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_001",
+          "node_kind": "sparse_feature"
+        },
+        {
+          "node_id": "feat_public_002",
+          "node_kind": "public_error_node"
+        }
+      ],
+      "graph_screenshot_only": false,
+      "hidden_chain_of_thought_exported": false,
+      "machine_readable_edges_present": true,
+      "private_model_weights_exported": false,
+      "proprietary_prompt_exported": false,
+      "raw_activation_dump_exported": false,
+      "release_authorized": false,
+      "replacement_model_approximation_score": 0.84,
+      "replay_id": "circuit_attribution_replay_06",
+      "sparse_feature_ids": [
+        "feat_public_006",
+        "feat_public_001"
+      ],
+      "sufficiency_label": "sufficient_for_fixture_replay",
+      "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/attribution_replays.json::circuit_attribution_replay_06",
+      "toy_prompt_ref": "toy_prompts/circuit_prompt_06.json",
+      "transparency_claim": true,
+      "uninterpretable_error_node_budget": 2,
+      "unverifiable_feature_name_claim": false
+    }
+  ],
+  "attribution_summary": {
+    "attribution_edge_count": 12,
+    "causal_intervention_count": 6,
+    "cold_replay_count": 6,
+    "contradiction_case_count": 6,
+    "feature_count": 6,
+    "hidden_chain_of_thought_export_count": 0,
+    "private_weight_export_count": 0,
+    "proprietary_prompt_export_count": 0,
+    "raw_activation_dump_export_count": 0,
+    "replay_count": 6,
+    "target_ref_count": 6,
+    "transparency_claim_count": 6
+  },
+  "authority_ceiling": {
+    "authority_ceiling": "public_circuit_attribution_runtime_receipt_only",
+    "benchmark_score_claim_authorized": false,
+    "hidden_chain_of_thought_export_authorized": false,
+    "hosted_public_authorized": false,
+    "live_model_access_authorized": false,
+    "model_transparency_product_claim_authorized": false,
+    "private_model_internals_claim_authorized": false,
+    "private_model_weights_export_authorized": false,
+    "proprietary_prompt_export_authorized": false,
+    "provider_calls_authorized": false,
+    "public_runtime_receipt_required": true,
+    "publication_authorized": false,
+    "raw_activation_dump_export_authorized": false,
+    "release_authorized": false,
+    "status": "pass"
+  },
+  "body_copied_material_count": 11,
+  "body_import_status": "real_runtime_receipt_landed",
+  "body_import_verification": {
+    "body_import_status": "real_runtime_receipt_landed",
+    "body_in_receipt": false,
+    "classification": "real_runtime_receipt",
+    "secret_exclusion_policy": "exclude only credential/account/session/provider/live-access material, private model weights, raw activations, proprietary prompt bodies, and hidden chain-of-thought bodies",
+    "source_refs": [
+      "microcosm-substrate/receipts/runtime_shell/public_mechanistic_interpretability_circuit_attribution_replay_lens.json",
+      "state/microcosm_portfolio/extracted_patterns_ledger.jsonl::mechanistic_interpretability_circuit_attribution_replay_compound",
+      "codex/nodes/oracle/oracle_attribution_map.json",
+      "codex/substrate/nodes/oracle/oracle_attribution_map.json",
+      "state/microcosm_portfolio/extracted_patterns_ledger.jsonl",
+      "state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.json",
+      "state/microcosm_portfolio/reconstruction/organ_projection_ir_v1.json",
+      "state/microcosm_portfolio/reconstruction/projection_readiness_checker_v1.py",
+      "tools/meta/control/mission_transaction_preflight.py",
+      "system/lib/agent_execution_trace.py",
+      "codex/standards/std_agent_execution_trace.json",
+      "codex/standards/std_extracted_pattern_route_readiness.json"
+    ],
+    "status": "pass",
+    "target_refs": [
+      "microcosm-substrate/src/microcosm_core/organs/mechanistic_interpretability_circuit_attribution_replay.py",
+      "microcosm-substrate/fixtures/first_wave/mechanistic_interpretability_circuit_attribution_replay/input/attribution_replays.json",
+      "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/attribution_replays.json",
+      "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_module_manifest.json"
+    ],
+    "validation_refs": [
+      "microcosm-substrate/tests/test_mechanistic_interpretability_circuit_attribution_replay.py::test_mechanistic_interpretability_exported_bundle_validates_runtime_shape",
+      "microcosm-substrate/tests/test_mechanistic_interpretability_circuit_attribution_replay.py::test_mechanistic_interpretability_circuit_attribution_receipts_consume_public_runtime_refs",
+      "microcosm-substrate/tests/test_mechanistic_interpretability_circuit_attribution_replay.py::test_mechanistic_interpretability_macro_source_modules_are_exact_imports"
+    ]
+  },
+  "body_in_receipt": false,
+  "body_material_status": "copied_non_secret_macro_body_landed",
+  "command": "microcosm run examples/runtime_shell/demo_project",
+  "created_at": "2026-06-01T09:10:12+00:00",
+  "features": [
+    {
+      "body_in_receipt": false,
+      "feature_id": "feat_public_001",
+      "private_model_weights_exported": false,
+      "public_label": "loop-control hinge feature",
+      "raw_activation_dump_exported": false,
+      "source_kind": "public_sparse_feature_summary",
+      "summary_ref": "evidence/feature_summaries/feat_public_001.json"
+    },
+    {
+      "body_in_receipt": false,
+      "feature_id": "feat_public_002",
+      "private_model_weights_exported": false,
+      "public_label": "route-choice pressure feature",
+      "raw_activation_dump_exported": false,
+      "source_kind": "public_sparse_feature_summary",
+      "summary_ref": "evidence/feature_summaries/feat_public_002.json"
+    },
+    {
+      "body_in_receipt": false,
+      "feature_id": "feat_public_003",
+      "private_model_weights_exported": false,
+      "public_label": "evidence-gap feature",
+      "raw_activation_dump_exported": false,
+      "source_kind": "public_sparse_feature_summary",
+      "summary_ref": "evidence/feature_summaries/feat_public_003.json"
+    },
+    {
+      "body_in_receipt": false,
+      "feature_id": "feat_public_004",
+      "private_model_weights_exported": false,
+      "public_label": "contradiction detector feature",
+      "raw_activation_dump_exported": false,
+      "source_kind": "public_sparse_feature_summary",
+      "summary_ref": "evidence/feature_summaries/feat_public_004.json"
+    },
+    {
+      "body_in_receipt": false,
+      "feature_id": "feat_public_005",
+      "private_model_weights_exported": false,
+      "public_label": "sufficiency check feature",
+      "raw_activation_dump_exported": false,
+      "source_kind": "public_sparse_feature_summary",
+      "summary_ref": "evidence/feature_summaries/feat_public_005.json"
+    },
+    {
+      "body_in_receipt": false,
+      "feature_id": "feat_public_006",
+      "private_model_weights_exported": false,
+      "public_label": "cold-replay stabilization feature",
+      "raw_activation_dump_exported": false,
+      "source_kind": "public_sparse_feature_summary",
+      "summary_ref": "evidence/feature_summaries/feat_public_006.json"
+    }
+  ],
+  "finding_count": 0,
+  "fixture_id": "first_wave.mechanistic_interpretability_circuit_attribution_replay",
+  "freshness_basis": {
+    "basis_digest": "sha256:dab8478fe6743067d5fb87b0993af29048850ad7fa868cc0aecec91ceb44e456",
+    "card_schema_version": "mechanistic_interpretability_circuit_attribution_replay_command_card_v1",
+    "include_negative": false,
+    "input_count": 18,
+    "inputs": [
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/attribution_protocol.json",
+        "sha256": "sha256:18c9653ed7a157f8ab42c01027f331db386c250b178e924e74a1e2eebfdad898",
+        "size_bytes": 3880
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/intervention_policy.json",
+        "sha256": "sha256:33f145a032d76cdd761b349509417d57ccc69be603246935a17e6a71d1468d1f",
+        "size_bytes": 1139
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/feature_catalog.json",
+        "sha256": "sha256:dd65551eb933d5a67aaf58683c79cab4c97dd81685dc526b8d8bc0883b5b6d3a",
+        "size_bytes": 2219
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/attribution_replays.json",
+        "sha256": "sha256:772bdd150e82c2ed821a5cabaee1021a55d18b374b20b013184c50c4958d9b4a",
+        "size_bytes": 15078
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_module_manifest.json",
+        "sha256": "sha256:27da9d64d6301d9a439ab587b0ac3917063581ffc6fd6aebdfc669297913eb56",
+        "size_bytes": 16855
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/bundle_manifest.json",
+        "sha256": "sha256:a9ec39172f905ee646392a2370c9ec688387f5dbdb5a2e5511195ba6dcca8425",
+        "size_bytes": 6419
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/codex/nodes/oracle/oracle_attribution_map.json",
+        "sha256": "sha256:659fad058524170be2788d4a9d590c8a1e419f51d8738cf1b51a93c3c043ca85",
+        "size_bytes": 1989
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/codex/substrate/nodes/oracle/oracle_attribution_map.json",
+        "sha256": "sha256:fddf05b33b965e28bd060f2110061064f7771be2449f9c0306af9296912bad8d",
+        "size_bytes": 3665
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/macro_state/microcosm_portfolio/extracted_patterns_ledger.jsonl",
+        "sha256": "sha256:ffbaece43238ff9dc970c25e3f92527be2d97d50308da9d54fe23db79ab4feb8",
+        "size_bytes": 936934
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/macro_state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.json",
+        "sha256": "sha256:c954765067576b26b7d1e8806a7fdf1443fe8821297c7bc72f6800e98a2171f7",
+        "size_bytes": 295524
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/macro_state/microcosm_portfolio/reconstruction/organ_projection_ir_v1.json",
+        "sha256": "sha256:4c5bc058d4b00fb1100463487c0ad75588dc13bdc4056d0abed14f39899cff21",
+        "size_bytes": 665274
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/macro_state/microcosm_portfolio/reconstruction/projection_readiness_checker_v1.py",
+        "sha256": "sha256:6bad000f0ae0a0ccbe73f37706a76681e66e111d45cb41b2f95ded709c96d764",
+        "size_bytes": 1184302
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/tools/meta/control/mission_transaction_preflight.py",
+        "sha256": "sha256:5585e45da640c4cbca411f81c85ab4ba56744b66b05a312741c0aeeb434e4037",
+        "size_bytes": 30296
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/system/lib/agent_execution_trace.py",
+        "sha256": "sha256:659a781e2a4e6dd72794631d9f09fd771ac086fa593166f3d04409d3639c1d04",
+        "size_bytes": 231602
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/codex/standards/std_agent_execution_trace.json",
+        "sha256": "sha256:beb6ee28ea53e74bdc63acbaa81670400e8f828cfb2653f124fca52c71ff2559",
+        "size_bytes": 49875
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/codex/standards/std_extracted_pattern_route_readiness.json",
+        "sha256": "sha256:b40238b1fbe1bac7fce7dc98fca3c4d12c9a8e7b289425a6329900349e12d0b4",
+        "size_bytes": 7644
+      },
+      {
+        "path": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/system/lib/strict_json.py",
+        "sha256": "sha256:2313d8651eb6fef586d9f81d0aea8e08abaff742020b0216ddbbbe448c39ecb7",
+        "size_bytes": 10373
+      },
+      {
+        "path": "core/private_state_forbidden_classes.json",
+        "sha256": "sha256:61046b4a08825917b36e65723213da93aecea1a861a1747e3bb6e4a0e741a02b",
+        "size_bytes": 4362
+      }
+    ],
+    "missing_inputs": [],
+    "missing_path_count": 0,
+    "schema_version": "mechanistic_interpretability_circuit_attribution_replay_freshness_basis_v1",
+    "validator_schema_version": "exported_circuit_attribution_bundle_validation_result_v1"
+  },
+  "input_mode": "exported_circuit_attribution_bundle",
+  "input_ref": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle",
+  "negative_case_findings": [],
+  "negative_case_summary": {
+    "expected_missing": {},
+    "expected_negative_case_count": 0,
+    "observed_codes": {},
+    "observed_negative_case_count": 0
+  },
+  "organ_id": "mechanistic_interpretability_circuit_attribution_replay",
+  "positive_findings": [],
+  "receipt_paths": [
+    "receipts/runtime_shell/demo_project/organs/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle_validation_result.json"
+  ],
+  "receipt_reused": false,
+  "release_authorized": false,
+  "safe_to_show": {
+    "body_in_receipt": false,
+    "hidden_chain_of_thought_omitted": true,
+    "private_model_weights_omitted": true,
+    "proprietary_prompt_bodies_omitted": true,
+    "provider_payloads_omitted": true,
+    "raw_activation_dumps_omitted": true,
+    "real_runtime_receipt": true
+  },
+  "schema_version": "exported_circuit_attribution_bundle_validation_result_v1",
+  "secret_exclusion_scan": {
+    "anti_claim": "Scanner terms are regression sentinels for tests and declared import rows. A pass is not a complete secret scan, credential audit, release clearance, or proof that no private material exists.",
+    "blocking_hit_count": 0,
+    "body_in_receipt": false,
+    "exclusion_policy": "Open-source macro substrate by default; exclude only secrets, credentials, operator conversation bodies, provider payloads, account/session state, and credential-equivalent live-access material.",
+    "hit_count": 0,
+    "hits": [],
+    "omitted_output_fields": [
+      "source_excerpt",
+      "body"
+    ],
+    "real_substrate_default": true,
+    "scan_purpose": "credential_account_bound_and_operator_payload_exclusion",
+    "scan_scope": {
+      "body_text_exported_in_findings": false,
+      "does_not_authorize_source_mutation": true,
+      "does_not_certify_absence_of_secrets": true,
+      "does_not_read_binary_or_live_account_state": true,
+      "intended_use": "Detect declared synthetic sentinel tokens and classify explicit macro-import material rows before public body import.",
+      "not_a_complete_secret_scan": true,
+      "scope_id": "synthetic_sentinel_and_declared_import_policy"
+    },
+    "scanned_path_count": 17,
+    "status": "pass",
+    "synthetic_receipt_policy": "Synthetic receipts are admissible only as regression or negative-case harness artifacts, or as named blocked-import debt. They are not substitutes for non-secret macro substrate, real runtime receipts, real copied bodies, or source-faithful refactors."
+  },
+  "selected_pattern_ids": [
+    "circuit_attribution_replay_01",
+    "circuit_attribution_replay_02",
+    "circuit_attribution_replay_03",
+    "circuit_attribution_replay_04",
+    "circuit_attribution_replay_05",
+    "circuit_attribution_replay_06"
+  ],
+  "selected_route_id": "mechanistic_interpretability_circuit_attribution_replay",
+  "source_module_import_status": "copied_non_secret_macro_body_landed",
+  "source_module_manifest_ref": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_module_manifest.json",
+  "source_module_summary": {
+    "body_import_status": "copied_non_secret_macro_body_landed",
+    "body_in_receipt": false,
+    "body_text_in_receipt": false,
+    "bundle_id": "exported_mechanistic_interpretability_circuit_attribution_bundle",
+    "findings": [],
+    "manifest_id": "exported_mechanistic_interpretability_macro_source_modules_import",
+    "material_classes": [
+      "public_macro_pattern_body",
+      "public_macro_proof_body",
+      "public_macro_tool_body"
+    ],
+    "module_count": 11,
+    "module_ids": [
+      "oracle_attribution_legacy_node_body_import",
+      "oracle_attribution_substrate_node_body_import",
+      "pattern_ledger_mechanistic_replay_contract_body_import",
+      "high_novelty_interpretability_growth_receipt_body_import",
+      "organ_projection_ir_external_boundary_body_import",
+      "projection_readiness_checker_control_plane_body_import",
+      "mission_transaction_preflight_tool_body_import",
+      "agent_execution_trace_tool_body_import",
+      "std_agent_execution_trace_standard_body_import",
+      "std_extracted_pattern_route_readiness_standard_body_import",
+      "strict_json_source_body_import"
+    ],
+    "modules": [
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 23,
+        "material_class": "public_macro_pattern_body",
+        "module_id": "oracle_attribution_legacy_node_body_import",
+        "required_anchors": [
+          "Oracle Attribution Mapper",
+          "what_subject_pointed_to_realized_outcome",
+          "subject_evidence_ledger_ids",
+          "cp2_reconstruction_guidance",
+          "Only subject-side ledger ids"
+        ],
+        "source_ref": "codex/nodes/oracle/oracle_attribution_map.json",
+        "source_sha256": "659fad058524170be2788d4a9d590c8a1e419f51d8738cf1b51a93c3c043ca85",
+        "status": "pass",
+        "target_body_digest": "sha256:659fad058524170be2788d4a9d590c8a1e419f51d8738cf1b51a93c3c043ca85",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/codex/nodes/oracle/oracle_attribution_map.json",
+        "target_sha256": "659fad058524170be2788d4a9d590c8a1e419f51d8738cf1b51a93c3c043ca85"
+      },
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 24,
+        "material_class": "public_macro_pattern_body",
+        "module_id": "oracle_attribution_substrate_node_body_import",
+        "required_anchors": [
+          "Oracle Critique Mapper",
+          "oracle_truth_diff_equity",
+          "critique_items",
+          "eligible_ledger_ids",
+          "Only subject-side refs"
+        ],
+        "source_ref": "codex/substrate/nodes/oracle/oracle_attribution_map.json",
+        "source_sha256": "fddf05b33b965e28bd060f2110061064f7771be2449f9c0306af9296912bad8d",
+        "status": "pass",
+        "target_body_digest": "sha256:fddf05b33b965e28bd060f2110061064f7771be2449f9c0306af9296912bad8d",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/codex/substrate/nodes/oracle/oracle_attribution_map.json",
+        "target_sha256": "fddf05b33b965e28bd060f2110061064f7771be2449f9c0306af9296912bad8d"
+      },
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 373,
+        "material_class": "public_macro_pattern_body",
+        "module_id": "pattern_ledger_mechanistic_replay_contract_body_import",
+        "required_anchors": [
+          "mechanistic_interpretability_circuit_attribution_replay_compound",
+          "candidate_fixture",
+          "mechanism_claim_requires_intervention_receipt",
+          "private model weights",
+          "source_refs"
+        ],
+        "source_ref": "state/microcosm_portfolio/extracted_patterns_ledger.jsonl",
+        "source_sha256": "ffbaece43238ff9dc970c25e3f92527be2d97d50308da9d54fe23db79ab4feb8",
+        "status": "pass",
+        "target_body_digest": "sha256:ffbaece43238ff9dc970c25e3f92527be2d97d50308da9d54fe23db79ab4feb8",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/macro_state/microcosm_portfolio/extracted_patterns_ledger.jsonl",
+        "target_sha256": "ffbaece43238ff9dc970c25e3f92527be2d97d50308da9d54fe23db79ab4feb8"
+      },
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 4825,
+        "material_class": "public_macro_pattern_body",
+        "module_id": "high_novelty_interpretability_growth_receipt_body_import",
+        "required_anchors": [
+          "actual_substrate_interpretability_eval_memory_spatial_growth_v1",
+          "mechanistic_interpretability_circuit_attribution_replay_compound",
+          "projection_contract",
+          "external_attention_inputs",
+          "public_roots_mutated"
+        ],
+        "source_ref": "state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.json",
+        "source_sha256": "c954765067576b26b7d1e8806a7fdf1443fe8821297c7bc72f6800e98a2171f7",
+        "status": "pass",
+        "target_body_digest": "sha256:c954765067576b26b7d1e8806a7fdf1443fe8821297c7bc72f6800e98a2171f7",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/macro_state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.json",
+        "target_sha256": "c954765067576b26b7d1e8806a7fdf1443fe8821297c7bc72f6800e98a2171f7"
+      },
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 8156,
+        "material_class": "public_macro_pattern_body",
+        "module_id": "organ_projection_ir_external_boundary_body_import",
+        "required_anchors": [
+          "proof_diagnostic_evidence_spine",
+          "agent_route_observability_runtime",
+          "external_boundary_anti_corruption_runtime",
+          "fixture_validator_contracts",
+          "entrypoint_to_implement"
+        ],
+        "source_ref": "state/microcosm_portfolio/reconstruction/organ_projection_ir_v1.json",
+        "source_sha256": "4c5bc058d4b00fb1100463487c0ad75588dc13bdc4056d0abed14f39899cff21",
+        "status": "pass",
+        "target_body_digest": "sha256:4c5bc058d4b00fb1100463487c0ad75588dc13bdc4056d0abed14f39899cff21",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/macro_state/microcosm_portfolio/reconstruction/organ_projection_ir_v1.json",
+        "target_sha256": "4c5bc058d4b00fb1100463487c0ad75588dc13bdc4056d0abed14f39899cff21"
+      },
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 20924,
+        "material_class": "public_macro_tool_body",
+        "module_id": "projection_readiness_checker_control_plane_body_import",
+        "required_anchors": [
+          "interpretability_eval_memory_spatial_growth",
+          "mechanistic_interpretability_circuit_attribution_replay_compound",
+          "private model weights",
+          "public_roots_mutated",
+          "forbidden_surfaces_mined"
+        ],
+        "source_ref": "state/microcosm_portfolio/reconstruction/projection_readiness_checker_v1.py",
+        "source_sha256": "6bad000f0ae0a0ccbe73f37706a76681e66e111d45cb41b2f95ded709c96d764",
+        "status": "pass",
+        "target_body_digest": "sha256:6bad000f0ae0a0ccbe73f37706a76681e66e111d45cb41b2f95ded709c96d764",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/macro_state/microcosm_portfolio/reconstruction/projection_readiness_checker_v1.py",
+        "target_sha256": "6bad000f0ae0a0ccbe73f37706a76681e66e111d45cb41b2f95ded709c96d764"
+      },
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 776,
+        "material_class": "public_macro_tool_body",
+        "module_id": "mission_transaction_preflight_tool_body_import",
+        "required_anchors": [
+          "build_mission_transaction_landing_preflight",
+          "compact_mission_transaction_landing_preflight",
+          "def build_parser",
+          "def main",
+          "landing_decision"
+        ],
+        "source_ref": "tools/meta/control/mission_transaction_preflight.py",
+        "source_sha256": "5585e45da640c4cbca411f81c85ab4ba56744b66b05a312741c0aeeb434e4037",
+        "status": "pass",
+        "target_body_digest": "sha256:5585e45da640c4cbca411f81c85ab4ba56744b66b05a312741c0aeeb434e4037",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/tools/meta/control/mission_transaction_preflight.py",
+        "target_sha256": "5585e45da640c4cbca411f81c85ab4ba56744b66b05a312741c0aeeb434e4037"
+      },
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 5298,
+        "material_class": "public_macro_tool_body",
+        "module_id": "agent_execution_trace_tool_body_import",
+        "required_anchors": [
+          "build_agent_execution_trace",
+          "write_agent_execution_trace",
+          "agent_execution_trace_ledger_v1",
+          "summary_thought_trace",
+          "privacy_boundary"
+        ],
+        "source_ref": "system/lib/agent_execution_trace.py",
+        "source_sha256": "659a781e2a4e6dd72794631d9f09fd771ac086fa593166f3d04409d3639c1d04",
+        "status": "pass",
+        "target_body_digest": "sha256:659a781e2a4e6dd72794631d9f09fd771ac086fa593166f3d04409d3639c1d04",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/system/lib/agent_execution_trace.py",
+        "target_sha256": "659a781e2a4e6dd72794631d9f09fd771ac086fa593166f3d04409d3639c1d04"
+      },
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 678,
+        "material_class": "public_macro_proof_body",
+        "module_id": "std_agent_execution_trace_standard_body_import",
+        "required_anchors": [
+          "std_agent_execution_trace",
+          "agent_execution_trace",
+          "NOT hidden chain-of-thought",
+          "trace_ontology_contract",
+          "privacy_boundary"
+        ],
+        "source_ref": "codex/standards/std_agent_execution_trace.json",
+        "source_sha256": "beb6ee28ea53e74bdc63acbaa81670400e8f828cfb2653f124fca52c71ff2559",
+        "status": "pass",
+        "target_body_digest": "sha256:beb6ee28ea53e74bdc63acbaa81670400e8f828cfb2653f124fca52c71ff2559",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/codex/standards/std_agent_execution_trace.json",
+        "target_sha256": "beb6ee28ea53e74bdc63acbaa81670400e8f828cfb2653f124fca52c71ff2559"
+      },
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 127,
+        "material_class": "public_macro_proof_body",
+        "module_id": "std_extracted_pattern_route_readiness_standard_body_import",
+        "required_anchors": [
+          "extracted_pattern_route_readiness",
+          "route_readiness_contract",
+          "check_extracted_pattern_route_readiness.py",
+          "route_readiness_audit",
+          "owner_validator"
+        ],
+        "source_ref": "codex/standards/std_extracted_pattern_route_readiness.json",
+        "source_sha256": "b40238b1fbe1bac7fce7dc98fca3c4d12c9a8e7b289425a6329900349e12d0b4",
+        "status": "pass",
+        "target_body_digest": "sha256:b40238b1fbe1bac7fce7dc98fca3c4d12c9a8e7b289425a6329900349e12d0b4",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/codex/standards/std_extracted_pattern_route_readiness.json",
+        "target_sha256": "b40238b1fbe1bac7fce7dc98fca3c4d12c9a8e7b289425a6329900349e12d0b4"
+      },
+      {
+        "anchor_count": 5,
+        "body_copied": true,
+        "body_in_receipt": false,
+        "classification": "copied_non_secret_macro_body",
+        "line_count": 260,
+        "material_class": "public_macro_tool_body",
+        "module_id": "strict_json_source_body_import",
+        "required_anchors": [
+          "class StrictJsonError",
+          "class DuplicateJsonKeyError",
+          "def loads_json_strict(",
+          "def read_json_strict(",
+          "def strict_json_artifact_report("
+        ],
+        "source_ref": "system/lib/strict_json.py",
+        "source_sha256": "2313d8651eb6fef586d9f81d0aea8e08abaff742020b0216ddbbbe448c39ecb7",
+        "status": "pass",
+        "target_body_digest": "sha256:2313d8651eb6fef586d9f81d0aea8e08abaff742020b0216ddbbbe448c39ecb7",
+        "target_ref": "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_modules/system/lib/strict_json.py",
+        "target_sha256": "2313d8651eb6fef586d9f81d0aea8e08abaff742020b0216ddbbbe448c39ecb7"
+      }
+    ],
+    "public_safe_body_material_ids": [
+      "oracle_attribution_legacy_node_body_import",
+      "oracle_attribution_substrate_node_body_import",
+      "pattern_ledger_mechanistic_replay_contract_body_import",
+      "high_novelty_interpretability_growth_receipt_body_import",
+      "organ_projection_ir_external_boundary_body_import",
+      "projection_readiness_checker_control_plane_body_import",
+      "mission_transaction_preflight_tool_body_import",
+      "agent_execution_trace_tool_body_import",
+      "std_agent_execution_trace_standard_body_import",
+      "std_extracted_pattern_route_readiness_standard_body_import",
+      "strict_json_source_body_import"
+    ],
+    "status": "pass",
+    "verified_module_count": 11
+  },
+  "source_open_body_imports": {
+    "aggregate_floor_ref": "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_module_manifest.json::modules",
+    "authority_ceiling": {
+      "benchmark_score_claim_authorized": false,
+      "body_text_in_receipt": false,
+      "credential_or_account_bound_payload_exported": false,
+      "hidden_chain_of_thought_exported": false,
+      "live_model_access_authorized": false,
+      "private_model_weights_exported": false,
+      "proprietary_prompt_body_exported": false,
+      "provider_payload_exported": false,
+      "raw_activation_dump_exported": false,
+      "release_authorized": false
+    },
+    "body_in_receipt": false,
+    "body_material_count": 11,
+    "body_material_ids": [
+      "oracle_attribution_legacy_node_body_import",
+      "oracle_attribution_substrate_node_body_import",
+      "pattern_ledger_mechanistic_replay_contract_body_import",
+      "high_novelty_interpretability_growth_receipt_body_import",
+      "organ_projection_ir_external_boundary_body_import",
+      "projection_readiness_checker_control_plane_body_import",
+      "mission_transaction_preflight_tool_body_import",
+      "agent_execution_trace_tool_body_import",
+      "std_agent_execution_trace_standard_body_import",
+      "std_extracted_pattern_route_readiness_standard_body_import",
+      "strict_json_source_body_import"
+    ],
+    "body_material_status": "copied_non_secret_macro_body_landed",
+    "body_text_exported_in_receipts": false,
+    "body_text_exported_in_workingness": false,
+    "material_classes": [
+      "public_macro_pattern_body",
+      "public_macro_proof_body",
+      "public_macro_tool_body"
+    ],
+    "reader_action": "Open source_module_manifest.json plus source_modules/ inside the exported circuit attribution bundle for copied Oracle, pattern-ledger, projection, mission-transaction, trace, and standards bodies; receipts carry refs, digests, counts, and verdicts only.",
+    "schema_version": "mechanistic_interpretability_circuit_attribution_replay_source_open_body_imports_v1",
+    "source_import_class": "copied_non_secret_macro_body",
+    "source_manifest_refs": [
+      "examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_module_manifest.json"
+    ],
+    "status": "pass"
+  },
+  "source_refs": [
+    "microcosm-substrate/receipts/runtime_shell/public_mechanistic_interpretability_circuit_attribution_replay_lens.json",
+    "state/microcosm_portfolio/extracted_patterns_ledger.jsonl::mechanistic_interpretability_circuit_attribution_replay_compound",
+    "codex/nodes/oracle/oracle_attribution_map.json",
+    "codex/substrate/nodes/oracle/oracle_attribution_map.json",
+    "state/microcosm_portfolio/extracted_patterns_ledger.jsonl",
+    "state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.json",
+    "state/microcosm_portfolio/reconstruction/organ_projection_ir_v1.json",
+    "state/microcosm_portfolio/reconstruction/projection_readiness_checker_v1.py",
+    "tools/meta/control/mission_transaction_preflight.py",
+    "system/lib/agent_execution_trace.py",
+    "codex/standards/std_agent_execution_trace.json",
+    "codex/standards/std_extracted_pattern_route_readiness.json"
+  ],
+  "status": "pass",
+  "target_refs": [
+    "microcosm-substrate/src/microcosm_core/organs/mechanistic_interpretability_circuit_attribution_replay.py",
+    "microcosm-substrate/fixtures/first_wave/mechanistic_interpretability_circuit_attribution_replay/input/attribution_replays.json",
+    "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/attribution_replays.json",
+    "microcosm-substrate/examples/mechanistic_interpretability_circuit_attribution_replay/exported_circuit_attribution_bundle/source_module_manifest.json"
+  ],
+  "validator_id": "validator.microcosm.organs.mechanistic_interpretability_circuit_attribution_replay"
+}

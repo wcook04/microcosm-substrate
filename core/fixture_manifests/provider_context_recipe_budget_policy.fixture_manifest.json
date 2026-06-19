@@ -1,0 +1,145 @@
+{
+  "anti_claim": "Provider context recipe budget fixtures validate copied source-module hashes plus context-shape metadata only; they do not call providers, prove goals, run Lean/Lake, expose proof or oracle bodies, authorize release, or claim private macro equivalence.",
+  "authority_ceiling": {
+    "formal_proof_authority": false,
+    "lean_lake_execution_authorized": false,
+    "provider_calls_authorized": false,
+    "release_authorized": false,
+    "truth_side_material_authorized": false
+  },
+  "body_copied_material_count": 8,
+  "body_material_status": "exact_copied_non_secret_provider_context_macro_reducer_calibration_policy_and_standard_bodies_with_digest_provenance",
+  "expected_receipts": [
+    "receipts/first_wave/provider_context_recipe_budget_policy/provider_context_budget_result.json",
+    "receipts/first_wave/provider_context_recipe_budget_policy/provider_context_budget_board.json",
+    "receipts/first_wave/provider_context_recipe_budget_policy/provider_context_budget_validation_receipt.json",
+    "receipts/acceptance/first_wave/provider_context_recipe_budget_policy_fixture_acceptance.json"
+  ],
+  "fixture_id": "fixture::provider_context_recipe_budget_policy::first_wave_contract_v1",
+  "inputs": [
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/provider_context_recipes.json",
+      "role": "public provider-context recipe budget table matching the macro provider-context recipe ids and authority ceiling"
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/section_materials.json",
+      "role": "source-backed public context section metadata with copied macro source refs, validator-checked anchors, byte budgets, and body redaction"
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/source_module_manifest.json",
+      "role": "exact copied macro source module manifest with source-to-target hashes and required anchors"
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/source_modules/tools/meta/factory/build_prover_provider_batch_context_calibration_report.py",
+      "role": "Macro batch calibration report builder that aggregates reduced provider receipts into recipe-policy, leakage, row-patch-review, cost, and taxonomy reports without provider dispatch."
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/source_modules/codex/standards/std_compute_provider.json",
+      "role": "Macro compute-provider policy standard defining provider lanes, authority tiers, transform-job packets, provider receipts, draft row patches, and low-authority worker boundaries."
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/source_modules/tools/meta/factory/run_prover_formal_problem_ladder_eval.py",
+      "role": "Macro formal problem ladder evaluator that consumes the provider-context harness into transform jobs, optional provider dispatch receipts, reduction, and recipe policy metrics."
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/source_modules/tools/meta/factory/run_prover_graph_benchmark.py",
+      "role": "Macro prover graph benchmark harness that defines provider context recipe ids, budget ceilings, bounded section fill, leakage audits, and std_transform_job compilation without provider dispatch in v0."
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/source_modules/codex/standards/std_provider_adapter.json",
+      "role": "Macro provider adapter contract body for registry binding, model resolution, fallback policy, budget policy, receipt requirements, and runtime-refactor gates."
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/source_modules/codex/standards/std_provider_navigation_transform_receipt.json",
+      "role": "Macro provider navigation transform receipt standard that keeps provider-generated navigation candidates candidate-only and mutation-free."
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/source_modules/tools/meta/factory/reduce_prover_provider_receipts.py",
+      "role": "Macro provider receipt reducer that classifies provider output, detects truth-side leakage, audits premise budgets, reviews row patches, and writes advisory evidence without provider calls or source promotion."
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/source_modules/codex/standards/std_transform_job.json",
+      "role": "Macro std_transform_job standard body that defines the provider-context transform-job ABI: projection input packets, provider receipts, row patches, authority ceilings, and local-evidence override policy."
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/budget_overflow_recipe.json",
+      "role": "negative case: recipe exceeds bounded byte contract"
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/truth_side_section.json",
+      "role": "negative case: truth-side or oracle-only section selected"
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/proof_body_leakage.json",
+      "role": "negative case: proof body or oracle body field leakage"
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/provider_call_authorized.json",
+      "role": "negative case: public fixture authorizes provider call"
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/deliverable_type_route_mismatch.json",
+      "role": "negative case: recipe emits wrong deliverable type for route"
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/omitted_sections_suppressed.json",
+      "role": "negative case: over-budget omitted-section manifest suppressed"
+    },
+    {
+      "path": "fixtures/first_wave/provider_context_recipe_budget_policy/input/synthetic_section_materials.json",
+      "role": "negative case: synthetic section material without source refs or source anchors"
+    }
+  ],
+  "negative_case_ids": [
+    "budget_overflow_recipe",
+    "truth_side_section",
+    "proof_body_leakage",
+    "provider_call_authorized",
+    "deliverable_type_route_mismatch",
+    "omitted_sections_suppressed",
+    "synthetic_section_materials"
+  ],
+  "organ_id": "provider_context_recipe_budget_policy",
+  "purpose": "Validate copied non-secret provider context source modules and public recipe budgets without calling providers, exposing proof bodies, or smuggling truth-side oracle material.",
+  "schema_version": "microcosm_fixture_manifest_v1",
+  "source_open_body_imports": {
+    "aggregate_floor_ref": "examples/provider_context_recipe_budget_policy/exported_provider_context_budget_bundle/source_module_manifest.json::modules",
+    "authority_ceiling": {
+      "body_text_in_receipt": false,
+      "formal_proof_authority": false,
+      "lean_lake_execution_authorized": false,
+      "provider_calls_authorized": false,
+      "provider_payload_exported": false,
+      "release_authorized": false,
+      "runtime_correctness_claim": false,
+      "truth_side_material_authorized": false
+    },
+    "body_in_receipt": false,
+    "body_material_count": 8,
+    "body_material_ids": [
+      "provider_context_batch_calibration_report_body_import",
+      "provider_context_compute_provider_standard_body_import",
+      "provider_context_formal_ladder_eval_body_import",
+      "provider_context_graph_benchmark_body_import",
+      "provider_context_provider_adapter_standard_body_import",
+      "provider_context_provider_navigation_transform_receipt_standard_body_import",
+      "provider_context_receipt_reducer_body_import",
+      "provider_context_transform_job_standard_body_import"
+    ],
+    "body_material_status": "exact_copied_non_secret_provider_context_macro_reducer_calibration_policy_and_standard_bodies_with_digest_provenance",
+    "body_text_exported_in_receipts": false,
+    "body_text_exported_in_workingness": false,
+    "material_classes": [
+      "public_macro_standard_body",
+      "public_macro_tool_body"
+    ],
+    "reader_action": "Validate with provider_context_recipe_budget_policy, then run microcosm workingness to count these imports in the source-open body floor.",
+    "source_manifest_refs": [
+      "fixtures/first_wave/provider_context_recipe_budget_policy/input/source_module_manifest.json",
+      "examples/provider_context_recipe_budget_policy/exported_provider_context_budget_bundle/source_module_manifest.json"
+    ],
+    "status": "pass"
+  },
+  "validator": "microcosm_core.organs.provider_context_recipe_budget_policy",
+  "validator_command": "python -m microcosm_core.organs.provider_context_recipe_budget_policy run --input fixtures/first_wave/provider_context_recipe_budget_policy/input --out receipts/first_wave/provider_context_recipe_budget_policy"
+}

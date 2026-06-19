@@ -1,0 +1,402 @@
+{
+  "admitted_control_count": 1,
+  "allowed_quarantine_verdicts": [
+    "admit",
+    "quarantine",
+    "reject",
+    "rerun_pass",
+    "rollback"
+  ],
+  "allowed_trust_tiers": [
+    "quarantined_candidate",
+    "rolled_back",
+    "trusted_source",
+    "untrusted_context"
+  ],
+  "anti_claim": "Sleeper memory poisoning quarantine replay validates a body-free public memory-security policy projection: poisoned source metadata, provenance-bound write proposal, quarantine verdict, later retrieval influence gating, rollback, cold rerun, negative cases, and receipts. It does not export private memory bodies or raw transcripts, import live user memory, promote untrusted context to trusted memory, call providers, mutate source, claim benchmark security, or authorize release.",
+  "authority_ceiling": {
+    "authority_ceiling": "public_body_free_sleeper_memory_quarantine_policy_projection_only",
+    "benchmark_score_claim_authorized": false,
+    "live_memory_product_claim_authorized": false,
+    "live_user_memory_claim_authorized": false,
+    "private_memory_body_export_authorized": false,
+    "provider_calls_authorized": false,
+    "raw_transcript_export_authorized": false,
+    "release_authorized": false,
+    "source_mutation_authorized": false,
+    "status": "pass",
+    "trusted_promotion_from_untrusted_context_authorized": false
+  },
+  "blocked_before_action_count": 1,
+  "body_copied_material_count": 7,
+  "body_import_classification": "copied_non_secret_public_memory_plane_macro_body_import",
+  "body_import_status": "copied_non_secret_sleeper_memory_macro_body_landed",
+  "body_in_receipt": false,
+  "body_material_status": "copied_non_secret_sleeper_memory_macro_body_landed",
+  "body_text_exported_in_receipts": false,
+  "body_text_in_receipt": false,
+  "bundle_id": "sleeper_memory_poisoning_quarantine_policy_refactor",
+  "command": "microcosm run examples/runtime_shell/demo_project",
+  "created_at": "2026-06-01T04:19:41+00:00",
+  "error_codes": [],
+  "expected_negative_cases": [],
+  "findings": [],
+  "fixture_id": "first_wave.sleeper_memory_poisoning_quarantine_replay",
+  "freshness_basis": {
+    "basis_digest": "sha256:e3e502e2da2bd138c16c76548b36e5bf22a8f66cec5e70758be1beb0c60bdadc",
+    "card_schema_version": "sleeper_memory_poisoning_quarantine_command_card_v1",
+    "include_negative": false,
+    "input_count": 16,
+    "inputs": [
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/projection_protocol.json",
+        "sha256": "sha256:8f4133ac8c37ebce75ffb68856afaa3e6c5279bbc710c36cc3060a7dde203f54",
+        "size_bytes": 2246
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/memory_policy.json",
+        "sha256": "sha256:4376655945f119a50da63b5fc7bb730f4c3ddc0877194a3775db5228875d7bd7",
+        "size_bytes": 1130
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/session_chain.json",
+        "sha256": "sha256:7b4aa9279a773ca92c67695d1c9a3a101ebda8901a9d282a72fc2f23b82c00d4",
+        "size_bytes": 1297
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/quarantine_events.json",
+        "sha256": "sha256:da49f83265ac1bb21be19df0565b126cff9229f0f97b72644b644c83aa638931",
+        "size_bytes": 1692
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/retrieval_replays.json",
+        "sha256": "sha256:c5bc73d3e6bea60ea1c21a817b2213c4660d90a6748f996a1fed5df5c89ea55c",
+        "size_bytes": 857
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/rollback_rerun.json",
+        "sha256": "sha256:b3ba5825743e8b831b0e193ea7e14faa0d5cca46b72aed6588ffac2ad678499e",
+        "size_bytes": 618
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/bundle_manifest.json",
+        "sha256": "sha256:c9a7e9f20656f364a8ed4ab1c174cf1a037a36cec0c3581a19c42ce29aa333ba",
+        "size_bytes": 1152
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_module_manifest.json",
+        "sha256": "sha256:8678a42c9709bad5b866ef438bc28400de49573ed6b78800f4a9f6b8f934395b",
+        "size_bytes": 16354
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.json",
+        "sha256": "sha256:c954765067576b26b7d1e8806a7fdf1443fe8821297c7bc72f6800e98a2171f7",
+        "size_bytes": 295524
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/codex/doctrine/paper_modules/claude_memory_plane_contract.md",
+        "sha256": "sha256:fac688a75dc8e33f1ed60741cdb234d607b280757395a175a99c1f2ff1612793",
+        "size_bytes": 12690
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/codex/doctrine/paper_modules/memory_injection_tiers.md",
+        "sha256": "sha256:9cdf92072216fe05cb9bd3d56050a36dea326967093ad48c7a6bac3976453214",
+        "size_bytes": 14191
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/system/server/tests/test_operator_thread_memory.py",
+        "sha256": "sha256:33763b6712dde78b2a3a8db63c42f8d20a3baed1adbded2634a987185c5ded21",
+        "size_bytes": 39882
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/system/lib/agent_execution_trace.py",
+        "sha256": "sha256:659a781e2a4e6dd72794631d9f09fd771ac086fa593166f3d04409d3639c1d04",
+        "size_bytes": 231602
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/codex/standards/std_agent_execution_trace.json",
+        "sha256": "sha256:beb6ee28ea53e74bdc63acbaa81670400e8f828cfb2653f124fca52c71ff2559",
+        "size_bytes": 49875
+      },
+      {
+        "path": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/system/lib/strict_json.py",
+        "sha256": "sha256:2313d8651eb6fef586d9f81d0aea8e08abaff742020b0216ddbbbe448c39ecb7",
+        "size_bytes": 10373
+      },
+      {
+        "path": "core/private_state_forbidden_classes.json",
+        "sha256": "sha256:61046b4a08825917b36e65723213da93aecea1a861a1747e3bb6e4a0e741a02b",
+        "size_bytes": 4362
+      }
+    ],
+    "missing_inputs": [],
+    "missing_path_count": 0,
+    "schema_version": "sleeper_memory_poisoning_quarantine_freshness_basis_v1",
+    "validator_schema_version": "exported_sleeper_memory_poisoning_bundle_validation_result_v1"
+  },
+  "input_mode": "exported_sleeper_memory_poisoning_bundle",
+  "memory_policy_id": "sleeper_memory_poisoning_quarantine_policy_v1",
+  "missing_negative_cases": [],
+  "observed_negative_cases": {},
+  "organ_id": "sleeper_memory_poisoning_quarantine_replay",
+  "private_state_scan": {
+    "anti_claim": "Scanner terms are regression sentinels for tests and declared import rows. A pass is not a complete secret scan, credential audit, release clearance, or proof that no private material exists.",
+    "blocking_hit_count": 0,
+    "body_redacted": true,
+    "hit_count": 0,
+    "hits": [],
+    "redacted_output_field_labels_omitted": true,
+    "scan_scope": {
+      "body_text_exported_in_findings": false,
+      "does_not_authorize_source_mutation": true,
+      "does_not_certify_absence_of_secrets": true,
+      "does_not_read_binary_or_live_account_state": true,
+      "intended_use": "Detect declared synthetic sentinel tokens and classify explicit macro-import material rows before public body import.",
+      "not_a_complete_secret_scan": true,
+      "scope_id": "synthetic_sentinel_and_declared_import_policy"
+    },
+    "scanned_path_count": 15,
+    "status": "pass"
+  },
+  "product_path_role": "copied_non_secret_macro_body_plus_public_memory_security_policy_refactor",
+  "projection_receipt_refs": [
+    "receipts/first_wave/sleeper_memory_poisoning_quarantine_replay/sleeper_memory_poisoning_quarantine_replay_validation_receipt.json",
+    "receipts/runtime_shell/demo_project/organs/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle_validation_result.json"
+  ],
+  "proposal_count": 2,
+  "protocol_id": "sleeper_memory_poisoning_quarantine_public_projection_v1",
+  "public_replacement_refs": [
+    "fixtures/first_wave/sleeper_memory_poisoning_quarantine_replay/input/session_chain.json",
+    "fixtures/first_wave/sleeper_memory_poisoning_quarantine_replay/input/quarantine_events.json",
+    "fixtures/first_wave/sleeper_memory_poisoning_quarantine_replay/input/retrieval_replays.json",
+    "fixtures/first_wave/sleeper_memory_poisoning_quarantine_replay/input/rollback_rerun.json"
+  ],
+  "quarantined_write_count": 1,
+  "receipt_paths": [
+    "receipts/runtime_shell/demo_project/organs/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle_validation_result.json"
+  ],
+  "receipt_reused": false,
+  "rerun_pass_count": 1,
+  "retrieval_replay_count": 1,
+  "retrieval_rows": [
+    {
+      "action_gate": "blocked_before_action",
+      "body_redacted": true,
+      "cold_replay_receipt_ref": "receipt.sleeper_memory.replay.blocked_before_action.v1",
+      "computed_verdict": "accepted_replay_metadata",
+      "evidence_used_refs": [
+        "audit.sleeper_memory.quarantine_decision.v1",
+        "receipt.sleeper_memory.replay.blocked_before_action.v1"
+      ],
+      "influence_grade": "quarantined_before_action",
+      "missing_required_fields": [],
+      "proposed_memory_ref": "memory_candidate.sleeper.future_trigger.redacted",
+      "reason_codes": [],
+      "replay_id": "replay_later_retrieval_blocked_before_action",
+      "retrieval_ref": "retrieval.sleeper_memory.quarantined_candidate.metadata",
+      "session_id": "session_c_later_retrieval_action_gated"
+    }
+  ],
+  "rollback_count": 1,
+  "rollback_rows": [
+    {
+      "body_redacted": true,
+      "computed_verdict": "accepted_rollback_metadata",
+      "deletion_audit_ref": "audit.sleeper_memory.rollback_delete.v1",
+      "memory_absent_after_rerun": true,
+      "missing_required_fields": [],
+      "proposed_memory_ref": "memory_candidate.sleeper.future_trigger.redacted",
+      "reason_codes": [],
+      "rerun_receipt_ref": "receipt.sleeper_memory.cold_rerun.absent_after_rollback.v1",
+      "rollback_id": "rollback_poisoned_candidate_and_rerun",
+      "rollback_receipt_ref": "receipt.sleeper_memory.rollback.quarantined_candidate.v1",
+      "session_id": "session_d_rollback_and_cold_rerun"
+    }
+  ],
+  "schema_version": "exported_sleeper_memory_poisoning_bundle_validation_result_v1",
+  "session_count": 4,
+  "session_roles": [
+    "poisoned_source_seen",
+    "memory_write_quarantined",
+    "later_retrieval_action_gated",
+    "rollback_and_cold_rerun"
+  ],
+  "session_rows": [
+    {
+      "body_redacted": true,
+      "chronological_order": 1,
+      "private_ref_metadata_only": true,
+      "public_evidence_ref": "evidence.sleeper_memory.session_a.source_capsule",
+      "session_id": "session_a_poisoned_source_seen",
+      "session_role": "poisoned_source_seen"
+    },
+    {
+      "body_redacted": true,
+      "chronological_order": 2,
+      "private_ref_metadata_only": true,
+      "public_evidence_ref": "evidence.sleeper_memory.session_b.quarantine_receipt",
+      "session_id": "session_b_memory_write_quarantined",
+      "session_role": "memory_write_quarantined"
+    },
+    {
+      "body_redacted": true,
+      "chronological_order": 3,
+      "private_ref_metadata_only": true,
+      "public_evidence_ref": "evidence.sleeper_memory.session_c.retrieval_gate",
+      "session_id": "session_c_later_retrieval_action_gated",
+      "session_role": "later_retrieval_action_gated"
+    },
+    {
+      "body_redacted": true,
+      "chronological_order": 4,
+      "private_ref_metadata_only": true,
+      "public_evidence_ref": "evidence.sleeper_memory.session_d.rollback_rerun",
+      "session_id": "session_d_rollback_and_cold_rerun",
+      "session_role": "rollback_and_cold_rerun"
+    }
+  ],
+  "source_module_imports": {
+    "body_in_receipt": false,
+    "body_material_classes": {
+      "public_macro_pattern_body": 3,
+      "public_macro_proof_body": 1,
+      "public_macro_receipt_body": 1,
+      "public_macro_tool_body": 2
+    },
+    "findings": [],
+    "material_classes": [
+      "public_macro_pattern_body",
+      "public_macro_proof_body",
+      "public_macro_receipt_body",
+      "public_macro_tool_body"
+    ],
+    "module_count": 7,
+    "module_ids": [
+      "sleeper_memory_high_novelty_growth_receipt_body_import",
+      "claude_memory_plane_contract_body_import",
+      "memory_injection_tiers_body_import",
+      "operator_thread_memory_test_body_import",
+      "agent_execution_trace_runtime_body_import",
+      "agent_execution_trace_standard_body_import",
+      "strict_json_source_body_import"
+    ],
+    "observed_negative_cases": {},
+    "source_module_import_status": "copied_non_secret_sleeper_memory_macro_body_landed",
+    "source_module_manifest_ref": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_module_manifest.json",
+    "source_refs": [
+      "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_module_manifest.json",
+      "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.json",
+      "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/codex/doctrine/paper_modules/claude_memory_plane_contract.md",
+      "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/codex/doctrine/paper_modules/memory_injection_tiers.md",
+      "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/system/server/tests/test_operator_thread_memory.py",
+      "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/system/lib/agent_execution_trace.py",
+      "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/ai_workflow/codex/standards/std_agent_execution_trace.json",
+      "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_modules/system/lib/strict_json.py"
+    ],
+    "status": "pass",
+    "verified_module_count": 7
+  },
+  "source_module_manifest_ref": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_module_manifest.json",
+  "source_module_manifest_status": "pass",
+  "source_open_body_imports": {
+    "aggregate_floor_ref": "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_module_manifest.json::modules",
+    "authority_ceiling": {
+      "benchmark_score_claim_authorized": false,
+      "credential_or_account_bound_payload_exported": false,
+      "live_memory_product_claim_authorized": false,
+      "private_memory_body_export_authorized": false,
+      "provider_payload_exported": false,
+      "raw_transcript_export_authorized": false,
+      "release_authorized": false
+    },
+    "body_in_receipt": false,
+    "body_material_classes": {
+      "public_macro_pattern_body": 3,
+      "public_macro_proof_body": 1,
+      "public_macro_receipt_body": 1,
+      "public_macro_tool_body": 2
+    },
+    "body_material_count": 7,
+    "body_material_ids": [
+      "sleeper_memory_high_novelty_growth_receipt_body_import",
+      "claude_memory_plane_contract_body_import",
+      "memory_injection_tiers_body_import",
+      "operator_thread_memory_test_body_import",
+      "agent_execution_trace_runtime_body_import",
+      "agent_execution_trace_standard_body_import",
+      "strict_json_source_body_import"
+    ],
+    "body_material_status": "copied_non_secret_sleeper_memory_macro_body_landed",
+    "body_text_exported_in_receipts": false,
+    "body_text_exported_in_workingness": false,
+    "body_text_in_receipt": false,
+    "material_classes": [
+      "public_macro_pattern_body",
+      "public_macro_proof_body",
+      "public_macro_receipt_body",
+      "public_macro_tool_body"
+    ],
+    "reader_action": "Open source_module_manifest.json plus source_modules/ inside the exported sleeper memory bundle for copied macro memory-plane doctrine, trace, standard, and reconstruction bodies; receipts carry refs, hashes, counts, and verdicts only.",
+    "schema_version": "sleeper_memory_poisoning_quarantine_source_open_body_imports_v1",
+    "source_import_class": "copied_non_secret_macro_body",
+    "source_manifest_refs": [
+      "examples/sleeper_memory_poisoning_quarantine_replay/exported_sleeper_memory_poisoning_bundle/source_module_manifest.json"
+    ],
+    "status": "pass"
+  },
+  "source_pattern_ids": [
+    "sleeper_memory_poisoning_quarantine_replay_compound",
+    "agent_reliability_replay_gauntlet",
+    "agent_memory_temporal_conflict_replay_compound"
+  ],
+  "source_refs": [
+    "state/microcosm_portfolio/extracted_patterns_ledger.jsonl#L344",
+    "state/microcosm_portfolio/reconstruction/public_microcosm_seed_pattern_reconstruction.jsonl#sleeper_memory_poisoning_quarantine_replay_compound",
+    "microcosm-substrate/src/microcosm_core/runtime_shell.py::replay_gauntlet",
+    "microcosm-substrate/receipts/runtime_shell/public_agent_reliability_replay_gauntlet_lens.json",
+    "system/lib/strict_json.py"
+  ],
+  "status": "pass",
+  "validator_id": "validator.microcosm.organs.sleeper_memory_poisoning_quarantine_replay",
+  "write_rows": [
+    {
+      "audit_ref": "audit.sleeper_memory.quarantine_decision.v1",
+      "body_redacted": true,
+      "classifier_labels": [
+        "sleeper_poisoning",
+        "future_trigger",
+        "untrusted_context"
+      ],
+      "computed_verdict": "accepted_write_metadata",
+      "missing_required_fields": [],
+      "proposal_id": "proposal_poisoned_future_trigger_memory",
+      "proposed_memory_ref": "memory_candidate.sleeper.future_trigger.redacted",
+      "provenance_ref": "provenance.sleeper_memory.poisoned_source_capsule",
+      "quarantine_verdict": "quarantine",
+      "reason_codes": [],
+      "session_id": "session_b_memory_write_quarantined",
+      "source_capsule_ref": "capsule.sleeper_memory.untrusted_source.redacted",
+      "source_trust_tier": "untrusted_context",
+      "trusted_promotion": false
+    },
+    {
+      "audit_ref": "audit.sleeper_memory.benign_control.v1",
+      "body_redacted": true,
+      "classifier_labels": [
+        "benign_control",
+        "trusted_source"
+      ],
+      "computed_verdict": "accepted_write_metadata",
+      "missing_required_fields": [],
+      "proposal_id": "proposal_trusted_benign_control",
+      "proposed_memory_ref": "memory_candidate.sleeper.benign_control.redacted",
+      "provenance_ref": "provenance.sleeper_memory.trusted_control",
+      "quarantine_verdict": "admit",
+      "reason_codes": [],
+      "session_id": "session_b_memory_write_quarantined",
+      "source_capsule_ref": "capsule.sleeper_memory.trusted_control.redacted",
+      "source_trust_tier": "trusted_source",
+      "trusted_promotion": false
+    }
+  ]
+}

@@ -1,0 +1,347 @@
+{
+  "advisory_regression_evidence_retained": true,
+  "anti_claim": "Agent observability receipts validate public trace-feedback metadata plus regression fixtures; they do not inspect live operator state, certify runtime behavior, mutate Task Ledger, authorize pattern assimilation, or prove whole Wave 1.",
+  "anti_pattern_debt_decisions": [
+    {
+      "behavior_change_evidence_trace_ids": [],
+      "body_redacted": true,
+      "debt_id": "debt_evidence_only_telemetry",
+      "decision": "retained",
+      "evidence_only_trace_ids": [
+        "trace_advisory_axis"
+      ]
+    },
+    {
+      "behavior_change_evidence_trace_ids": [
+        "trace_fix_001"
+      ],
+      "body_redacted": true,
+      "debt_id": "debt_direct_action_after_route_lease",
+      "decision": "retired",
+      "evidence_only_trace_ids": []
+    }
+  ],
+  "authority_ceiling": {
+    "authority_ceiling": "agent_observability_metadata_not_live_trace_authority",
+    "behavior_change_claim_authorized_without_trace": false,
+    "later_organs_authorized": false,
+    "live_operator_state_read": false,
+    "provider_payload_read": false,
+    "status": "pass"
+  },
+  "behavior_change_evidence_status": "behavior_change_evidence_present",
+  "behavior_change_evidence_trace_ids": [
+    "trace_fix_001"
+  ],
+  "bundle_id": null,
+  "command": "python -m microcosm_core.organs.agent_route_observability_runtime run --input fixtures/first_wave/agent_route_observability_runtime/input --out receipts/first_wave/agent_route_observability_runtime",
+  "created_at": "2026-05-28T02:12:09+00:00",
+  "debt_id": "agent_route_observability_runtime.synthetic_debt_set",
+  "debt_retirement_count": 1,
+  "error_codes": [
+    "ACTOR_AXIS_AUTHORITY_MISMATCH",
+    "DUPLICATE_TRACE_EVENT_ID",
+    "HOOK_SHADOW_BANNED_ROUTE_INTERVENTION",
+    "HOOK_SHADOW_COMMAND_DISPLACEMENT",
+    "HOOK_SHADOW_LIVE_STATE_READ_FORBIDDEN",
+    "HOOK_SHADOW_MISSING_AUTHORITY",
+    "HOOK_SHADOW_OVER_BUDGET",
+    "KERNEL_BLOAT_BEFORE_DIRECT_ACTION",
+    "MISSING_ROUTE_LEASE",
+    "NO_BEHAVIOR_CHANGE_EVIDENCE",
+    "ROUTE_COMPLIANCE_PASS_OVERCLAIMS_BEHAVIOR_CHANGE",
+    "ROUTE_LEASE_NOT_CONSUMED",
+    "ROUTE_MISS_REPLACED",
+    "TELEMETRY_PRIVATE_TRANSCRIPT_BODY"
+  ],
+  "evidence_only_trace_ids": [
+    "trace_advisory_axis"
+  ],
+  "expected_negative_cases": {
+    "agent_trace_missing_route_lease": [
+      "MISSING_ROUTE_LEASE"
+    ],
+    "duplicate_trace_event_conflict": [
+      "DUPLICATE_TRACE_EVENT_ID"
+    ],
+    "hook_shadow_banned_route_attempt": [
+      "HOOK_SHADOW_BANNED_ROUTE_INTERVENTION"
+    ],
+    "hook_shadow_budget_overrun": [
+      "HOOK_SHADOW_OVER_BUDGET"
+    ],
+    "hook_shadow_command_displacement": [
+      "HOOK_SHADOW_COMMAND_DISPLACEMENT"
+    ],
+    "hook_shadow_live_state_read_attempt": [
+      "HOOK_SHADOW_LIVE_STATE_READ_FORBIDDEN"
+    ],
+    "hook_shadow_missing_authority": [
+      "HOOK_SHADOW_MISSING_AUTHORITY"
+    ],
+    "route_compliance_overclaims_behavior_change": [
+      "ROUTE_COMPLIANCE_PASS_OVERCLAIMS_BEHAVIOR_CHANGE"
+    ],
+    "route_lease_broad_kernel_bloat_before_direct_action": [
+      "KERNEL_BLOAT_BEFORE_DIRECT_ACTION"
+    ],
+    "route_lease_static_metadata_without_trace_feedback": [
+      "ROUTE_LEASE_NOT_CONSUMED"
+    ],
+    "route_miss_replaced": [
+      "ROUTE_MISS_REPLACED"
+    ],
+    "telemetry_private_transcript_body": [
+      "TELEMETRY_PRIVATE_TRANSCRIPT_BODY"
+    ],
+    "wrong_actor_axis_and_evidence_only_telemetry": [
+      "ACTOR_AXIS_AUTHORITY_MISMATCH",
+      "NO_BEHAVIOR_CHANGE_EVIDENCE"
+    ]
+  },
+  "findings": [
+    {
+      "body_redacted": true,
+      "error_code": "MISSING_ROUTE_LEASE",
+      "message": "Trace feedback row requires a route lease id.",
+      "negative_case_id": "agent_trace_missing_route_lease",
+      "subject_id": "trace_missing_lease",
+      "subject_kind": "agent_trace_event"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "DUPLICATE_TRACE_EVENT_ID",
+      "message": "Trace event id must be unique before it can feed behavior evidence.",
+      "negative_case_id": "duplicate_trace_event_conflict",
+      "subject_id": "trace_duplicate",
+      "subject_kind": "agent_trace_event"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "HOOK_SHADOW_BANNED_ROUTE_INTERVENTION",
+      "message": "Hook-shadow row detects a banned first-contact route and must redirect through the kernel entry path.",
+      "negative_case_id": "hook_shadow_banned_route_attempt",
+      "subject_id": "synthetic_first_contact_route_guard",
+      "subject_kind": "hook_shadow_case"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "HOOK_SHADOW_OVER_BUDGET",
+      "message": "Hook-shadow row exceeds its public synthetic coverage budget and must be downgraded.",
+      "negative_case_id": "hook_shadow_budget_overrun",
+      "subject_id": "synthetic_route_ladder_budget_guard",
+      "subject_kind": "hook_shadow_case"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "HOOK_SHADOW_COMMAND_DISPLACEMENT",
+      "message": "Hook-shadow row detects context gathering displacing direct local action.",
+      "negative_case_id": "hook_shadow_command_displacement",
+      "subject_id": "synthetic_direct_action_guard",
+      "subject_kind": "hook_shadow_case"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "HOOK_SHADOW_LIVE_STATE_READ_FORBIDDEN",
+      "message": "Hook-shadow coverage cannot read live operator, provider, browser/HUD/cockpit, or Task Ledger state.",
+      "negative_case_id": "hook_shadow_live_state_read_attempt",
+      "subject_id": "synthetic_live_operator_state_guard",
+      "subject_kind": "hook_shadow_case"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "HOOK_SHADOW_MISSING_AUTHORITY",
+      "message": "Hook-shadow row lacks authority to intervene and must remain advisory.",
+      "negative_case_id": "hook_shadow_missing_authority",
+      "subject_id": "synthetic_prompt_observer",
+      "subject_kind": "hook_shadow_case"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "ROUTE_COMPLIANCE_PASS_OVERCLAIMS_BEHAVIOR_CHANGE",
+      "message": "Route compliance pass cannot claim behavior change without evidence ids.",
+      "negative_case_id": "route_compliance_overclaims_behavior_change",
+      "subject_id": "trace_route_overclaim",
+      "subject_kind": "agent_trace_event"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "KERNEL_BLOAT_BEFORE_DIRECT_ACTION",
+      "message": "Route lease returned to broad kernel context before direct action.",
+      "negative_case_id": "route_lease_broad_kernel_bloat_before_direct_action",
+      "subject_id": "trace_kernel_bloat",
+      "subject_kind": "route_lease_feedback"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "ROUTE_LEASE_NOT_CONSUMED",
+      "message": "Static route metadata cannot count as consumed trace feedback.",
+      "negative_case_id": "route_lease_static_metadata_without_trace_feedback",
+      "subject_id": "trace_static_metadata",
+      "subject_kind": "route_lease_feedback"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "ROUTE_MISS_REPLACED",
+      "message": "Route miss must name the expected route, observed route, and public replacement route.",
+      "negative_case_id": "route_miss_replaced",
+      "subject_id": "trace_route_miss",
+      "subject_kind": "agent_trace_event"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "TELEMETRY_PRIVATE_TRANSCRIPT_BODY",
+      "message": "Private transcript payload class is rejected and redacted.",
+      "negative_case_id": "telemetry_private_transcript_body",
+      "subject_id": "trace_private_marker",
+      "subject_kind": "agent_trace_event"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "ACTOR_AXIS_AUTHORITY_MISMATCH",
+      "message": "Advisory trace cannot claim live mutation authority.",
+      "negative_case_id": "wrong_actor_axis_and_evidence_only_telemetry",
+      "subject_id": "trace_advisory_axis",
+      "subject_kind": "agent_trace_event"
+    },
+    {
+      "body_redacted": true,
+      "error_code": "NO_BEHAVIOR_CHANGE_EVIDENCE",
+      "message": "Evidence-only telemetry cannot retire behavior debt.",
+      "negative_case_id": "wrong_actor_axis_and_evidence_only_telemetry",
+      "subject_id": "trace_advisory_axis",
+      "subject_kind": "agent_trace_event"
+    }
+  ],
+  "fixture_id": "first_wave.agent_route_observability_runtime",
+  "input_mode": null,
+  "missing_negative_cases": [],
+  "observed_negative_cases": {
+    "agent_trace_missing_route_lease": [
+      "MISSING_ROUTE_LEASE"
+    ],
+    "duplicate_trace_event_conflict": [
+      "DUPLICATE_TRACE_EVENT_ID"
+    ],
+    "hook_shadow_banned_route_attempt": [
+      "HOOK_SHADOW_BANNED_ROUTE_INTERVENTION"
+    ],
+    "hook_shadow_budget_overrun": [
+      "HOOK_SHADOW_OVER_BUDGET"
+    ],
+    "hook_shadow_command_displacement": [
+      "HOOK_SHADOW_COMMAND_DISPLACEMENT"
+    ],
+    "hook_shadow_live_state_read_attempt": [
+      "HOOK_SHADOW_LIVE_STATE_READ_FORBIDDEN"
+    ],
+    "hook_shadow_missing_authority": [
+      "HOOK_SHADOW_MISSING_AUTHORITY"
+    ],
+    "route_compliance_overclaims_behavior_change": [
+      "ROUTE_COMPLIANCE_PASS_OVERCLAIMS_BEHAVIOR_CHANGE"
+    ],
+    "route_lease_broad_kernel_bloat_before_direct_action": [
+      "KERNEL_BLOAT_BEFORE_DIRECT_ACTION"
+    ],
+    "route_lease_static_metadata_without_trace_feedback": [
+      "ROUTE_LEASE_NOT_CONSUMED"
+    ],
+    "route_miss_replaced": [
+      "ROUTE_MISS_REPLACED"
+    ],
+    "telemetry_private_transcript_body": [
+      "TELEMETRY_PRIVATE_TRANSCRIPT_BODY"
+    ],
+    "wrong_actor_axis_and_evidence_only_telemetry": [
+      "ACTOR_AXIS_AUTHORITY_MISMATCH",
+      "NO_BEHAVIOR_CHANGE_EVIDENCE"
+    ]
+  },
+  "organ_id": "agent_route_observability_runtime",
+  "private_state_scan": {
+    "anti_claim": "Scanner terms are regression sentinels for tests and declared import rows. A pass is not a complete secret scan, credential audit, release clearance, or proof that no private material exists.",
+    "blocking_hit_count": 0,
+    "body_redacted": true,
+    "hit_count": 0,
+    "hits": [],
+    "redacted_output_field_labels_omitted": true,
+    "scan_scope": {
+      "body_text_exported_in_findings": false,
+      "does_not_authorize_source_mutation": true,
+      "does_not_certify_absence_of_secrets": true,
+      "does_not_read_binary_or_live_account_state": true,
+      "intended_use": "Detect declared synthetic sentinel tokens and classify explicit macro-import material rows before public body import.",
+      "not_a_complete_secret_scan": true,
+      "scope_id": "synthetic_sentinel_and_declared_import_policy"
+    },
+    "scanned_path_count": 5,
+    "status": "pass",
+    "synthetic_boundary_negative_cases_observed": [
+      "telemetry_private_transcript_body"
+    ]
+  },
+  "receipt_id": "agent_route_observability_runtime_debt_retirement_v1",
+  "receipt_paths": [
+    "receipts/first_wave/agent_route_observability_runtime/route_compliance_audit.json",
+    "receipts/first_wave/agent_route_observability_runtime/hook_shadow_coverage.json",
+    "receipts/first_wave/agent_route_observability_runtime/debt_retirement_receipt.json",
+    "receipts/first_wave/agent_route_observability_runtime/route_lease_mode_control_receipt.json",
+    "receipts/first_wave/agent_route_observability_runtime/agent_principle_lens_receipt.json",
+    "receipts/first_wave/agent_route_observability_runtime/egress_mirror_receipt.json"
+  ],
+  "schema_version": "agent_route_observability_runtime_debt_retirement_v1",
+  "source_pattern_ids": [
+    "agent_route_observability_runtime",
+    "agent_route_compliance_audit",
+    "agent_session_attribution",
+    "agent_trace_to_route_repair_observability_compound",
+    "agent_principle_lens",
+    "entry_payload_admission_nonnegotiable_floor",
+    "egress_compliance_stop_hook_mirror",
+    "route_lease_mode_control",
+    "actor_axis_authority_boundary",
+    "anti_pattern_debt_retirement",
+    "trace_feedback_behavior_change_gate",
+    "runtime_hook_shadow_intervention_coverage"
+  ],
+  "status": "pass",
+  "validator_asserted_feeds_patterns": [
+    {
+      "assertion_id": "route_lease_feedback_requires_consumed_trace",
+      "source_pattern_id": "route_lease_mode_control",
+      "status": "pass"
+    },
+    {
+      "assertion_id": "actor_axis_mismatch_rejects_mutation_authority",
+      "source_pattern_id": "actor_axis_authority_boundary",
+      "status": "pass"
+    },
+    {
+      "assertion_id": "debt_retirement_requires_behavior_change_evidence",
+      "source_pattern_id": "anti_pattern_debt_retirement",
+      "status": "pass"
+    },
+    {
+      "assertion_id": "hook_shadow_intervention_requires_mapped_repair_and_ceiling",
+      "source_pattern_id": "runtime_hook_shadow_intervention_coverage",
+      "status": "pass"
+    },
+    {
+      "assertion_id": "agent_principle_lens_requires_compact_admission_receipts",
+      "source_pattern_id": "agent_principle_lens",
+      "status": "pass"
+    },
+    {
+      "assertion_id": "entry_payload_admission_preserves_principle_lens_handles",
+      "source_pattern_id": "entry_payload_admission_nonnegotiable_floor",
+      "status": "pass"
+    },
+    {
+      "assertion_id": "egress_mirror_detects_final_response_tripwires_without_private_state",
+      "source_pattern_id": "egress_compliance_stop_hook_mirror",
+      "status": "pass"
+    }
+  ],
+  "validator_id": "validator.microcosm.organs.agent_route_observability_runtime"
+}

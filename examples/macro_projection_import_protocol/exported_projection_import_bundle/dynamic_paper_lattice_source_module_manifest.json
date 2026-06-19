@@ -1,0 +1,61 @@
+{
+  "authority_ceiling": {
+    "account_or_session_state_exported": false,
+    "browser_hud_live_access": false,
+    "credential_or_account_bound_bodies_exported": false,
+    "generated_paper_sidecar_authority_claimed": false,
+    "live_macro_kernel_execution": false,
+    "provider_payload_access": false,
+    "raw_operator_voice_exported": false,
+    "release_authorized": false
+  },
+  "body_in_receipt": false,
+  "body_storage_policy": "exact_non_secret_dynamic_paper_lattice_source_modules_copied_into_public_projection_bundle",
+  "bundle_id": "macro_projection_import_protocol_runtime_example",
+  "classification": "copied_non_secret_macro_body",
+  "manifest_id": "dynamic_paper_lattice_source_modules_import",
+  "module_count": 0,
+  "modules": [],
+  "public_runtime_policy": "public validation uses exact source digests, anchor checks, syntax compilation, and the existing dynamic paper lattice regression contract; copied source modules are body evidence, not authority to read raw operator voice, mutate paper-module source, run live macro kernel routing state, access provider payloads, or claim private session state.",
+  "receipt_body_policy": "receipts report paths hashes counts and anchor results but never duplicate full source bodies or live private/kernel/provider/session payloads",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "dynamic_paper_lattice_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/dynamic_paper_lattice.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/dynamic_paper_lattice.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/dynamic_paper_lattice.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "dynamic_paper_lattice_test_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_dynamic_paper_lattice.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/server/tests/test_dynamic_paper_lattice.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/server/tests/test_dynamic_paper_lattice.py"
+    }
+  ],
+  "schema_version": "macro_projection_dynamic_paper_lattice_source_module_manifest_v1",
+  "secret_exclusion_boundary": [
+    "api keys",
+    "credentials",
+    "cookies",
+    "account/session state",
+    "provider payload bodies",
+    "browser/HUD live-access material",
+    "operator thread bodies",
+    "recipient-send state",
+    "private account control",
+    "credential-equivalent payloads"
+  ],
+  "source_open_payload_boundary": "open_source_everything_but_keys"
+}

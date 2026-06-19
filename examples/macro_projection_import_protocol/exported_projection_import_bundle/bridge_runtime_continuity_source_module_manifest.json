@@ -1,0 +1,100 @@
+{
+  "body_storage_policy": "exact_non_secret_bridge_runtime_continuity_source_modules_copied_into_public_projection_bundle",
+  "bundle_id": "macro_projection_import_protocol_runtime_example",
+  "classification": "copied_non_secret_macro_body",
+  "manifest_id": "bridge_runtime_continuity_source_modules_import",
+  "module_count": 0,
+  "modules": [],
+  "public_runtime_policy": "public validation uses exact source digests, anchor checks, syntax compilation, and the existing synthetic bridge/controller/continuation regression suites; copied source modules are body evidence, not authority to inject into live Claude sessions, read live transcript bodies, call providers, mutate bridge ledgers, or claim private session state.",
+  "receipt_body_policy": "receipts report paths hashes counts and anchor results but never duplicate full source bodies or live session jsonl bridge provider browser HUD account or credential-equivalent payloads",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "bridge_resume_source_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/meta/bridge/bridge_resume.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/bridge/bridge_resume.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/bridge/bridge_resume.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "controller_heartbeat_source_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/controller_heartbeat.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/controller_heartbeat.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/controller_heartbeat.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "continuation_packet_source_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/continuation_packet.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/continuation_packet.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/continuation_packet.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "bridge_resume_test_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_bridge_resume.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/server/tests/test_bridge_resume.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/server/tests/test_bridge_resume.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "controller_heartbeat_test_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_controller_heartbeat.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/server/tests/test_controller_heartbeat.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/server/tests/test_controller_heartbeat.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "continuation_packet_test_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_continuation_packet.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/server/tests/test_continuation_packet.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/server/tests/test_continuation_packet.py"
+    }
+  ],
+  "schema_version": "macro_projection_bridge_runtime_continuity_source_module_manifest_v1",
+  "secret_exclusion_boundary": [
+    "api keys",
+    "credentials",
+    "cookies",
+    "account/session state",
+    "provider payload bodies",
+    "browser/HUD live-access material",
+    "operator thread bodies",
+    "recipient-send state",
+    "private account control",
+    "credential-equivalent payloads",
+    "live Claude Desktop injection state",
+    "live session jsonl transcript bodies"
+  ],
+  "source_open_payload_boundary": "open_source_everything_except_keys_credentials_account_session_state_cookies_provider_payload_bodies_browser_hud_live_access_recipient_send_state_and_credential_equivalent_material"
+}

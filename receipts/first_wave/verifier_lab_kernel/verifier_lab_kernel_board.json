@@ -1,0 +1,311 @@
+{
+  "anti_claim": "Verifier lab kernel composes source-available public component receipts for bounded Lean/Lake execution, tactic routing, verifier trace repair, provider-hypothesis quarantine, CP2 action candidates, bounded Evolve candidates, and structured public runtime receipts. It does not import macro proof bodies, count oracle or provider output as forward proof success, expose proof bodies, mutate source, claim benchmark solve rate, or authorize release.",
+  "authority_ceiling": {
+    "authority_ceiling": "verifier_governed_public_kernel_receipt_only",
+    "cp2_outputs_are_proof_bodies": false,
+    "evolve_mutates_arbitrary_code": false,
+    "formal_proof_authority": false,
+    "lean_lake_execution_authorized": "bounded_public_component_witness_only",
+    "macro_private_body_import_authorized": false,
+    "oracle_success_counts_as_forward_success": false,
+    "proof_bodies_allowed_in_receipts": false,
+    "provider_calls_authorized": false,
+    "provider_text_counts_as_proof": false,
+    "release_authorized": false,
+    "source_mutation_authorized": false,
+    "status": "pass"
+  },
+  "authority_counters": {
+    "oracle_forward_success_increment_count": 0,
+    "proof_body_export_count": 2,
+    "provider_results_counted": 0
+  },
+  "authority_split": {
+    "cp2": "typed action candidate plus rerun receipt only",
+    "evolve": "bounded policy candidate plus rerun/quarantine receipt only",
+    "forward_success": "independent verifier receipt only",
+    "oracle": "diagnostic comparator only",
+    "provider": "advisory hypothesis only"
+  },
+  "board_id": "verifier_lab_kernel_public_board",
+  "body_copied_material_count": 0,
+  "body_in_receipt": false,
+  "claim_separation": {
+    "contract_rejected": [
+      {
+        "authority": "rejected_contract_violation_not_forward_result",
+        "case_id": "cp2_candidate_contains_proof_body",
+        "error_codes": [
+          "VERIFIER_LAB_CP2_PROOF_BODY_FORBIDDEN"
+        ]
+      },
+      {
+        "authority": "rejected_contract_violation_not_forward_result",
+        "case_id": "evolve_mutates_unbounded_artifact",
+        "error_codes": [
+          "VERIFIER_LAB_EVOLVE_SCOPE_FORBIDDEN"
+        ]
+      },
+      {
+        "authority": "rejected_contract_violation_not_forward_result",
+        "case_id": "forward_problem_leaks_candidate_body",
+        "error_codes": [
+          "VERIFIER_LAB_FORWARD_FIELD_FORBIDDEN"
+        ]
+      },
+      {
+        "authority": "rejected_contract_violation_not_forward_result",
+        "case_id": "oracle_counted_as_forward",
+        "error_codes": [
+          "VERIFIER_LAB_ORACLE_FORWARD_CONTAMINATION"
+        ]
+      },
+      {
+        "authority": "rejected_contract_violation_not_forward_result",
+        "case_id": "provider_claims_proof",
+        "error_codes": [
+          "VERIFIER_LAB_PROVIDER_PROOF_AUTHORITY_FORBIDDEN"
+        ]
+      }
+    ],
+    "cp2_translated": [
+      {
+        "action_class": "premise_exact",
+        "proposal_id": "cp2_premise_exact_add_comm",
+        "residual_id": "res_missing_commutativity_prior",
+        "verifier_rerun_ref": "receipts/first_wave/formal_math_verifier_trace_repair_loop/cold_rerun_receipt_public_synthetic.json"
+      },
+      {
+        "action_class": "retry_with_recipe",
+        "proposal_id": "cp2_retry_with_recipe_closed_std",
+        "residual_id": "res_missing_commutativity_prior",
+        "verifier_rerun_ref": "receipts/first_wave/formal_math_verifier_trace_repair_loop/cold_rerun_receipt_public_synthetic.json"
+      }
+    ],
+    "evolve_candidate": [
+      {
+        "baseline_receipt_ref": "receipts/first_wave/formal_math_verifier_trace_repair_loop/formal_math_verifier_trace_repair_loop_result.json",
+        "candidate_id": "evolve_prioritize_premise_exact_after_retrieval_miss",
+        "mutated_artifact": "failure_class_routing",
+        "rerun_receipt_ref": "receipts/first_wave/verifier_lab_kernel/verifier_lab_kernel_validation_receipt.json"
+      }
+    ],
+    "lean_verified": [
+      {
+        "body_in_receipt": false,
+        "compiled_declaration_count": 8,
+        "component_status": "pass",
+        "receipt_refs": [
+          "receipts/first_wave/verifier_lab_kernel/components/formal_math_lean_proof_witness/formal_math_lean_proof_witness_result.json",
+          "receipts/first_wave/verifier_lab_kernel/components/formal_math_lean_proof_witness/lean_proof_witness_board.json",
+          "receipts/first_wave/verifier_lab_kernel/components/formal_math_lean_proof_witness/formal_math_lean_proof_witness_validation_receipt.json",
+          "receipts/first_wave/verifier_lab_kernel/components/acceptance/formal_math_lean_proof_witness_fixture_acceptance.json"
+        ],
+        "source": "formal_math_lean_proof_witness"
+      },
+      {
+        "attempt_id": "attempt_closed_nat_mod_decide",
+        "component_receipt_ref": "component:formal_math_lean_proof_witness",
+        "forward_problem_id": "fp_closed_nat_mod_public",
+        "selected_tactic_id": "decide",
+        "verifier_result_class": "lean_verified"
+      },
+      {
+        "attempt_id": "attempt_or_comm_constructor",
+        "component_receipt_ref": "component:formal_math_lean_proof_witness",
+        "forward_problem_id": "fp_or_comm_public",
+        "selected_tactic_id": "constructor_cases",
+        "verifier_result_class": "lean_verified"
+      }
+    ],
+    "oracle_compared": [
+      {
+        "counted_as_forward_success": false,
+        "forward_problem_id": "fp_missing_commutativity_prior",
+        "oracle_result_class": "oracle_can_identify_missing_premise",
+        "sidecar_id": "oracle_missing_commutativity_prior"
+      }
+    ],
+    "provider_suggested": [
+      {
+        "candidate_action_classes": [
+          "premise_exact",
+          "retry_with_recipe"
+        ],
+        "hypothesis_id": "provider_hyp_missing_commutativity_prior",
+        "provider_results_counted": false,
+        "residual_class": "PREMISE_RETRIEVAL_MISS",
+        "residual_id": "res_missing_commutativity_prior"
+      }
+    ],
+    "retrieval_miss": [
+      {
+        "forward_problem_id": "fp_missing_commutativity_prior",
+        "missing_primitive": "Nat.add_comm closed premise term",
+        "residual_class": "PREMISE_RETRIEVAL_MISS",
+        "residual_id": "res_missing_commutativity_prior"
+      }
+    ]
+  },
+  "component_statuses": {
+    "corpus_readiness_mathlib_absence_gate": "pass",
+    "formal_math_lean_proof_witness": "pass",
+    "formal_math_premise_retrieval": "pass",
+    "formal_math_verifier_trace_repair_loop": "pass",
+    "lean_std_premise_index": "pass",
+    "proof_diagnostic_evidence_spine": "pass",
+    "ring2_premise_retrieval_precision_recall_harness": "pass",
+    "tactic_portfolio_availability_probe": "pass",
+    "target_shape_tactic_routing_gate": "pass"
+  },
+  "input_mode": "first_wave_fixture",
+  "kernel_id": "leak_proof_verifier_lab_kernel_public_fixture_v1",
+  "lab_summary": {
+    "cp2_candidate_count": 2,
+    "evolve_candidate_count": 1,
+    "forward_problem_count": 4,
+    "lean_compiled_declaration_count": 8,
+    "oracle_sidecar_count": 1,
+    "proof_lab_route_component_count": 0,
+    "proof_lab_route_id": null,
+    "provider_hypothesis_count": 1,
+    "target_shape_route_case_count": 7,
+    "verifier_attempt_count": 3,
+    "verifier_trace_attempt_count": 5
+  },
+  "organ_id": "verifier_lab_kernel",
+  "proof_lab_component_metrics": {
+    "corpus_count": 7,
+    "lean_compiled_declaration_count": 8,
+    "lean_lake_return_code": 0,
+    "lean_std_premise_count": 11,
+    "mathlib_lake_project_import_available": false,
+    "proof_diagnostic_accepted_count": 2,
+    "proof_diagnostic_rejected_count": 1,
+    "retrieval_mean_public_recall": 1.0,
+    "retrieval_query_count": 4,
+    "ring2_mean_precision_at_k": 0.36,
+    "ring2_mean_recall_at_k": 0.9,
+    "ring2_problem_count": 10,
+    "tactic_probe_status": "pass",
+    "target_shape_route_case_count": 7,
+    "verifier_trace_attempt_count": 5
+  },
+  "proof_lab_route": {
+    "available_pattern_ids": [],
+    "error_codes": [],
+    "missing_component_organs": [],
+    "missing_pattern_ids": [],
+    "route_id": null,
+    "route_supplied": false,
+    "source_ref": null,
+    "source_refs": [],
+    "source_sha256": null,
+    "status": "pass"
+  },
+  "real_runtime_receipt": true,
+  "receipt_paths": [
+    "receipts/first_wave/verifier_lab_kernel/verifier_lab_kernel_result.json",
+    "receipts/first_wave/verifier_lab_kernel/verifier_lab_kernel_board.json",
+    "receipts/first_wave/verifier_lab_kernel/verifier_lab_kernel_validation_receipt.json",
+    "receipts/acceptance/first_wave/verifier_lab_kernel_fixture_acceptance.json"
+  ],
+  "receipt_transparency_contract": {
+    "body_in_receipt": false,
+    "forbidden_payload_fields": [
+      "proof_body",
+      "raw_tactic_script",
+      "provider_text",
+      "oracle_ideal_answer",
+      "oracle_needed_premise_ids",
+      "private_source_path",
+      "private_payload_body",
+      "stdout_body",
+      "stderr_body"
+    ],
+    "omitted_payload_scope": "proof_provider_oracle_private_source_and_stdout_stderr_bodies_only",
+    "real_substrate_default": true,
+    "receipt_body_is_public_evidence": true,
+    "required_public_evidence_fields": [
+      "theorem_or_declaration_names",
+      "lean_lake_command_identity",
+      "lean_return_code",
+      "source_hashes",
+      "source_module_imports",
+      "source_open_body_imports",
+      "declaration_counts",
+      "accepted_transition_count",
+      "residual_transition_count",
+      "negative_case_id",
+      "cp2_action_class",
+      "evolve_policy_artifact_id",
+      "oracle_provider_separation_counters",
+      "authority_ceiling",
+      "anti_claim"
+    ],
+    "schema_version": "verifier_lab_receipt_transparency_contract_v1",
+    "stdout_stderr_policy": "counts_and_return_codes_public_bodies_omitted"
+  },
+  "schema_version": "verifier_lab_kernel_board_v1",
+  "secret_exclusion_scan": {
+    "anti_claim": "Scanner terms are regression sentinels for tests and declared import rows. A pass is not a complete secret scan, credential audit, release clearance, or proof that no private material exists.",
+    "blocking_hit_count": 0,
+    "body_in_receipt": false,
+    "exclusion_policy": "Open-source macro substrate by default; exclude only secrets, credentials, operator conversation bodies, provider payloads, account/session state, and credential-equivalent live-access material.",
+    "hit_count": 0,
+    "hits": [],
+    "omitted_output_fields": [
+      "source_excerpt",
+      "body"
+    ],
+    "real_substrate_default": true,
+    "scan_purpose": "credential_account_bound_and_operator_payload_exclusion",
+    "scan_scope": {
+      "body_text_exported_in_findings": false,
+      "does_not_authorize_source_mutation": true,
+      "does_not_certify_absence_of_secrets": true,
+      "does_not_read_binary_or_live_account_state": true,
+      "intended_use": "Detect declared synthetic sentinel tokens and classify explicit macro-import material rows before public body import.",
+      "not_a_complete_secret_scan": true,
+      "scope_id": "synthetic_sentinel_and_declared_import_policy"
+    },
+    "scanned_path_count": 6,
+    "status": "pass",
+    "synthetic_receipt_policy": "Synthetic receipts are admissible only as regression or negative-case harness artifacts, or as named blocked-import debt. They are not substitutes for non-secret macro substrate, real runtime receipts, real copied bodies, or source-faithful refactors."
+  },
+  "source_module_imports": {
+    "findings": [],
+    "module_count": 0,
+    "modules": [],
+    "observed_negative_cases": {},
+    "source_module_manifest_ref": "fixtures/first_wave/verifier_lab_kernel/input/source_module_manifest.json",
+    "status": "not_applicable"
+  },
+  "source_module_manifest_ref": "fixtures/first_wave/verifier_lab_kernel/input/source_module_manifest.json",
+  "source_open_body_imports": {
+    "aggregate_floor_ref": "",
+    "authority_ceiling": {
+      "body_text_in_receipt": false,
+      "formal_proof_authority": false,
+      "host_local_absolute_paths_exported": false,
+      "lean_lake_execution_authorized": "component_witness_only",
+      "proof_body_or_oracle_proof_text_exported": false,
+      "provider_payload_exported": false,
+      "release_authorized": false
+    },
+    "body_in_receipt": false,
+    "body_material_count": 0,
+    "body_material_ids": [],
+    "body_material_status": "",
+    "body_text_exported_in_receipts": false,
+    "body_text_exported_in_workingness": false,
+    "material_classes": [],
+    "reader_action": "",
+    "schema_version": "verifier_lab_kernel_source_open_body_imports_v1",
+    "source_import_class": "",
+    "source_manifest_refs": [],
+    "status": "not_applicable"
+  },
+  "status": "pass",
+  "synthetic_receipt_standin_allowed": false
+}

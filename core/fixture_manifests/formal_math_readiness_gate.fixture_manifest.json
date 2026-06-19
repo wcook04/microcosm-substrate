@@ -1,0 +1,146 @@
+{
+  "schema_version": "microcosm_fixture_manifest_v1",
+  "manifest_type": "first_organ_fixture_validator_manifest",
+  "organ_id": "formal_math_readiness_gate",
+  "fixture_id": "fixture::formal_math_readiness_gate::first_wave_contract_v1",
+  "status": "public_slice_contract_bound",
+  "purpose": "Validate source-available formal math readiness metadata for corpus availability, tactic probes, premise indexes, target-shape routing, and provider context recipes without running Lean/Lake, calling providers, or exposing proof bodies.",
+  "inputs": [
+    "fixtures/first_wave/formal_math_readiness_gate/input/corpus_readiness.json",
+    "fixtures/first_wave/formal_math_readiness_gate/input/tactic_portfolio_availability.json",
+    "fixtures/first_wave/formal_math_readiness_gate/input/premise_index.json",
+    "fixtures/first_wave/formal_math_readiness_gate/input/target_shape_tactic_routing.json",
+    "fixtures/first_wave/formal_math_readiness_gate/input/provider_context_recipes.json",
+    "fixtures/first_wave/formal_math_readiness_gate/input/corpus_readiness_overclaims_mathlib.json",
+    "fixtures/first_wave/formal_math_readiness_gate/input/tactic_claims_availability_without_probe.json",
+    "fixtures/first_wave/formal_math_readiness_gate/input/premise_index_with_proof_body.json",
+    "fixtures/first_wave/formal_math_readiness_gate/input/routing_allows_unavailable_tactic.json",
+    "fixtures/first_wave/formal_math_readiness_gate/input/provider_context_recipe_overclaim.json"
+  ],
+  "generated_receipts": [
+    "receipts/first_wave/formal_math_readiness_gate/readiness_gate_result.json",
+    "receipts/first_wave/formal_math_readiness_gate/formal_math_readiness_board.json",
+    "receipts/first_wave/formal_math_readiness_gate/formal_math_readiness_extension_board.json",
+    "receipts/first_wave/formal_math_readiness_gate/formal_math_readiness_validation_receipt.json",
+    "receipts/acceptance/first_wave/formal_math_readiness_gate_fixture_acceptance.json"
+  ],
+  "command": "python -m microcosm_core.organs.formal_math_readiness_gate run --input fixtures/first_wave/formal_math_readiness_gate/input --out receipts/first_wave/formal_math_readiness_gate",
+  "expected_negative_cases": [
+    "corpus_readiness_overclaims_mathlib",
+    "tactic_availability_without_probe",
+    "premise_index_proof_body_forbidden",
+    "routing_allows_unavailable_tactic",
+    "provider_context_recipe_overclaim"
+  ],
+  "stable_error_codes": [
+    "MATHLIB_AVAILABILITY_OVERCLAIM",
+    "TACTIC_AVAILABILITY_UNPROBED",
+    "PREMISE_INDEX_PROOF_BODY_FORBIDDEN",
+    "ROUTING_ALLOWS_UNAVAILABLE_TACTIC",
+    "PROVIDER_RECIPE_BUDGET_EXCEEDED",
+    "PROVIDER_RECIPE_PROOF_BODY_FORBIDDEN"
+  ],
+  "receipt_field_floor": [
+    "schema_version",
+    "organ_id",
+    "fixture_id",
+    "validator_id",
+    "command",
+    "status",
+    "expected_negative_cases",
+    "observed_negative_cases",
+    "missing_negative_cases",
+    "error_codes",
+    "anti_claim",
+    "private_state_scan",
+    "authority_ceiling",
+    "receipt_paths",
+    "blocked_capabilities",
+    "available_tactic_ids",
+    "unavailable_tactic_ids",
+    "projection_cell_id",
+    "selected_pattern_ids",
+    "readiness_extension_board"
+  ],
+  "private_state_exclusion_rules": {
+    "lean_lake": "not executed; readiness metadata only",
+    "mathlib": "availability may be reported only from a probe status and cannot authorize dependent proof work",
+    "proof_bodies": "forbidden; negative fixtures may carry synthetic forbidden-key rows only and generated receipts may record key names only",
+    "provider_payload_bodies": "forbidden; recipes remain metadata and provider_calls_authorized=false",
+    "oracle_truth": "forbidden; premise rows expose retrieval terms and split policy only"
+  },
+  "authority_ceiling": "public synthetic formal-math readiness fixture only; not Lean/Lake execution, formal proof authority, provider authority, runtime correctness, or release operations",
+  "anti_claim": "This fixture manifest accepts only a readiness gate. It does not authorize formal_math_lean_proof_witness, Lean/Lake, provider calls, proof bodies, public release, hosted deployment, publication operations, recipient work, or secret export.",
+  "body_material_status": "copied_non_secret_macro_readiness_probe_body_with_provenance",
+  "body_copied_material_count": 13,
+  "source_open_body_imports": {
+    "status": "pass",
+    "body_material_status": "copied_non_secret_PROVER_smoke_run_readiness_and_tactic_probe_artifacts_with_digest_provenance",
+    "body_material_count": 13,
+    "body_material_ids": [
+      "prover_proof_state_curriculum_corpus_readiness_json_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_json_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_mathlib_probe_lean_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_trace_state_probe_lean_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_portfolio_core_v0_aesop_lean_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_portfolio_core_v0_decide_lean_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_portfolio_core_v0_grind_lean_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_portfolio_core_v0_native_decide_lean_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_portfolio_core_v0_omega_lean_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_portfolio_core_v0_rfl_lean_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_portfolio_core_v0_simp_lean_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_portfolio_core_v0_simp_all_lean_body_import",
+      "prover_proof_state_curriculum_tactic_affordance_probe_portfolio_core_v0_tactic_portfolio_availability_json_body_import"
+    ],
+    "material_classes": [
+      "public_macro_receipt_body",
+      "public_macro_tool_body"
+    ],
+    "aggregate_floor_ref": "examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/bundle_manifest.json::copied_macro_body_artifacts",
+    "source_manifest_refs": [
+      "examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_module_manifest.json",
+      "examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/bundle_manifest.json"
+    ],
+    "source_refs": [
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/corpus_readiness.json",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe.json",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/mathlib_probe.lean",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/trace_state_probe.lean",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/aesop.lean",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/decide.lean",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/grind.lean",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/native_decide.lean",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/omega.lean",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/rfl.lean",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/simp.lean",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/simp_all.lean",
+      "state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/tactic_portfolio_availability.json"
+    ],
+    "target_refs": [
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/corpus_readiness.json",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe.json",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/mathlib_probe.lean",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/trace_state_probe.lean",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/aesop.lean",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/decide.lean",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/grind.lean",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/native_decide.lean",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/omega.lean",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/rfl.lean",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/simp.lean",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/simp_all.lean",
+      "microcosm-substrate/examples/formal_math_readiness_gate/exported_formal_math_readiness_bundle/source_artifacts/state/runs/PROVER_PROOF_STATE_SEARCH_CURRICULUM_20260511_v0_smoke/tactic_affordance_probe/portfolio_core_v0/tactic_portfolio_availability.json"
+    ],
+    "body_in_receipt": false,
+    "reader_action": "Run microcosm workingness and the formal_math_readiness_gate exported-bundle validator to inspect the copied PROVER smoke-run readiness/probe body floor.",
+    "authority_ceiling": {
+      "body_text_in_receipt": false,
+      "private_theorem_proof_body_exported": false,
+      "provider_payload_exported": false,
+      "lean_lake_execution_authorized": false,
+      "mathlib_presence_claim_authorized": false,
+      "formal_proof_authority": false,
+      "release_authorized": false
+    }
+  }
+}

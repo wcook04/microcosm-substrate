@@ -1,0 +1,21 @@
+{
+  "schema_version": "formal_math_verifier_trace_negative_fixture_v1",
+  "attempts": [
+    {
+      "expected_negative_case_id": "attempt_with_proof_body",
+      "attempt_id": "negative_attempt_with_proof_body",
+      "verifier_class": "invalid_proof_body_shape",
+      "trace_grade": "failed_checker",
+      "repair_action_id": "repair_redact_body",
+      "proof_body": "negative fixture forbidden proof payload",
+      "trace_events": [
+        {
+          "event_id": "negative_trace_body",
+          "event_class": "checker_rejected_candidate"
+        }
+      ]
+    }
+  ],
+  "fixture_material_status": "regression_negative_fixture",
+  "negative_fixture_role": "forbidden_contract_guard"
+}

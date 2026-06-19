@@ -1,0 +1,69 @@
+{
+  "replay_observations": [
+    {
+      "benchmark_score_claimed": false,
+      "body_in_receipt": false,
+      "case_id": "repo_issue_public_001",
+      "contamination_check_ref": "receipts/benchmark_integrity/contamination_001.json",
+      "evaluator_config_hash": "sha256:evaluator001",
+      "evaluator_id": "locked_repo_repair_scorer_v1",
+      "file_access_log_ref": "receipts/benchmark_integrity/file_access_log_001.json",
+      "integrity_verdict": "integrity_pass",
+      "metric_claim_authorized": false,
+      "output_replay_ref": "receipts/benchmark_integrity/output_replay_001.json",
+      "real_benchmark_trace_ref": "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/real_traces/benchmark_integrity_pytest_cmdrun_20260604T215615Z_92860_96643ade2288.json",
+      "replay_id": "replay_repo_issue_public_001_clean",
+      "source_artifact_evidence_refs": [
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/macro_state/microcosm_portfolio/extracted_patterns_ledger/agent_benchmark_integrity_anti_gaming_replay_compound.json",
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/macro_state/microcosm_portfolio/reconstruction/deterministic_pattern_order_v1.pattern_agent_benchmark_integrity_anti_gaming_replay_compound.json",
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/macro_state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.actual_substrate_science_multimodal_benchmark_integrity_growth_v1.json",
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/real_traces/benchmark_integrity_pytest_cmdrun_20260604T215615Z_92860_96643ade2288.json"
+      ],
+      "trusted_reference_score_ref": "receipts/benchmark_integrity/trusted_reference_001.json"
+    },
+    {
+      "benchmark_score_claimed": false,
+      "body_in_receipt": false,
+      "case_id": "repo_issue_public_002",
+      "contamination_check_ref": "receipts/benchmark_integrity/contamination_002.json",
+      "evaluator_config_hash": "sha256:evaluator002",
+      "evaluator_id": "locked_regression_guard_scorer_v1",
+      "file_access_log_ref": "receipts/benchmark_integrity/file_access_log_002.json",
+      "integrity_verdict": "integrity_pass",
+      "metric_claim_authorized": false,
+      "output_replay_ref": "receipts/benchmark_integrity/output_replay_002.json",
+      "real_benchmark_trace_ref": "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/real_traces/benchmark_integrity_pytest_cmdrun_20260604T215615Z_92860_96643ade2288.json",
+      "replay_id": "replay_repo_issue_public_002_clean",
+      "source_artifact_evidence_refs": [
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/macro_state/microcosm_portfolio/extracted_patterns_ledger/agent_benchmark_integrity_anti_gaming_replay_compound.json",
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/macro_state/microcosm_portfolio/reconstruction/deterministic_pattern_order_v1.pattern_agent_benchmark_integrity_anti_gaming_replay_compound.json",
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/macro_state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.actual_substrate_science_multimodal_benchmark_integrity_growth_v1.json",
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/real_traces/benchmark_integrity_pytest_cmdrun_20260604T215615Z_92860_96643ade2288.json"
+      ],
+      "trusted_reference_score_ref": "receipts/benchmark_integrity/trusted_reference_002.json"
+    },
+    {
+      "benchmark_score_claimed": false,
+      "body_in_receipt": false,
+      "case_id": "repo_issue_public_003",
+      "contamination_check_ref": "receipts/benchmark_integrity/contamination_003.json",
+      "evaluator_config_hash": "sha256:evaluator003",
+      "evaluator_id": "locked_repo_repair_scorer_v1",
+      "file_access_log_ref": "receipts/benchmark_integrity/file_access_log_003.json",
+      "integrity_verdict": "quarantine",
+      "metric_claim_authorized": false,
+      "output_replay_ref": "receipts/benchmark_integrity/output_replay_003.json",
+      "quarantine_reason_ref": "receipts/benchmark_integrity/quarantine_oracle_patch_body_ref_003.json",
+      "real_benchmark_trace_ref": "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/real_traces/benchmark_integrity_pytest_cmdrun_20260604T215615Z_92860_96643ade2288.json",
+      "replay_id": "replay_repo_issue_public_003_quarantined",
+      "source_artifact_evidence_refs": [
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/macro_state/microcosm_portfolio/extracted_patterns_ledger/agent_benchmark_integrity_anti_gaming_replay_compound.json",
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/macro_state/microcosm_portfolio/reconstruction/deterministic_pattern_order_v1.pattern_agent_benchmark_integrity_anti_gaming_replay_compound.json",
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/macro_state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.actual_substrate_science_multimodal_benchmark_integrity_growth_v1.json",
+        "examples/agent_benchmark_integrity_anti_gaming_replay/exported_benchmark_integrity_bundle/source_artifacts/real_traces/benchmark_integrity_pytest_cmdrun_20260604T215615Z_92860_96643ade2288.json"
+      ],
+      "trusted_reference_score_ref": "receipts/benchmark_integrity/trusted_reference_003.json"
+    }
+  ],
+  "schema_version": "benchmark_replay_observations_v1"
+}

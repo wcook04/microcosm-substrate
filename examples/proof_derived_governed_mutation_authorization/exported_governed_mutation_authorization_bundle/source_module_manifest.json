@@ -1,0 +1,105 @@
+{
+  "body_in_receipt": false,
+  "body_storage_policy": "exact_non_secret_macro_governed_mutation_authorization_source_bodies_copied_into_public_source_module_bundle",
+  "bundle_id": "proof_derived_governed_mutation_authorization_runtime_example",
+  "classification": "copied_non_secret_macro_body",
+  "manifest_id": "proof_derived_governed_mutation_authorization_source_open_body_import",
+  "module_count": 0,
+  "modules": [],
+  "omitted_material": [
+    {
+      "reason": "Private proof bodies, provider payloads, live credentials, account/session state, browser/HUD live-access state, raw policy-vote bodies, cloud/account identifiers, and irreversible mutation authority are credential-equivalent or private control material.",
+      "replacement_criteria": "Only public-safe synthetic governed-mutation metadata, exact non-secret macro control-plane bodies, digest-verified source refs, and body-free omission receipts may enter this bundle.",
+      "source_ref": "private proof/provider/cloud/account/operator surfaces"
+    },
+    {
+      "reason": "External research pages are attention refs for the pattern row, not macro substrate owned by ai_workflow.",
+      "replacement_criteria": "Keep external refs in extracted-pattern metadata; import local macro control bodies that implement the authorization, claim, landing, and scoped-commit mechanics.",
+      "source_ref": "external_attention_refs"
+    }
+  ],
+  "public_runtime_policy": "source_modules_are_governed_mutation_authorization_body_floor_not_live_mutation_or_cloud_dependency",
+  "receipt_body_policy": "target_body_text_is_never_embedded_in_receipts",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "proof_governed_mutation_extracted_patterns_ledger_body_import",
+      "path": "source_modules/ai_workflow/state/microcosm_portfolio/extracted_patterns_ledger.jsonl",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "state/microcosm_portfolio/extracted_patterns_ledger.jsonl",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "state/microcosm_portfolio/extracted_patterns_ledger.jsonl"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "proof_governed_mutation_high_novelty_growth_receipt_body_import",
+      "path": "source_modules/ai_workflow/state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.json",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.json",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "state/microcosm_portfolio/reconstruction/high_novelty_substrate_gap_scout_v1.json"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "mission_transaction_preflight_control_body_import",
+      "path": "source_modules/ai_workflow/tools/meta/control/mission_transaction_preflight.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/control/mission_transaction_preflight.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/control/mission_transaction_preflight.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "scoped_commit_private_index_control_body_import",
+      "path": "source_modules/ai_workflow/tools/meta/control/scoped_commit.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_near_verbatim",
+        "matched_private_ref": "tools/meta/control/scoped_commit.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/control/scoped_commit.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "work_ledger_claim_runtime_body_import",
+      "path": "source_modules/ai_workflow/tools/meta/factory/work_ledger.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/factory/work_ledger.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/factory/work_ledger.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "work_landing_reconcile_control_body_import",
+      "path": "source_modules/ai_workflow/system/lib/work_landing_status.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/work_landing_status.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/work_landing_status.py"
+    }
+  ],
+  "schema_version": "proof_derived_governed_mutation_authorization_source_module_manifest_v1",
+  "secret_exclusion_boundary": "no_keys_credentials_account_session_cookies_provider_payload_bodies_browser_hud_live_access_private_proof_bodies_raw_policy_votes_recipient_send_state_or_credential_equivalent_material",
+  "source_import_class": "copied_non_secret_macro_body",
+  "source_open_payload_boundary": "source_open_everything_except_keys_credentials_account_session_cookies_provider_payload_bodies_browser_hud_live_access_recipient_send_state_private_proof_bodies_raw_policy_votes_and_credential_equivalent_material",
+  "validation_contract_refs": [
+    "microcosm-substrate/tests/test_proof_derived_governed_mutation_authorization.py::test_governed_mutation_authorization_source_modules_are_exact_macro_body_imports",
+    "microcosm-substrate/tests/test_proof_derived_governed_mutation_authorization.py::test_governed_mutation_authorization_exported_bundle_validates_runtime_shape"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "body_copied_material_count": 1,
+  "body_in_receipt": false,
+  "bundle_id": "public_controller_heartbeat_runtime_example",
+  "module_count": 0,
+  "modules": [],
+  "omitted_material": [
+    "seed bodies",
+    "mission blackboard bodies",
+    "Work Ledger runtime bodies",
+    "provider payload bodies",
+    "browser/HUD live-access",
+    "account/session state",
+    "cookies",
+    "recipient-send state",
+    "credential-equivalent material"
+  ],
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/controller_heartbeat.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/controller_heartbeat.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/controller_heartbeat.py"
+    }
+  ],
+  "schema_version": "agent_route_observability_runtime_controller_heartbeat_source_module_manifest_v1",
+  "source_import_class": "copied_non_secret_macro_body",
+  "validation_ref_count": 3
+}

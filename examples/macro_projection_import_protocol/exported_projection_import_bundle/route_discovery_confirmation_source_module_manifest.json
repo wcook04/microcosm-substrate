@@ -1,0 +1,47 @@
+{
+  "body_storage_policy": "exact_non_secret_route_discovery_confirmation_source_module_copied_into_public_projection_bundle",
+  "bundle_id": "macro_projection_import_protocol_runtime_example",
+  "classification": "copied_non_secret_macro_body",
+  "manifest_id": "route_discovery_confirmation_source_modules_import",
+  "module_count": 0,
+  "modules": [],
+  "public_runtime_policy": "public validation uses exact source digests, anchor checks, syntax compilation, and read-only macro confirmation smoke checks; copied route-discovery-confirmation source is body evidence, not authority to mutate accepted edges, update the canonical route graph, execute live providers, export prompt/operator/provider bodies, inspect browser/HUD live access, inspect private account/session state, or send recipient material",
+  "receipt_body_policy": "receipts report paths hashes counts and anchor results but never duplicate full source bodies, provider payload bodies, provider response bodies, operator prompt bodies, browser/HUD live-access material, account/session state, cookies, credentials, accepted-edge private state, recipient-send state, or confirmation payload bodies",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "route_discovery_confirmation_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/meta/control/route_discovery_confirmation.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/control/route_discovery_confirmation.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/control/route_discovery_confirmation.py"
+    }
+  ],
+  "schema_version": "macro_projection_route_discovery_confirmation_source_module_manifest_v1",
+  "secret_exclusion_boundary": [
+    "api keys",
+    "credentials",
+    "cookies",
+    "account/session state",
+    "provider payload bodies",
+    "provider response bodies",
+    "browser/HUD live-access material",
+    "operator thread bodies",
+    "routing-pilot prompt bodies",
+    "route discovery proposal payload bodies beyond public-safe fixture refs",
+    "accepted-edge private state",
+    "recipient-send state",
+    "private account control",
+    "credential-equivalent payloads"
+  ],
+  "source_open_payload_boundary": "open_source_everything_but_keys_provider_payloads_and_live_access",
+  "validation_contract_refs": [
+    "microcosm-substrate/tests/test_command_output_projection_runtime.py::test_route_discovery_confirmation_source_manifest_matches_exact_macro_sources",
+    "microcosm-substrate/tests/test_command_output_projection_runtime.py::test_route_discovery_confirmation_source_compiles_and_preserves_mutation_boundary",
+    "microcosm-substrate/tests/test_macro_projection_import_protocol.py::test_route_discovery_confirmation_source_modules_body_import_is_unified_under_macro_projection_spine"
+  ]
+}

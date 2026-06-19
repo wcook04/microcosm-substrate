@@ -1,0 +1,26 @@
+{
+  "schema_version": "lean_std_premise_index_negative_case_v1",
+  "expected_negative_case_id": "namespace_without_source_ref",
+  "premises": [
+    {
+      "premise_id": "missing_source_ref",
+      "declaration_name": "Bool.and_comm",
+      "namespace": "Bool",
+      "source_ref": "",
+      "statement_shape": "regression_negative_descriptor",
+      "retrieval_terms": [
+        "boolean",
+        "and",
+        "commutative"
+      ],
+      "allowed_for_split": [
+        "train",
+        "dev",
+        "test"
+      ],
+      "body_material_status": "regression_negative_fixture"
+    }
+  ],
+  "fixture_class": "regression_negative_fixture",
+  "body_material_status": "regression_negative_fixture"
+}

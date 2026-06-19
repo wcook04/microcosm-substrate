@@ -1,0 +1,62 @@
+{
+  "body_storage_policy": "exact_non_secret_embedding_substrate_source_modules_copied_into_public_projection_bundle",
+  "bundle_id": "macro_projection_import_protocol_runtime_example",
+  "classification": "copied_non_secret_macro_body",
+  "manifest_id": "embedding_substrate_source_modules_import",
+  "module_count": 0,
+  "modules": [],
+  "public_runtime_policy": "public validation uses exact source digests, anchor checks, syntax compilation, and the existing embedding substrate regression contract; copied source modules are body evidence, not authority to call embedding providers, export live cache vectors, mutate private state/embeddings, access provider payloads, or claim private session state.",
+  "receipt_body_policy": "receipts report paths hashes counts and anchor results but never duplicate full source bodies, provider payload bodies, live embedding vectors, account/session material, or credential-equivalent payloads",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "embedding_substrate_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/embedding_substrate.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/embedding_substrate.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/embedding_substrate.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "embedding_sources_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/embedding_sources.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/embedding_sources.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/embedding_sources.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "embedding_substrate_test_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_embedding_substrate.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/server/tests/test_embedding_substrate.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/server/tests/test_embedding_substrate.py"
+    }
+  ],
+  "schema_version": "macro_projection_embedding_substrate_source_module_manifest_v1",
+  "secret_exclusion_boundary": [
+    "api keys",
+    "credentials",
+    "cookies",
+    "account/session state",
+    "provider payload bodies",
+    "browser/HUD live-access material",
+    "operator thread bodies",
+    "recipient-send state",
+    "private account control",
+    "credential-equivalent payloads"
+  ],
+  "source_open_payload_boundary": "open_source_everything_but_keys"
+}

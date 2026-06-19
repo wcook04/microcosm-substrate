@@ -1,0 +1,185 @@
+{
+  "body_storage_policy": "exact_non_secret_provider_context_macro_reducer_calibration_policy_and_standard_bodies_copied_into_public_provider_context_bundle",
+  "body_text_in_receipt": false,
+  "bundle_id": "provider_context_budget_runtime_example",
+  "classification": "copied_non_secret_macro_body_and_standard_body",
+  "manifest_id": "provider_context_recipe_budget_policy_source_modules_import",
+  "module_count": 4,
+  "modules": [
+    {
+      "anchor_count": 6,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "body_text_in_receipt": false,
+      "byte_count": 36717,
+      "classification": "copied_non_secret_macro_standard_body",
+      "line_count": 1100,
+      "material_class": "public_macro_standard_body",
+      "module_id": "provider_context_compute_provider_standard_body_import",
+      "required_anchors": [
+        "\"schema_version\": \"std_compute_provider_v1\"",
+        "\"provider_lane_policy\"",
+        "\"scheduler_shape\"",
+        "provider_receipts plus draft row_patches",
+        "records receipts and row patches",
+        "\"forbidden_to_low_authority_reason\""
+      ],
+      "sha256_match": true,
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_or_provider_payload_export",
+      "source_ref": "codex/standards/std_compute_provider.json",
+      "source_role": "Macro compute-provider policy standard defining provider lanes, authority tiers, transform-job packets, provider receipts, draft row patches, and low-authority worker boundaries.",
+      "source_sha256": "5e2c903a8e4ab8155dcac08cbc639cc50d29d491d5c31e135d4bc21d7e6e48bb",
+      "target_ref": "source_modules/codex/standards/std_compute_provider.json",
+      "target_sha256": "5e2c903a8e4ab8155dcac08cbc639cc50d29d491d5c31e135d4bc21d7e6e48bb"
+    },
+    {
+      "anchor_count": 6,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "body_text_in_receipt": false,
+      "byte_count": 9476,
+      "classification": "copied_non_secret_macro_standard_body",
+      "line_count": 241,
+      "material_class": "public_macro_standard_body",
+      "module_id": "provider_context_provider_adapter_standard_body_import",
+      "required_anchors": [
+        "\"schema_version\": \"std_provider_adapter_v1\"",
+        "\"fallback_policy\"",
+        "\"budget_policy\"",
+        "\"receipt_requirements\"",
+        "\"runtime_refactor_gate\"",
+        "provider receipts when the adapter is used for governed work"
+      ],
+      "sha256_match": true,
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_or_provider_payload_export",
+      "source_ref": "codex/standards/std_provider_adapter.json",
+      "source_role": "Macro provider adapter contract body for registry binding, model resolution, fallback policy, budget policy, receipt requirements, and runtime-refactor gates.",
+      "source_sha256": "248211860480f2ba3b9e8272386abc7e9f1bbd0dc1a69f636c6fd41ec1897fba",
+      "target_ref": "source_modules/codex/standards/std_provider_adapter.json",
+      "target_sha256": "248211860480f2ba3b9e8272386abc7e9f1bbd0dc1a69f636c6fd41ec1897fba"
+    },
+    {
+      "anchor_count": 6,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "body_text_in_receipt": false,
+      "byte_count": 1716,
+      "classification": "copied_non_secret_macro_standard_body",
+      "line_count": 52,
+      "material_class": "public_macro_standard_body",
+      "module_id": "provider_context_provider_navigation_transform_receipt_standard_body_import",
+      "required_anchors": [
+        "\"schema_version\": \"provider_navigation_transform_receipt_v0\"",
+        "\"mutation_authority\"",
+        "candidate_only rows",
+        "Provider output cannot write Task Ledger",
+        "\"route_pattern_candidate\"",
+        "\"standard_gap_candidate\""
+      ],
+      "sha256_match": true,
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_or_provider_payload_export",
+      "source_ref": "codex/standards/std_provider_navigation_transform_receipt.json",
+      "source_role": "Macro provider navigation transform receipt standard that keeps provider-generated navigation candidates candidate-only and mutation-free.",
+      "source_sha256": "512d4847809f6f32621de5f96a7096b2c417050775a923201f3e02d71a18cfda",
+      "target_ref": "source_modules/codex/standards/std_provider_navigation_transform_receipt.json",
+      "target_sha256": "512d4847809f6f32621de5f96a7096b2c417050775a923201f3e02d71a18cfda"
+    },
+    {
+      "anchor_count": 6,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "body_text_in_receipt": false,
+      "byte_count": 8649,
+      "classification": "copied_non_secret_macro_standard_body",
+      "line_count": 208,
+      "material_class": "public_macro_standard_body",
+      "module_id": "provider_context_transform_job_standard_body_import",
+      "required_anchors": [
+        "\"schema_version\": \"std_transform_job_v1\"",
+        "provider_receipt",
+        "row_patch",
+        "provider_selection_policy",
+        "local_evidence_override_policy",
+        "authority_ceiling"
+      ],
+      "sha256_match": true,
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_or_provider_payload_export",
+      "source_ref": "codex/standards/std_transform_job.json",
+      "source_role": "Macro std_transform_job standard body that defines the provider-context transform-job ABI: projection input packets, provider receipts, row patches, authority ceilings, and local-evidence override policy.",
+      "source_sha256": "017d75b5cdfa7520dafe88eb7ede6773f0b592ec32f7303988b448281c66ab3b",
+      "target_ref": "source_modules/codex/standards/std_transform_job.json",
+      "target_sha256": "017d75b5cdfa7520dafe88eb7ede6773f0b592ec32f7303988b448281c66ab3b"
+    }
+  ],
+  "organ_id": "provider_context_recipe_budget_policy",
+  "public_runtime_policy": "Public validation checks source module hashes and anchors only; it does not call providers, dispatch transform jobs, read live provider receipts, run reducer over live payloads, or run Lean/Lake.",
+  "receipt_body_policy": "receipts report paths, hashes, counts, and anchor results without duplicating full source bodies or provider payload/session bodies",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "provider_context_batch_calibration_report_body_import",
+      "path": "source_modules/tools/meta/factory/build_prover_provider_batch_context_calibration_report.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/factory/build_prover_provider_batch_context_calibration_report.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/factory/build_prover_provider_batch_context_calibration_report.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "provider_context_formal_ladder_eval_body_import",
+      "path": "source_modules/tools/meta/factory/run_prover_formal_problem_ladder_eval.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/factory/run_prover_formal_problem_ladder_eval.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/factory/run_prover_formal_problem_ladder_eval.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "provider_context_graph_benchmark_body_import",
+      "path": "source_modules/tools/meta/factory/run_prover_graph_benchmark.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/factory/run_prover_graph_benchmark.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/factory/run_prover_graph_benchmark.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "provider_context_receipt_reducer_body_import",
+      "path": "source_modules/tools/meta/factory/reduce_prover_provider_receipts.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/factory/reduce_prover_provider_receipts.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/factory/reduce_prover_provider_receipts.py"
+    }
+  ],
+  "schema_version": "provider_context_source_module_manifest_v1",
+  "secret_exclusion_boundary": [
+    "api keys",
+    "credentials",
+    "cookies",
+    "account/session state",
+    "provider payload bodies",
+    "browser/HUD live-access material",
+    "operator thread bodies",
+    "recipient-send state",
+    "credential-equivalent payloads"
+  ],
+  "source_open_payload_boundary": "open_source_provider_context_policy_code_without_keys_credentials_provider_payload_bodies_or_live_access_state",
+  "validation_contract_refs": [
+    "microcosm-substrate/tests/test_provider_context_recipe_budget_policy.py::test_provider_context_source_modules_are_exact_macro_body_imports",
+    "microcosm-substrate/tests/test_macro_projection_import_protocol.py::test_provider_context_source_modules_body_import_is_unified_under_macro_projection_spine",
+    "microcosm-substrate/tests/test_provider_context_recipe_budget_policy.py::test_provider_context_fixture_manifest_counts_source_open_body_floor"
+  ]
+}

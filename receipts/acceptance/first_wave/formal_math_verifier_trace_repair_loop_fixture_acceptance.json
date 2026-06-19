@@ -1,0 +1,68 @@
+{
+  "accepted_negative_cases": [
+    "attempt_with_oracle_ids",
+    "attempt_with_proof_body",
+    "human_approval_as_proof",
+    "promotion_without_cold_rerun",
+    "provider_payload_leakage",
+    "repair_without_verifier_class",
+    "trace_grade_without_trace"
+  ],
+  "anti_claim": "Formal math verifier-trace repair loop validates copied non-secret Ring2 failure taxonomy, graph-update, and oracle-repair contrast rows as public repair-loop evidence. It does not run Lean or Lake here, call providers, expose proof bodies or oracle premise ids, treat human or provider advice as proof correctness, prove theorem correctness, or authorize release.",
+  "authority_ceiling": {
+    "authority_ceiling": "copied_ring2_verifier_trace_repair_metadata_not_proof_authority",
+    "formal_proof_authority": false,
+    "human_approval_as_proof_authority": false,
+    "lean_lake_execution_authorized": false,
+    "oracle_premise_ids_allowed": false,
+    "proof_bodies_allowed": false,
+    "provider_calls_authorized": false,
+    "release_authorized": false,
+    "status": "pass"
+  },
+  "body_copied_material_count": 3,
+  "body_material_status": "copied_non_secret_macro_body_with_provenance",
+  "created_at": "2026-05-26T16:55:34+00:00",
+  "error_codes": [
+    "VERIFIER_HUMAN_APPROVAL_NOT_PROOF_AUTHORITY",
+    "VERIFIER_PROMOTION_WITHOUT_COLD_RERUN",
+    "VERIFIER_PROVIDER_PAYLOAD_FORBIDDEN",
+    "VERIFIER_REPAIR_WITHOUT_VERIFIER_CLASS",
+    "VERIFIER_TRACE_GRADE_WITHOUT_TRACE",
+    "VERIFIER_TRACE_ORACLE_IDS_FORBIDDEN",
+    "VERIFIER_TRACE_PROOF_BODY_FORBIDDEN"
+  ],
+  "fixture_id": "first_wave.formal_math_verifier_trace_repair_loop",
+  "missing_negative_cases": [],
+  "organ_id": "formal_math_verifier_trace_repair_loop",
+  "receipt_paths": [
+    "receipts/first_wave/formal_math_verifier_trace_repair_loop/formal_math_verifier_trace_repair_loop_result.json",
+    "receipts/first_wave/formal_math_verifier_trace_repair_loop/verifier_trace_repair_board.json",
+    "receipts/first_wave/formal_math_verifier_trace_repair_loop/formal_math_verifier_trace_repair_loop_validation_receipt.json",
+    "receipts/acceptance/first_wave/formal_math_verifier_trace_repair_loop_fixture_acceptance.json"
+  ],
+  "schema_version": "formal_math_verifier_trace_repair_loop_fixture_acceptance_v1",
+  "secret_exclusion_scan": {
+    "anti_claim": "Scanner terms are regression sentinels for tests and declared import rows. A pass is not a complete secret scan, credential audit, release clearance, or proof that no private material exists.",
+    "blocking_hit_count": 0,
+    "body_material_status": "secret_exclusion_scan_no_payload_bodies",
+    "forbidden_output_field_labels_omitted": true,
+    "hit_count": 0,
+    "hits": [],
+    "scanned_path_count": 11,
+    "status": "pass"
+  },
+  "source_module_manifest_ref": "",
+  "source_open_body_imports": {},
+  "source_refs": [
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/run_summary.json",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/failure_taxonomy_report.json",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/graph_update_candidates.json",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/oracle_repair_graph_v0/run_summary.json",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/oracle_repair_graph_v0/failure_taxonomy_report.json",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/oracle_repair_graph_v0/graph_update_candidates.json",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/graph_variant_comparison.json"
+  ],
+  "status": "pass",
+  "validator_id": "validator.microcosm.organs.formal_math_verifier_trace_repair_loop"
+}

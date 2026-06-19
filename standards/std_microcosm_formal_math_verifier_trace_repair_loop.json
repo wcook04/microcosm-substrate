@@ -1,0 +1,339 @@
+{
+  "schema_version": "public_microcosm_standard_v2",
+  "standard_id": "std_microcosm_formal_math_verifier_trace_repair_loop",
+  "kind_id": "formal_math_verifier_trace_repair_loop",
+  "kind_name": "Formal math verifier trace repair loop",
+  "status": "active",
+  "first_wave_required": true,
+  "wave": "w1_formal_math_verifier_trace_repair",
+  "authority_boundary": "copied_ring2_verifier_trace_repair_not_proof_authority",
+  "source_refs": [
+    {
+      "path": "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/run_summary.json",
+      "digest": "sha256:93304410f32d40f5cad1c161c1d01a5d6f353ee10b7cf3fecbaaf7b068b43008",
+      "role": "real_ring2_run_source"
+    },
+    {
+      "path": "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/failure_taxonomy_report.json",
+      "digest": "sha256:8b054c57001c432942a7ed97cbd4dca2a2e2b174d9cd31d9121c38c5ecc933af",
+      "role": "real_ring2_run_source"
+    },
+    {
+      "path": "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/graph_update_candidates.json",
+      "digest": "sha256:6c7eb0bc4ebf1c9a2689720ea8cfe9aa72298c136fdfebd6e1a4aae78986890f",
+      "role": "real_ring2_run_source"
+    },
+    {
+      "path": "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/oracle_repair_graph_v0/run_summary.json",
+      "digest": "sha256:7669c8d91ddf7de75b6a7c7e688e70e4ba211ff3c00ceb9bca32d3202c5739b4",
+      "role": "real_ring2_run_source"
+    },
+    {
+      "path": "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/oracle_repair_graph_v0/failure_taxonomy_report.json",
+      "digest": "sha256:7d30aa6ba8a5ce77dbdf855229c3e26bba0be7e814e02cdfcbba9fcbfee24ab8",
+      "role": "real_ring2_run_source"
+    },
+    {
+      "path": "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/oracle_repair_graph_v0/graph_update_candidates.json",
+      "digest": "sha256:4e2576708439023a72267f5fab2e609e62813991890c8321ab272a0221a9136a",
+      "role": "real_ring2_run_source"
+    },
+    {
+      "path": "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/graph_variant_comparison.json",
+      "digest": "sha256:8bab9c7a0a2a62f2178a550ab2fadf06887ff03cc9bf83f057688597b9e0556f",
+      "role": "real_ring2_run_source"
+    },
+    {
+      "path": "paper_modules/formal_math_verifier_trace_repair_loop.md",
+      "role": "authored_doctrine_projection"
+    },
+    {
+      "path": "core/paper_module_capsules.json#paper_module.formal_math_verifier_trace_repair_loop",
+      "role": "json_paper_module_capsule"
+    },
+    {
+      "path": "core/mechanism_sources.json#mechanism.formal_math_verifier_trace_repair_loop.validates_public_verifier_trace_repair_bundle",
+      "role": "mechanism_source"
+    },
+    {
+      "path": "examples/formal_math_verifier_trace_repair_loop/exported_verifier_trace_repair_bundle/source_module_manifest.json",
+      "role": "copied_non_secret_macro_body_floor_manifest"
+    }
+  ],
+  "relationships": {
+    "canonical_organ_model_ref": "core/organ_registry.json#formal_math_verifier_trace_repair_loop",
+    "used_by_organs": [
+      "formal_math_verifier_trace_repair_loop"
+    ],
+    "source_pattern_id_sample": [
+      "formal_math_verifier_trace_repair_loop_compound",
+      "lean_std_toolchain_premise_index",
+      "tactic_portfolio_availability_probe",
+      "target_shape_tactic_routing_gate",
+      "formal_math_premise_retrieval"
+    ]
+  },
+  "required_fields": [
+    "protocol_id",
+    "source_refs",
+    "source_digests",
+    "source_pattern_ids",
+    "projection_receipt_refs",
+    "target_refs",
+    "copied_material",
+    "verifier_attempts",
+    "failure_mode_ledger",
+    "curriculum_edges",
+    "promotion_policy",
+    "body_material_status",
+    "secret_exclusion_scan",
+    "authority_ceiling",
+    "anti_claim"
+  ],
+  "validation_rules": [
+    "require real Ring2 source refs, source digests, copied-material target refs, and validation refs",
+    "require verifier class before repair action promotion",
+    "require trace events before trace grade emission",
+    "require cold rerun receipt before promotion",
+    "emit failure-mode ledger and curriculum deltas from copied real failure taxonomy and graph-update rows",
+    "reject proof bodies and provider payload bodies",
+    "reject oracle-needed premise ids in public trace rows",
+    "reject human approval as proof correctness",
+    "emit secret_exclusion_scan and copied-material receipts"
+  ],
+  "receipt_expectations": [
+    "receipt.microcosm.formal_math_verifier_trace_repair_loop",
+    "receipt must cite source refs, source digests, target refs, copied material, trace counts, repair counts, cold rerun promotion count, negative-case coverage, secret_exclusion_scan, and anti-claim"
+  ],
+  "validator_contract": {
+    "required": true,
+    "validator_id": "validator.microcosm.formal_math_verifier_trace_repair_loop",
+    "minimum_checks": [
+      "projection_protocol_floor",
+      "trace_event_required_for_grade",
+      "repair_requires_verifier_class",
+      "promotion_requires_cold_rerun",
+      "proof_body_rejection",
+      "oracle_id_rejection",
+      "provider_payload_rejection",
+      "human_approval_rejection",
+      "negative_case_coverage"
+    ]
+  },
+  "receipt_contract": {
+    "required": true,
+    "receipt_id": "receipt.microcosm.formal_math_verifier_trace_repair_loop",
+    "must_record": [
+      "protocol_id",
+      "source_pattern_ids",
+      "source_refs",
+      "source_digests",
+      "projection_receipt_refs",
+      "target_refs",
+      "copied_material",
+      "body_material_status",
+      "body_copied_material_count",
+      "attempt_count",
+      "trace_event_count",
+      "repair_action_count",
+      "cold_rerun_promotion_count",
+      "authority_ceiling",
+      "anti_claim",
+      "secret_exclusion_scan",
+      "negative_case_coverage"
+    ]
+  },
+  "public_private_boundary": {
+    "default_posture": "copied_non_secret_macro_run_rows_with_secret_exclusion",
+    "allowed_public_inputs": [
+      "attempt ids",
+      "problem ids",
+      "source run refs",
+      "source digests",
+      "failure classes",
+      "trace event metadata",
+      "repair action ids",
+      "failure mode ids",
+      "cold rerun contrast refs",
+      "projection receipt refs"
+    ],
+    "forbidden_public_inputs": [
+      "proof bodies",
+      "oracle-needed premise ids",
+      "provider payload bodies",
+      "private run logs",
+      "credentials",
+      "human approval as proof correctness"
+    ]
+  },
+  "authority_ceiling": {
+    "status": "pass",
+    "standard_authority": "copied_ring2_verifier_trace_repair_receipt_schema_only",
+    "formal_proof_authority": false,
+    "lean_lake_authority": false,
+    "provider_authority": false,
+    "human_approval_as_proof_authority": false,
+    "release_authority": false
+  },
+  "anti_claim": "This standard governs copied non-secret Ring2 verifier trace repair rows only; it does not authorize Lean/Lake execution here, provider calls, proof bodies, oracle leakage, theorem correctness claims, human approval as proof authority, or release/publication work.",
+  "standard_payload": {
+    "ontology": "A public-safe verifier trace repair loop: attempts, trace grades, repair actions, failure-mode ledger deltas, cold rerun gates, receipts, and leakage negative cases.",
+    "teleology": "Make Microcosm demonstrate proof-lab self-repair mechanics while preserving proof, provider, and oracle authority boundaries.",
+    "anti_purpose": "Turning verifier feedback or human approval into theorem-proof authority.",
+    "compression_bands": [
+      "protocol",
+      "attempt",
+      "trace",
+      "repair",
+      "curriculum",
+      "receipt"
+    ],
+    "failure_modes": [
+      "attempt row leaks proof body",
+      "attempt row leaks oracle premise ids",
+      "trace grade emitted without trace",
+      "repair action lacks verifier class",
+      "promotion lacks cold rerun receipt",
+      "provider payload body leaks into public fixture",
+      "human approval is treated as proof correctness"
+    ],
+    "rebuild_action": "draft",
+    "contract_version": "public_microcosm_standard_v2",
+    "contract_projection_basis": {
+      "source_schema_version": "public_microcosm_standard_v2",
+      "source_status": "active",
+      "runtime_acceptance_status": "accepted",
+      "previous_source_schema_version": "public_microcosm_standard_v1",
+      "previous_source_status": "accepted",
+      "validator_refs": [
+        "microcosm_core.organs.formal_math_verifier_trace_repair_loop",
+        "validator.microcosm.formal_math_verifier_trace_repair_loop"
+      ],
+      "receipt_refs": [
+        "receipts/first_wave/formal_math_verifier_trace_repair_loop/formal_math_verifier_trace_repair_loop_result.json",
+        "receipts/first_wave/formal_math_verifier_trace_repair_loop/verifier_trace_repair_board.json",
+        "receipts/first_wave/formal_math_verifier_trace_repair_loop/formal_math_verifier_trace_repair_loop_validation_receipt.json",
+        "receipts/acceptance/first_wave/formal_math_verifier_trace_repair_loop_fixture_acceptance.json",
+        "receipts/runtime_shell/demo_project/organs/formal_math_verifier_trace_repair_loop/exported_verifier_trace_repair_bundle_validation_result.json",
+        "receipt.microcosm.formal_math_verifier_trace_repair_loop"
+      ],
+      "authority_boundary": "computed standard-lattice contract only; existing authority_ceiling remains the operative claim ceiling."
+    }
+  },
+  "receipt_refs": [
+    "receipts/first_wave/formal_math_verifier_trace_repair_loop/formal_math_verifier_trace_repair_loop_result.json",
+    "receipts/first_wave/formal_math_verifier_trace_repair_loop/verifier_trace_repair_board.json",
+    "receipts/first_wave/formal_math_verifier_trace_repair_loop/formal_math_verifier_trace_repair_loop_validation_receipt.json",
+    "receipts/acceptance/first_wave/formal_math_verifier_trace_repair_loop_fixture_acceptance.json",
+    "receipts/runtime_shell/demo_project/organs/formal_math_verifier_trace_repair_loop/exported_verifier_trace_repair_bundle_validation_result.json",
+    "receipt.microcosm.formal_math_verifier_trace_repair_loop"
+  ],
+  "validator_refs": [
+    "microcosm_core.organs.formal_math_verifier_trace_repair_loop",
+    "validator.microcosm.formal_math_verifier_trace_repair_loop"
+  ],
+  "paper_module_contract": {
+    "capsule_ref": "core/paper_module_capsules.json#paper_module.formal_math_verifier_trace_repair_loop",
+    "mechanism_ref": "mechanism.formal_math_verifier_trace_repair_loop.validates_public_verifier_trace_repair_bundle",
+    "module_slug": "formal_math_verifier_trace_repair_loop",
+    "required": true,
+    "source_authority": "json_capsule"
+  },
+  "doctrine_population_status": {
+    "paper_module": "source_backed_authored",
+    "json_capsule": "populated",
+    "mechanism_source": "populated",
+    "atlas_binding_status": "populated",
+    "coverage_projection_status": "required_edges_populated",
+    "source_module_manifest_status": "populated",
+    "authority_boundary": "Structured doctrine population binds the source-backed capsule, mechanism, standard, authored Markdown projection, organ atlas edge, copied Ring2 source-module manifest, first-wave receipts, runtime-shell bundle receipt, and focused tests while keeping proof bodies, oracle premise ids, provider payloads, Lean/Lake execution, theorem correctness, release, publication, benchmark, and whole-system claims outside this standard's authority.",
+    "validation_refs": [
+      "tests/test_doctrine_lattice_runtime.py::test_formal_math_verifier_trace_repair_loop_population_has_atlas_capsule_and_mechanism_source",
+      "tests/test_formal_math_verifier_trace_repair_loop.py",
+      "microcosm_core.organs.formal_math_verifier_trace_repair_loop run",
+      "microcosm_core.organs.formal_math_verifier_trace_repair_loop run-loop-bundle"
+    ]
+  },
+  "source_module_manifest_contract": {
+    "required": true,
+    "bundle_ref": "examples/formal_math_verifier_trace_repair_loop/exported_verifier_trace_repair_bundle",
+    "manifest_ref": "examples/formal_math_verifier_trace_repair_loop/exported_verifier_trace_repair_bundle/source_module_manifest.json",
+    "body_material_status": "source_faithful_public_safe_ring2_verifier_trace_repair_bodies_with_digest_provenance",
+    "receipt_ref": "receipts/runtime_shell/demo_project/organs/formal_math_verifier_trace_repair_loop/exported_verifier_trace_repair_bundle_validation_result.json"
+  },
+  "omission_receipt": {
+    "omitted": [
+      "proof bodies",
+      "oracle-needed premise ids",
+      "provider payload bodies",
+      "private run logs",
+      "Lean/Lake execution receipts"
+    ],
+    "reason": "public slice carries copied non-secret Ring2 failure and repair-loop rows while excluding proof, oracle, provider, and live-access material",
+    "drilldown": "fixtures/first_wave/formal_math_verifier_trace_repair_loop/input/projection_protocol.json"
+  },
+  "anti_claim_contract": {
+    "required": true,
+    "rule": "verifier trace repair material must state that repair feedback is not proof authority"
+  },
+  "source_coupling_contract": {
+    "required": true,
+    "rule": "macro source refs and target refs must point to copied non-secret run rows with source digests and validation receipts"
+  },
+  "body_material_status": "copied_non_secret_macro_body_with_provenance",
+  "macro_run_id": "PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0",
+  "premise_retrieval_variant_id": "premise_retrieval_graph_v0",
+  "oracle_repair_variant_id": "oracle_repair_graph_v0",
+  "skills": {
+    "author": {
+      "skill_id": "skill.microcosm.formal_math_verifier_trace_repair_loop.author",
+      "status": "planned",
+      "purpose": "create a valid Formal math verifier trace repair loop instance"
+    },
+    "refine_instance": {
+      "skill_id": "skill.microcosm.formal_math_verifier_trace_repair_loop.refine_instance",
+      "status": "planned",
+      "purpose": "improve an existing Formal math verifier trace repair loop without corrupting authority"
+    },
+    "refine_standard_and_propagate": {
+      "skill_id": "skill.microcosm.formal_math_verifier_trace_repair_loop.refine_standard_and_propagate",
+      "status": "planned",
+      "purpose": "change std_microcosm_formal_math_verifier_trace_repair_loop and propagate through governed artifacts plus generated lattice projections"
+    }
+  },
+  "runtime_acceptance_status": "accepted",
+  "source_format": "json",
+  "source_authority": "json_is_contract_markdown_is_projection",
+  "source_authority_ref": "microcosm-substrate/AXIOMS.md#1 (JSON is contract; Markdown is projection)",
+  "source_location": "microcosm-substrate/standards/std_microcosm_formal_math_verifier_trace_repair_loop.json",
+  "doctrine_kind_envelope": {
+    "envelope_version": "doctrine_kind_envelope_v2",
+    "governed_by": "std_microcosm_standard",
+    "note": "This standard conforms to the universal doctrine-kind envelope; markdown, Mermaid, Atlas, coverage, health, and entry-card views are generated projections of this JSON source."
+  },
+  "anti_claims": [
+    "This standard governs copied non-secret Ring2 verifier trace repair rows only; it does not authorize Lean/Lake execution here, provider calls, proof bodies, oracle leakage, theorem correctness claims, human approval as proof authority, or release/publication work.",
+    "Active v2 standard status is a source JSON contract state only; it does not expand release, publication, provider dispatch, private-root equivalence, product-readiness, or whole-system correctness authority beyond the authority_ceiling."
+  ],
+  "runtime_acceptance_refs": {
+    "registry_row_ref": "core/standards_registry.json::standard_id=std_microcosm_formal_math_verifier_trace_repair_loop",
+    "registry_status": "draft",
+    "source_status_before_v2_uplift": "accepted",
+    "source_schema_before_v2_uplift": "public_microcosm_standard_v1",
+    "uplift_basis": "registry-backed source standard already carried accepted, active, source-body-import, or body-floor status; this update narrows it into the active v2 JSON contract shape without raising its authority ceiling.",
+    "validator_id": "validator.microcosm.formal_math_verifier_trace_repair_loop",
+    "receipt_id": "receipt.microcosm.formal_math_verifier_trace_repair_loop",
+    "validator_refs": [
+      "microcosm_core.organs.formal_math_verifier_trace_repair_loop",
+      "validator.microcosm.formal_math_verifier_trace_repair_loop"
+    ],
+    "receipt_refs": [
+      "receipts/first_wave/formal_math_verifier_trace_repair_loop/formal_math_verifier_trace_repair_loop_result.json",
+      "receipts/first_wave/formal_math_verifier_trace_repair_loop/verifier_trace_repair_board.json",
+      "receipts/first_wave/formal_math_verifier_trace_repair_loop/formal_math_verifier_trace_repair_loop_validation_receipt.json",
+      "receipts/acceptance/first_wave/formal_math_verifier_trace_repair_loop_fixture_acceptance.json",
+      "receipts/runtime_shell/demo_project/organs/formal_math_verifier_trace_repair_loop/exported_verifier_trace_repair_bundle_validation_result.json",
+      "receipt.microcosm.formal_math_verifier_trace_repair_loop"
+    ]
+  }
+}

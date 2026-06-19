@@ -1,0 +1,52 @@
+{
+  "body_copied_material_count": 2,
+  "body_in_receipt": false,
+  "bundle_id": "public_agent_harness_configuration_audit_runtime_example",
+  "module_count": 1,
+  "modules": [
+    {
+      "anchor_count": 3,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "body_text_in_receipt": false,
+      "byte_count": 18591,
+      "line_count": 179,
+      "material_class": "public_standard_body",
+      "path": "source_modules/codex/standards/std_agent_entrypoint_audit.json",
+      "required_anchors": [
+        "agent_entrypoint_audit",
+        "required_axes",
+        "resolution_method_semantics"
+      ],
+      "sha256": "ca47a2948e219eeeedb616c118269555f9784c7f5b6fb490ca01eb68c25ec7c4",
+      "sha256_match": true,
+      "source_import_class": "copied_non_secret_macro_body",
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_provider_payload_browser_hud_live_access_account_session_credentials_live_hook_state_or_recipient_send_state",
+      "source_ref": "codex/standards/std_agent_entrypoint_audit.json",
+      "source_sha256": "sha256:ca47a2948e219eeeedb616c118269555f9784c7f5b6fb490ca01eb68c25ec7c4",
+      "target_ref": "microcosm-substrate/examples/agent_route_observability_runtime/exported_harness_configuration_audit_bundle/source_modules/codex/standards/std_agent_entrypoint_audit.json",
+      "target_sha256": "sha256:ca47a2948e219eeeedb616c118269555f9784c7f5b6fb490ca01eb68c25ec7c4",
+      "validation_refs": [
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_harness_configuration_exported_bundle_validates_runtime_shape",
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_harness_configuration_exported_bundle_receipt_is_public_safe"
+      ]
+    }
+  ],
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/tools/meta/audit/harness_audit.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/audit/harness_audit.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/audit/harness_audit.py"
+    }
+  ],
+  "schema_version": "agent_route_observability_runtime_harness_configuration_source_module_manifest_v1",
+  "source_import_class": "copied_non_secret_macro_body",
+  "validation_ref_count": 2
+}

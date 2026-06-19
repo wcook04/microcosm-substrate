@@ -1,0 +1,52 @@
+{
+  "body_storage_policy": "exact_non_secret_prompt_shelf_uppropagation_digest_source_and_synthetic_regression_test_copied_into_public_projection_bundle",
+  "bundle_id": "macro_projection_import_protocol_runtime_example",
+  "classification": "copied_non_secret_macro_body",
+  "manifest_id": "prompt_shelf_uppropagation_digest_source_modules_import",
+  "module_count": 0,
+  "modules": [],
+  "public_runtime_policy": "public validation uses exact source digest, anchor checks, syntax compilation, and synthetic uppropagation-digest assertions; copied source module is body evidence, not authority to read live prompt-shelf raw events, export prompt bodies, access browser/HUD state, call providers, write generated digest state, promote digest candidates, mutate private state, or claim release authority.",
+  "receipt_body_policy": "receipts report paths hashes counts anchor results and synthetic validation checks but never duplicate full source bodies, prompt bodies, raw prompt-shelf events, provider request or response payload bodies, account/session material, browser/HUD live access, generated digest output bodies, recipient-send state, or credential-equivalent payloads",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "prompt_shelf_uppropagation_digest_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/meta/observability/prompt_shelf_uppropagation_digest.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/observability/prompt_shelf_uppropagation_digest.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/observability/prompt_shelf_uppropagation_digest.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "prompt_shelf_uppropagation_digest_test_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_prompt_shelf_uppropagation_digest.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/server/tests/test_prompt_shelf_uppropagation_digest.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/server/tests/test_prompt_shelf_uppropagation_digest.py"
+    }
+  ],
+  "schema_version": "macro_projection_prompt_shelf_uppropagation_digest_source_module_manifest_v1",
+  "secret_exclusion_boundary": [
+    "api keys",
+    "credentials",
+    "cookies",
+    "account/session state",
+    "prompt bodies",
+    "raw prompt-shelf events",
+    "provider request payload bodies",
+    "provider response payload bodies",
+    "browser/HUD live-access material",
+    "recipient-send state",
+    "generated digest output bodies",
+    "credential-equivalent payloads"
+  ],
+  "source_open_payload_boundary": "open_source_everything_but_keys_credentials_account_sessions_cookies_provider_payload_bodies_browser_hud_live_access_prompt_bodies_raw_prompt_shelf_events_recipient_send_state_and_credential_equivalent_material"
+}

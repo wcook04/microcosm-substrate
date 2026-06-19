@@ -1,0 +1,786 @@
+{
+  "generated_from": "standards_meta_diagnostics_input_projection_v1",
+  "runtime_contracts": [
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.pattern_binding_contract validate --input fixtures/first_wave/pattern_binding_contract/input --out receipts/first_wave/pattern_binding_contract",
+      "current_authority_receipt": "state/microcosm_portfolio/reconstruction/public_first_slice_build_execution_receipt_v1.json",
+      "ordinal": 1,
+      "organ_id": "pattern_binding_contract",
+      "runtime_receipt_count": 3,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::pattern_binding_contract",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "PYTHONPATH=src python3 -m microcosm_core.organs.executable_doctrine_grammar validate-executable-grammar-metabolism-bundle --input examples/executable_doctrine_grammar/exported_executable_grammar_metabolism_bundle --out receipts/first_wave/executable_doctrine_grammar --card",
+      "current_authority_receipt": "state/microcosm_portfolio/reconstruction/executable_doctrine_grammar_current_authority_adoption_receipt_v1.json",
+      "ordinal": 2,
+      "organ_id": "executable_doctrine_grammar",
+      "runtime_receipt_count": 5,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::executable_doctrine_grammar",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.proof_diagnostic_evidence_spine run --input fixtures/first_wave/proof_diagnostic_evidence_spine/input --out receipts/first_wave/proof_diagnostic_evidence_spine",
+      "current_authority_receipt": "state/microcosm_portfolio/reconstruction/proof_diagnostic_evidence_spine_current_authority_adoption_receipt_v1.json",
+      "ordinal": 3,
+      "organ_id": "proof_diagnostic_evidence_spine",
+      "runtime_receipt_count": 5,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::proof_diagnostic_evidence_spine",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.formal_math_readiness_gate run --input fixtures/first_wave/formal_math_readiness_gate/input --out receipts/first_wave/formal_math_readiness_gate",
+      "current_authority_receipt": "receipts/acceptance/first_wave/formal_math_readiness_gate_fixture_acceptance.json",
+      "ordinal": 4,
+      "organ_id": "formal_math_readiness_gate",
+      "runtime_receipt_count": 5,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::formal_math_readiness_gate",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.corpus_readiness_mathlib_absence_gate run --input fixtures/first_wave/corpus_readiness_mathlib_absence_gate/input --out receipts/first_wave/corpus_readiness_mathlib_absence_gate",
+      "current_authority_receipt": "receipts/acceptance/first_wave/corpus_readiness_mathlib_absence_gate_fixture_acceptance.json",
+      "ordinal": 5,
+      "organ_id": "corpus_readiness_mathlib_absence_gate",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::corpus_readiness_mathlib_absence_gate",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.mathematical_strategy_atlas_hypothesis_scorer run --input fixtures/first_wave/mathematical_strategy_atlas_hypothesis_scorer/input --out receipts/first_wave/mathematical_strategy_atlas_hypothesis_scorer",
+      "current_authority_receipt": "receipts/acceptance/first_wave/mathematical_strategy_atlas_hypothesis_scorer_fixture_acceptance.json",
+      "ordinal": 6,
+      "organ_id": "mathematical_strategy_atlas_hypothesis_scorer",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::mathematical_strategy_atlas_hypothesis_scorer",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.tactic_portfolio_availability_probe run --input fixtures/first_wave/tactic_portfolio_availability_probe/input --out receipts/first_wave/tactic_portfolio_availability_probe",
+      "current_authority_receipt": "receipts/acceptance/first_wave/tactic_portfolio_availability_probe_fixture_acceptance.json",
+      "ordinal": 7,
+      "organ_id": "tactic_portfolio_availability_probe",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::tactic_portfolio_availability_probe",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.target_shape_tactic_routing_gate run --input fixtures/first_wave/target_shape_tactic_routing_gate/input --out receipts/first_wave/target_shape_tactic_routing_gate",
+      "current_authority_receipt": "receipts/acceptance/first_wave/target_shape_tactic_routing_gate_fixture_acceptance.json",
+      "ordinal": 8,
+      "organ_id": "target_shape_tactic_routing_gate",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::target_shape_tactic_routing_gate",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.lean_std_premise_index run --input fixtures/first_wave/lean_std_premise_index/input --out receipts/first_wave/lean_std_premise_index",
+      "current_authority_receipt": "receipts/acceptance/first_wave/lean_std_premise_index_fixture_acceptance.json",
+      "ordinal": 9,
+      "organ_id": "lean_std_premise_index",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::lean_std_premise_index",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.formal_math_premise_retrieval run --input fixtures/first_wave/formal_math_premise_retrieval/input --out receipts/first_wave/formal_math_premise_retrieval",
+      "current_authority_receipt": "receipts/acceptance/first_wave/formal_math_premise_retrieval_fixture_acceptance.json",
+      "ordinal": 10,
+      "organ_id": "formal_math_premise_retrieval",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::formal_math_premise_retrieval",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.formal_math_verifier_trace_repair_loop run --input fixtures/first_wave/formal_math_verifier_trace_repair_loop/input --out receipts/first_wave/formal_math_verifier_trace_repair_loop",
+      "current_authority_receipt": "receipts/acceptance/first_wave/formal_math_verifier_trace_repair_loop_fixture_acceptance.json",
+      "ordinal": 11,
+      "organ_id": "formal_math_verifier_trace_repair_loop",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::formal_math_verifier_trace_repair_loop",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.formal_evidence_cell_anchor_resolver run --input fixtures/first_wave/formal_evidence_cell_anchor_resolver/input --out receipts/first_wave/formal_evidence_cell_anchor_resolver",
+      "current_authority_receipt": "receipts/acceptance/first_wave/formal_evidence_cell_anchor_resolver_fixture_acceptance.json",
+      "ordinal": 12,
+      "organ_id": "formal_evidence_cell_anchor_resolver",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::formal_evidence_cell_anchor_resolver",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.undeclared_library_prior_symbol_classifier run --input fixtures/first_wave/undeclared_library_prior_symbol_classifier/input --out receipts/first_wave/undeclared_library_prior_symbol_classifier",
+      "current_authority_receipt": "receipts/acceptance/first_wave/undeclared_library_prior_symbol_classifier_fixture_acceptance.json",
+      "ordinal": 13,
+      "organ_id": "undeclared_library_prior_symbol_classifier",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::undeclared_library_prior_symbol_classifier",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.ring2_premise_retrieval_precision_recall_harness run --input fixtures/first_wave/ring2_premise_retrieval_precision_recall_harness/input --out receipts/first_wave/ring2_premise_retrieval_precision_recall_harness",
+      "current_authority_receipt": "receipts/acceptance/first_wave/ring2_premise_retrieval_precision_recall_harness_fixture_acceptance.json",
+      "ordinal": 14,
+      "organ_id": "ring2_premise_retrieval_precision_recall_harness",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::ring2_premise_retrieval_precision_recall_harness",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.agent_benchmark_integrity_anti_gaming_replay run --input fixtures/first_wave/agent_benchmark_integrity_anti_gaming_replay/input --out receipts/first_wave/agent_benchmark_integrity_anti_gaming_replay",
+      "current_authority_receipt": "receipts/acceptance/first_wave/agent_benchmark_integrity_anti_gaming_replay_fixture_acceptance.json",
+      "ordinal": 15,
+      "organ_id": "agent_benchmark_integrity_anti_gaming_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::agent_benchmark_integrity_anti_gaming_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.provider_context_recipe_budget_policy run --input fixtures/first_wave/provider_context_recipe_budget_policy/input --out receipts/first_wave/provider_context_recipe_budget_policy",
+      "current_authority_receipt": "receipts/acceptance/first_wave/provider_context_recipe_budget_policy_fixture_acceptance.json",
+      "ordinal": 16,
+      "organ_id": "provider_context_recipe_budget_policy",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::provider_context_recipe_budget_policy",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.formal_math_lean_proof_witness run --input fixtures/first_wave/formal_math_lean_proof_witness/input --out receipts/first_wave/formal_math_lean_proof_witness",
+      "current_authority_receipt": "receipts/acceptance/first_wave/formal_math_lean_proof_witness_fixture_acceptance.json",
+      "ordinal": 17,
+      "organ_id": "formal_math_lean_proof_witness",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::formal_math_lean_proof_witness",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.verifier_lab_kernel run --input fixtures/first_wave/verifier_lab_kernel/input --out receipts/first_wave/verifier_lab_kernel",
+      "current_authority_receipt": "receipts/acceptance/first_wave/verifier_lab_kernel_fixture_acceptance.json",
+      "ordinal": 18,
+      "organ_id": "verifier_lab_kernel",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::verifier_lab_kernel",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.verifier_lab_execution_spine run --input fixtures/first_wave/verifier_lab_execution_spine/input --out receipts/first_wave/verifier_lab_execution_spine",
+      "current_authority_receipt": "receipts/acceptance/first_wave/verifier_lab_execution_spine_fixture_acceptance.json",
+      "ordinal": 19,
+      "organ_id": "verifier_lab_execution_spine",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::verifier_lab_execution_spine",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.navigation_hologram_route_plane run --input fixtures/first_wave/navigation_hologram_route_plane/input --out receipts/first_wave/navigation_hologram_route_plane",
+      "current_authority_receipt": "state/microcosm_portfolio/reconstruction/navigation_hologram_route_plane_current_authority_build_receipt_v1.json",
+      "ordinal": 20,
+      "organ_id": "navigation_hologram_route_plane",
+      "runtime_receipt_count": 7,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::navigation_hologram_route_plane",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.mission_transaction_work_spine run --input fixtures/first_wave/mission_transaction_work_spine/input --out receipts/first_wave/mission_transaction_work_spine",
+      "current_authority_receipt": "state/microcosm_portfolio/reconstruction/mission_transaction_work_spine_current_authority_build_receipt_v1.json",
+      "ordinal": 21,
+      "organ_id": "mission_transaction_work_spine",
+      "runtime_receipt_count": 8,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::mission_transaction_work_spine",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.durable_agent_work_landing_replay run --input fixtures/first_wave/durable_agent_work_landing_replay/input --out receipts/first_wave/durable_agent_work_landing_replay",
+      "current_authority_receipt": "receipts/acceptance/first_wave/durable_agent_work_landing_replay_fixture_acceptance.json",
+      "ordinal": 22,
+      "organ_id": "durable_agent_work_landing_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::durable_agent_work_landing_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.research_replication_rubric_artifact_replay run --input fixtures/first_wave/research_replication_rubric_artifact_replay/input --out receipts/first_wave/research_replication_rubric_artifact_replay",
+      "current_authority_receipt": "receipts/acceptance/first_wave/research_replication_rubric_artifact_replay_fixture_acceptance.json",
+      "ordinal": 23,
+      "organ_id": "research_replication_rubric_artifact_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::research_replication_rubric_artifact_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.world_model_projection_drift_control_room run --input fixtures/first_wave/world_model_projection_drift_control_room/input --out receipts/first_wave/world_model_projection_drift_control_room",
+      "current_authority_receipt": "receipts/acceptance/first_wave/world_model_projection_drift_control_room_fixture_acceptance.json",
+      "ordinal": 24,
+      "organ_id": "world_model_projection_drift_control_room",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::world_model_projection_drift_control_room",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.spatial_world_model_counterfactual_simulation_replay run --input fixtures/first_wave/spatial_world_model_counterfactual_simulation_replay/input --out receipts/first_wave/spatial_world_model_counterfactual_simulation_replay",
+      "current_authority_receipt": "receipts/acceptance/first_wave/spatial_world_model_counterfactual_simulation_replay_fixture_acceptance.json",
+      "ordinal": 25,
+      "organ_id": "spatial_world_model_counterfactual_simulation_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::spatial_world_model_counterfactual_simulation_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.mechanistic_interpretability_circuit_attribution_replay run --input fixtures/first_wave/mechanistic_interpretability_circuit_attribution_replay/input --out receipts/first_wave/mechanistic_interpretability_circuit_attribution_replay",
+      "current_authority_receipt": "receipts/acceptance/first_wave/mechanistic_interpretability_circuit_attribution_replay_fixture_acceptance.json",
+      "ordinal": 26,
+      "organ_id": "mechanistic_interpretability_circuit_attribution_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::mechanistic_interpretability_circuit_attribution_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.agent_route_observability_runtime run --input fixtures/first_wave/agent_route_observability_runtime/input --out receipts/first_wave/agent_route_observability_runtime",
+      "current_authority_receipt": "state/microcosm_portfolio/reconstruction/agent_route_observability_runtime_current_authority_build_receipt_v1.json",
+      "ordinal": 27,
+      "organ_id": "agent_route_observability_runtime",
+      "runtime_receipt_count": 6,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::agent_route_observability_runtime",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.bridge_phase_continuity_runtime run --input fixtures/second_wave/bridge_phase_continuity_runtime/input --out receipts/second_wave/bridge_phase_continuity_runtime",
+      "current_authority_receipt": "receipts/second_wave/bridge_phase_continuity_runtime/closeout_transition.json",
+      "ordinal": 28,
+      "organ_id": "bridge_phase_continuity_runtime",
+      "runtime_receipt_count": 5,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::bridge_phase_continuity_runtime",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.validators.acceptance validate-assimilation-bundle --input examples/pattern_assimilation_step/exported_assimilation_bundle --out receipts/first_wave/pattern_assimilation_step",
+      "current_authority_receipt": "state/microcosm_portfolio/reconstruction/pattern_assimilation_step_current_authority_build_receipt_v1.json",
+      "ordinal": 29,
+      "organ_id": "pattern_assimilation_step",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::pattern_assimilation_step",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.public_reveal_walkthrough run-reveal-bundle --input examples/public_reveal_walkthrough/exported_public_reveal_bundle --out receipts/runtime_shell/demo_project/organs/public_reveal_walkthrough",
+      "current_authority_receipt": "receipts/acceptance/first_wave/public_reveal_walkthrough_fixture_acceptance.json",
+      "ordinal": 30,
+      "organ_id": "public_reveal_walkthrough",
+      "runtime_receipt_count": 5,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::public_reveal_walkthrough",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.macro_projection_import_protocol run --input fixtures/first_wave/macro_projection_import_protocol/input --out receipts/first_wave/macro_projection_import_protocol",
+      "current_authority_receipt": "receipts/acceptance/first_wave/macro_projection_import_protocol_fixture_acceptance.json",
+      "ordinal": 31,
+      "organ_id": "macro_projection_import_protocol",
+      "runtime_receipt_count": 5,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::macro_projection_import_protocol",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.prediction_oracle_reconciliation run --input fixtures/first_wave/prediction_oracle_reconciliation/input --out receipts/first_wave/prediction_oracle_reconciliation",
+      "current_authority_receipt": "receipts/acceptance/first_wave/prediction_oracle_reconciliation_fixture_acceptance.json",
+      "ordinal": 32,
+      "organ_id": "prediction_oracle_reconciliation",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::prediction_oracle_reconciliation",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.standards_meta_diagnostics run --input fixtures/first_wave/standards_meta_diagnostics/input --out receipts/first_wave/standards_meta_diagnostics",
+      "current_authority_receipt": "receipts/acceptance/first_wave/standards_meta_diagnostics_fixture_acceptance.json",
+      "ordinal": 33,
+      "organ_id": "standards_meta_diagnostics",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::standards_meta_diagnostics",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.cold_reader_route_map run --input fixtures/first_wave/cold_reader_route_map/input --out receipts/first_wave/cold_reader_route_map",
+      "current_authority_receipt": "receipts/acceptance/first_wave/cold_reader_route_map_fixture_acceptance.json",
+      "ordinal": 34,
+      "organ_id": "cold_reader_route_map",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::cold_reader_route_map",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.agent_monitor_redteam_falsification_replay run --input fixtures/first_wave/agent_monitor_redteam_falsification_replay/input --out receipts/first_wave/agent_monitor_redteam_falsification_replay",
+      "current_authority_receipt": "receipts/acceptance/first_wave/agent_monitor_redteam_falsification_replay_fixture_acceptance.json",
+      "ordinal": 35,
+      "organ_id": "agent_monitor_redteam_falsification_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::agent_monitor_redteam_falsification_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.agent_sabotage_scheming_monitor_replay run --input fixtures/first_wave/agent_sabotage_scheming_monitor_replay/input --out receipts/first_wave/agent_sabotage_scheming_monitor_replay --acceptance-out receipts/acceptance/first_wave/agent_sabotage_scheming_monitor_replay_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/agent_sabotage_scheming_monitor_replay_fixture_acceptance.json",
+      "ordinal": 36,
+      "organ_id": "agent_sabotage_scheming_monitor_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::agent_sabotage_scheming_monitor_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.agent_memory_temporal_conflict_replay run --input fixtures/first_wave/agent_memory_temporal_conflict_replay/input --out receipts/first_wave/agent_memory_temporal_conflict_replay",
+      "current_authority_receipt": "receipts/acceptance/first_wave/agent_memory_temporal_conflict_replay_fixture_acceptance.json",
+      "ordinal": 37,
+      "organ_id": "agent_memory_temporal_conflict_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::agent_memory_temporal_conflict_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.sleeper_memory_poisoning_quarantine_replay run --input fixtures/first_wave/sleeper_memory_poisoning_quarantine_replay/input --out receipts/first_wave/sleeper_memory_poisoning_quarantine_replay",
+      "current_authority_receipt": "receipts/acceptance/first_wave/sleeper_memory_poisoning_quarantine_replay_fixture_acceptance.json",
+      "ordinal": 38,
+      "organ_id": "sleeper_memory_poisoning_quarantine_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::sleeper_memory_poisoning_quarantine_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.mcp_tool_authority_replay run --input fixtures/first_wave/mcp_tool_authority_replay/input --out receipts/first_wave/mcp_tool_authority_replay",
+      "current_authority_receipt": "receipts/acceptance/first_wave/mcp_tool_authority_replay_fixture_acceptance.json",
+      "ordinal": 39,
+      "organ_id": "mcp_tool_authority_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::mcp_tool_authority_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.proof_derived_governed_mutation_authorization run --input fixtures/first_wave/proof_derived_governed_mutation_authorization/input --out receipts/first_wave/proof_derived_governed_mutation_authorization",
+      "current_authority_receipt": "receipts/acceptance/first_wave/proof_derived_governed_mutation_authorization_fixture_acceptance.json",
+      "ordinal": 40,
+      "organ_id": "proof_derived_governed_mutation_authorization",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::proof_derived_governed_mutation_authorization",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.belief_state_process_reward_replay run --input fixtures/first_wave/belief_state_process_reward_replay/input --out receipts/first_wave/belief_state_process_reward_replay",
+      "current_authority_receipt": "receipts/acceptance/first_wave/belief_state_process_reward_replay_fixture_acceptance.json",
+      "ordinal": 41,
+      "organ_id": "belief_state_process_reward_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::belief_state_process_reward_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.agent_sandbox_policy_escape_replay run --input fixtures/first_wave/agent_sandbox_policy_escape_replay/input --out receipts/first_wave/agent_sandbox_policy_escape_replay --acceptance-out receipts/acceptance/first_wave/agent_sandbox_policy_escape_replay_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/agent_sandbox_policy_escape_replay_fixture_acceptance.json",
+      "ordinal": 42,
+      "organ_id": "agent_sandbox_policy_escape_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::agent_sandbox_policy_escape_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.indirect_prompt_injection_information_flow_policy_replay run --input fixtures/first_wave/indirect_prompt_injection_information_flow_policy_replay/input --out receipts/first_wave/indirect_prompt_injection_information_flow_policy_replay --acceptance-out receipts/acceptance/first_wave/indirect_prompt_injection_information_flow_policy_replay_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/indirect_prompt_injection_information_flow_policy_replay_fixture_acceptance.json",
+      "ordinal": 43,
+      "organ_id": "indirect_prompt_injection_information_flow_policy_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::indirect_prompt_injection_information_flow_policy_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.agentic_vulnerability_discovery_patch_proof_replay run --input fixtures/first_wave/agentic_vulnerability_discovery_patch_proof_replay/input --out receipts/first_wave/agentic_vulnerability_discovery_patch_proof_replay --acceptance-out receipts/acceptance/first_wave/agentic_vulnerability_discovery_patch_proof_replay_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/agentic_vulnerability_discovery_patch_proof_replay_fixture_acceptance.json",
+      "ordinal": 44,
+      "organ_id": "agentic_vulnerability_discovery_patch_proof_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::agentic_vulnerability_discovery_patch_proof_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.materials_chemistry_closed_loop_lab_safety_replay run --input fixtures/first_wave/materials_chemistry_closed_loop_lab_safety_replay/input --out receipts/first_wave/materials_chemistry_closed_loop_lab_safety_replay --acceptance-out receipts/acceptance/first_wave/materials_chemistry_closed_loop_lab_safety_replay_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/materials_chemistry_closed_loop_lab_safety_replay_fixture_acceptance.json",
+      "ordinal": 45,
+      "organ_id": "materials_chemistry_closed_loop_lab_safety_replay",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::materials_chemistry_closed_loop_lab_safety_replay",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.certificate_kernel_execution_lab run --input fixtures/first_wave/certificate_kernel_execution_lab/input --out receipts/first_wave/certificate_kernel_execution_lab --acceptance-out receipts/acceptance/first_wave/certificate_kernel_execution_lab_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/certificate_kernel_execution_lab_fixture_acceptance.json",
+      "ordinal": 46,
+      "organ_id": "certificate_kernel_execution_lab",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::certificate_kernel_execution_lab",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.voice_to_doctrine_self_improvement_loop run --input fixtures/first_wave/voice_to_doctrine_self_improvement_loop/input --out receipts/first_wave/voice_to_doctrine_self_improvement_loop --acceptance-out receipts/acceptance/first_wave/voice_to_doctrine_self_improvement_loop_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/voice_to_doctrine_self_improvement_loop_fixture_acceptance.json",
+      "ordinal": 47,
+      "organ_id": "voice_to_doctrine_self_improvement_loop",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::voice_to_doctrine_self_improvement_loop",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.cognitive_operator_registry run --input fixtures/first_wave/cognitive_operator_registry/input --out receipts/first_wave/cognitive_operator_registry",
+      "current_authority_receipt": "receipts/acceptance/first_wave/cognitive_operator_registry_fixture_acceptance.json",
+      "ordinal": 48,
+      "organ_id": "cognitive_operator_registry",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::cognitive_operator_registry",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.routing_anti_patterns_registry run --input fixtures/first_wave/routing_anti_patterns_registry/input --out receipts/first_wave/routing_anti_patterns_registry",
+      "current_authority_receipt": "receipts/acceptance/first_wave/routing_anti_patterns_registry_fixture_acceptance.json",
+      "ordinal": 49,
+      "organ_id": "routing_anti_patterns_registry",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::routing_anti_patterns_registry",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.agent_closeout_faithfulness_audit run --input fixtures/first_wave/agent_closeout_faithfulness_audit/input --out receipts/first_wave/agent_closeout_faithfulness_audit --acceptance-out receipts/acceptance/first_wave/agent_closeout_faithfulness_audit_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/agent_closeout_faithfulness_audit_fixture_acceptance.json",
+      "ordinal": 50,
+      "organ_id": "agent_closeout_faithfulness_audit",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::agent_closeout_faithfulness_audit",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.doctrine_fact_claim_audit run --input fixtures/first_wave/doctrine_fact_claim_audit/input --out receipts/first_wave/doctrine_fact_claim_audit --acceptance-out receipts/acceptance/first_wave/doctrine_fact_claim_audit_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/doctrine_fact_claim_audit_fixture_acceptance.json",
+      "ordinal": 51,
+      "organ_id": "doctrine_fact_claim_audit",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::doctrine_fact_claim_audit",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.self_ignorance_coverage_ledger run --input fixtures/first_wave/self_ignorance_coverage_ledger/input --out receipts/first_wave/self_ignorance_coverage_ledger --acceptance-out receipts/acceptance/first_wave/self_ignorance_coverage_ledger_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/self_ignorance_coverage_ledger_fixture_acceptance.json",
+      "ordinal": 52,
+      "organ_id": "self_ignorance_coverage_ledger",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::self_ignorance_coverage_ledger",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.bounded_autonomy_campaign_packet run --input fixtures/first_wave/bounded_autonomy_campaign_packet/input --out receipts/first_wave/bounded_autonomy_campaign_packet --acceptance-out receipts/acceptance/first_wave/bounded_autonomy_campaign_packet_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/bounded_autonomy_campaign_packet_fixture_acceptance.json",
+      "ordinal": 53,
+      "organ_id": "bounded_autonomy_campaign_packet",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::bounded_autonomy_campaign_packet",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.finance_forecast_evaluation_spine run --input fixtures/first_wave/finance_forecast_evaluation_spine/input --out receipts/first_wave/finance_forecast_evaluation_spine --acceptance-out receipts/acceptance/first_wave/finance_forecast_evaluation_spine_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/finance_forecast_evaluation_spine_fixture_acceptance.json",
+      "ordinal": 54,
+      "organ_id": "finance_forecast_evaluation_spine",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::finance_forecast_evaluation_spine",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch4_proof_authority_runtime run --input fixtures/first_wave/batch4_proof_authority_runtime/input --out receipts/first_wave/batch4_proof_authority_runtime --acceptance-out receipts/acceptance/first_wave/batch4_proof_authority_runtime_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch4_proof_authority_runtime_fixture_acceptance.json",
+      "ordinal": 55,
+      "organ_id": "batch4_proof_authority_runtime",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch4_proof_authority_runtime",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch6_unsurfaced_primitives_capsule run --input fixtures/first_wave/batch6_unsurfaced_primitives_capsule/input --out receipts/first_wave/batch6_unsurfaced_primitives_capsule --acceptance-out receipts/acceptance/first_wave/batch6_unsurfaced_primitives_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch6_unsurfaced_primitives_capsule_fixture_acceptance.json",
+      "ordinal": 56,
+      "organ_id": "batch6_unsurfaced_primitives_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch6_unsurfaced_primitives_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch5_authority_systems_capsule run --input fixtures/first_wave/batch5_authority_systems_capsule/input --out receipts/first_wave/batch5_authority_systems_capsule --acceptance-out receipts/acceptance/first_wave/batch5_authority_systems_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch5_authority_systems_capsule_fixture_acceptance.json",
+      "ordinal": 57,
+      "organ_id": "batch5_authority_systems_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch5_authority_systems_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch7_macro_engines_capsule run --input fixtures/first_wave/batch7_macro_engines_capsule/input --out receipts/first_wave/batch7_macro_engines_capsule --acceptance-out receipts/acceptance/first_wave/batch7_macro_engines_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch7_macro_engines_capsule_fixture_acceptance.json",
+      "ordinal": 58,
+      "organ_id": "batch7_macro_engines_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch7_macro_engines_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch7_oracle_sibling_capsule run --input fixtures/first_wave/batch7_oracle_sibling_capsule/input --out receipts/first_wave/batch7_oracle_sibling_capsule --acceptance-out receipts/acceptance/first_wave/batch7_oracle_sibling_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch7_oracle_sibling_capsule_fixture_acceptance.json",
+      "ordinal": 59,
+      "organ_id": "batch7_oracle_sibling_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch7_oracle_sibling_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch7_demo_take_console_capsule run --input fixtures/first_wave/batch7_demo_take_console_capsule/input --out receipts/first_wave/batch7_demo_take_console_capsule --acceptance-out receipts/acceptance/first_wave/batch7_demo_take_console_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch7_demo_take_console_capsule_fixture_acceptance.json",
+      "ordinal": 60,
+      "organ_id": "batch7_demo_take_console_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch7_demo_take_console_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch8_tools_tail_primitives_capsule run --input fixtures/first_wave/batch8_tools_tail_primitives_capsule/input --out receipts/first_wave/batch8_tools_tail_primitives_capsule --acceptance-out receipts/acceptance/first_wave/batch8_tools_tail_primitives_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch8_tools_tail_primitives_capsule_fixture_acceptance.json",
+      "ordinal": 61,
+      "organ_id": "batch8_tools_tail_primitives_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch8_tools_tail_primitives_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch8_policy_engines_capsule run --input fixtures/first_wave/batch8_policy_engines_capsule/input --out receipts/first_wave/batch8_policy_engines_capsule --acceptance-out receipts/acceptance/first_wave/batch8_policy_engines_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch8_policy_engines_capsule_fixture_acceptance.json",
+      "ordinal": 62,
+      "organ_id": "batch8_policy_engines_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch8_policy_engines_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch8_audio_level_rms_port run --input fixtures/first_wave/batch8_audio_level_rms_port/input --out receipts/first_wave/batch8_audio_level_rms_port --acceptance-out receipts/acceptance/first_wave/batch8_audio_level_rms_port_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch8_audio_level_rms_port_fixture_acceptance.json",
+      "ordinal": 63,
+      "organ_id": "batch8_audio_level_rms_port",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch8_audio_level_rms_port",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch8_structural_theses_capsule run --input fixtures/first_wave/batch8_structural_theses_capsule/input --out receipts/first_wave/batch8_structural_theses_capsule --acceptance-out receipts/acceptance/first_wave/batch8_structural_theses_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch8_structural_theses_capsule_fixture_acceptance.json",
+      "ordinal": 64,
+      "organ_id": "batch8_structural_theses_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch8_structural_theses_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.engine_room_demo run --input fixtures/first_wave/engine_room_demo/input --out receipts/first_wave/engine_room_demo --acceptance-out receipts/acceptance/first_wave/engine_room_demo_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/engine_room_demo_fixture_acceptance.json",
+      "ordinal": 65,
+      "organ_id": "engine_room_demo",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::engine_room_demo",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch9_macro_engines_capsule run --input fixtures/first_wave/batch9_macro_engines_capsule/input --out receipts/first_wave/batch9_macro_engines_capsule --acceptance-out receipts/acceptance/first_wave/batch9_macro_engines_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch9_macro_engines_capsule_fixture_acceptance.json",
+      "ordinal": 66,
+      "organ_id": "batch9_macro_engines_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch9_macro_engines_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch10_governance_compilers_capsule run --input fixtures/first_wave/batch10_governance_compilers_capsule/input --out receipts/first_wave/batch10_governance_compilers_capsule --acceptance-out receipts/acceptance/first_wave/batch10_governance_compilers_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch10_governance_compilers_capsule_fixture_acceptance.json",
+      "ordinal": 67,
+      "organ_id": "batch10_governance_compilers_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch10_governance_compilers_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch11_saturation_engines_capsule run --input fixtures/first_wave/batch11_saturation_engines_capsule/input --out receipts/first_wave/batch11_saturation_engines_capsule --acceptance-out receipts/acceptance/first_wave/batch11_saturation_engines_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch11_saturation_engines_capsule_fixture_acceptance.json",
+      "ordinal": 68,
+      "organ_id": "batch11_saturation_engines_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch11_saturation_engines_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.tool_server_pressure_inventory run --input fixtures/first_wave/tool_server_pressure_inventory/input --out receipts/first_wave/tool_server_pressure_inventory --acceptance-out receipts/acceptance/first_wave/tool_server_pressure_inventory_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/tool_server_pressure_inventory_fixture_acceptance.json",
+      "ordinal": 69,
+      "organ_id": "tool_server_pressure_inventory",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::tool_server_pressure_inventory",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch8_compliance_pipeline_capsule run --input fixtures/first_wave/batch8_compliance_pipeline_capsule/input --out receipts/first_wave/batch8_compliance_pipeline_capsule --acceptance-out receipts/acceptance/first_wave/batch8_compliance_pipeline_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch8_compliance_pipeline_capsule_fixture_acceptance.json",
+      "ordinal": 70,
+      "organ_id": "batch8_compliance_pipeline_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch8_compliance_pipeline_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch10_live_source_drift_capsule run --input fixtures/first_wave/batch10_live_source_drift_capsule/input --out receipts/first_wave/batch10_live_source_drift_capsule --acceptance-out receipts/acceptance/first_wave/batch10_live_source_drift_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch10_live_source_drift_capsule_fixture_acceptance.json",
+      "ordinal": 71,
+      "organ_id": "batch10_live_source_drift_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch10_live_source_drift_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch10_cold_eval_honesty_capsule run --input fixtures/first_wave/batch10_cold_eval_honesty_capsule/input --out receipts/first_wave/batch10_cold_eval_honesty_capsule --acceptance-out receipts/acceptance/first_wave/batch10_cold_eval_honesty_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch10_cold_eval_honesty_capsule_fixture_acceptance.json",
+      "ordinal": 72,
+      "organ_id": "batch10_cold_eval_honesty_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch10_cold_eval_honesty_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch8_validator_checker_capsule run --input fixtures/first_wave/batch8_validator_checker_capsule/input --out receipts/first_wave/batch8_validator_checker_capsule --acceptance-out receipts/acceptance/first_wave/batch8_validator_checker_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch8_validator_checker_capsule_fixture_acceptance.json",
+      "ordinal": 73,
+      "organ_id": "batch8_validator_checker_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch8_validator_checker_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.concurrency_mission_control run --input fixtures/first_wave/concurrency_mission_control/input --out receipts/first_wave/concurrency_mission_control --acceptance-out receipts/acceptance/first_wave/concurrency_mission_control_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/concurrency_mission_control_fixture_acceptance.json",
+      "ordinal": 74,
+      "organ_id": "concurrency_mission_control",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::concurrency_mission_control",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch7_secondary_runtime_capsule run --input fixtures/first_wave/batch7_secondary_runtime_capsule/input --out receipts/first_wave/batch7_secondary_runtime_capsule --acceptance-out receipts/acceptance/first_wave/batch7_secondary_runtime_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch7_secondary_runtime_capsule_fixture_acceptance.json",
+      "ordinal": 75,
+      "organ_id": "batch7_secondary_runtime_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch7_secondary_runtime_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch12_market_dashboard_read_model_capsule run --input fixtures/first_wave/batch12_market_dashboard_read_model_capsule/input --out receipts/first_wave/batch12_market_dashboard_read_model_capsule --acceptance-out receipts/acceptance/first_wave/batch12_market_dashboard_read_model_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch12_market_dashboard_read_model_capsule_fixture_acceptance.json",
+      "ordinal": 76,
+      "organ_id": "batch12_market_dashboard_read_model_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch12_market_dashboard_read_model_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch12_prediction_market_board_capsule run --input fixtures/first_wave/batch12_prediction_market_board_capsule/input --out receipts/first_wave/batch12_prediction_market_board_capsule --acceptance-out receipts/acceptance/first_wave/batch12_prediction_market_board_capsule_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch12_prediction_market_board_capsule_fixture_acceptance.json",
+      "ordinal": 77,
+      "organ_id": "batch12_prediction_market_board_capsule",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch12_prediction_market_board_capsule",
+      "runtime_step_present": true
+    },
+    {
+      "body_in_receipt": false,
+      "cli_command": "python -m microcosm_core.organs.batch12_release_claim_language_gate run --input fixtures/first_wave/batch12_release_claim_language_gate/input --out receipts/first_wave/batch12_release_claim_language_gate --acceptance-out receipts/acceptance/first_wave/batch12_release_claim_language_gate_fixture_acceptance.json",
+      "current_authority_receipt": "receipts/acceptance/first_wave/batch12_release_claim_language_gate_fixture_acceptance.json",
+      "ordinal": 78,
+      "organ_id": "batch12_release_claim_language_gate",
+      "runtime_receipt_count": 4,
+      "runtime_step": "microcosm_core.runtime_shell.RUNTIME_STEPS::batch12_release_claim_language_gate",
+      "runtime_step_present": true
+    }
+  ],
+  "schema_version": "standards_meta_diagnostics_runtime_contracts_v1"
+}

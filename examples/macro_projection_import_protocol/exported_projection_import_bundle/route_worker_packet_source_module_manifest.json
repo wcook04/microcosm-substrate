@@ -1,0 +1,117 @@
+{
+  "body_storage_policy": "exact_non_secret_route_worker_packet_source_modules_copied_into_public_projection_bundle",
+  "bundle_id": "macro_projection_import_protocol_runtime_example",
+  "classification": "copied_non_secret_macro_body",
+  "manifest_id": "route_worker_packet_source_modules_import",
+  "module_count": 0,
+  "modules": [],
+  "public_runtime_policy": "public validation uses exact source digests, anchor checks, syntax compilation into pytest temp state, and neutral passage assertions; copied source modules are body evidence, not authority to execute live providers, mutate route graphs, export prompt/operator/provider bodies, or inspect private state",
+  "receipt_body_policy": "receipts report paths hashes counts and anchor results but never duplicate full source bodies, prompt/operator thread bodies, provider payload bodies, browser/HUD live-access material, account/session state, cookies, credentials, or route-worker live provider responses",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "route_worker_node_card_builder_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/route_node_card_builder.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/route_node_card_builder.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/route_node_card_builder.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "route_worker_candidate_builder_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/route_candidate_builder.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/route_candidate_builder.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/route_candidate_builder.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "route_worker_graph_ranker_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/route_graph_candidate_ranker.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/route_graph_candidate_ranker.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/route_graph_candidate_ranker.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "route_worker_discovery_edc_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/route_discovery_edc.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/route_discovery_edc.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/route_discovery_edc.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "route_worker_verb_correction_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/route_verb_correction.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/route_verb_correction.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/route_verb_correction.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "route_worker_nvidia_hints_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/nvidia_route_hints.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/nvidia_route_hints.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/nvidia_route_hints.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "route_worker_packet_test_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_route_worker_packet.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/server/tests/test_route_worker_packet.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/server/tests/test_route_worker_packet.py"
+    }
+  ],
+  "schema_version": "macro_projection_route_worker_packet_source_module_manifest_v1",
+  "secret_exclusion_boundary": [
+    "api keys",
+    "credentials",
+    "cookies",
+    "account/session state",
+    "provider payload bodies",
+    "provider response bodies",
+    "browser/HUD live-access material",
+    "operator thread bodies",
+    "route-worker prompt bodies",
+    "recipient-send state",
+    "private account control",
+    "credential-equivalent payloads"
+  ],
+  "source_open_payload_boundary": "open_source_everything_but_keys_provider_payloads_and_live_access",
+  "validation_contract_refs": [
+    "microcosm-substrate/tests/test_command_output_projection_runtime.py::test_route_worker_packet_source_manifest_matches_exact_macro_sources",
+    "microcosm-substrate/tests/test_command_output_projection_runtime.py::test_route_worker_packet_sources_compile_and_preserve_provider_boundary",
+    "microcosm-substrate/tests/test_macro_projection_import_protocol.py::test_route_worker_packet_source_modules_body_import_is_unified_under_macro_projection_spine"
+  ]
+}

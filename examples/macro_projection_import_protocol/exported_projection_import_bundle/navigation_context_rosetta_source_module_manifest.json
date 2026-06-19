@@ -1,0 +1,111 @@
+{
+  "body_storage_policy": "exact_non_secret_navigation_rosetta_source_modules_copied_into_public_projection_bundle",
+  "bundle_id": "macro_projection_import_protocol_runtime_example",
+  "classification": "copied_non_secret_macro_body",
+  "manifest_id": "navigation_context_rosetta_source_modules_import",
+  "module_count": 2,
+  "modules": [
+    {
+      "anchor_count": 5,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "byte_count": 48905,
+      "classification": "copied_non_secret_macro_body",
+      "line_count": 1004,
+      "material_class": "public_macro_tool_body",
+      "module_id": "navigation_rosetta_grammar_standard_body_import",
+      "required_anchors": [
+        "\"id\": \"std_navigation_rosetta_grammar\"",
+        "\"context_atom_shape\"",
+        "\"relation_verb_shape\"",
+        "\"selector_policies\"",
+        "\"proof_obligations\""
+      ],
+      "sha256_match": true,
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_or_live_kernel_export",
+      "source_ref": "codex/standards/std_navigation_rosetta_grammar.json",
+      "source_role": "Machine standard for context atoms, noun/verb grammar, selector policies, impact axes, evidence commands, and proof obligations for navigation packets.",
+      "source_sha256": "8a686d79a218a92f0f63d685898b8a648bbabe0d5549f55d01c0458c4abb5023",
+      "target_ref": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/codex/standards/std_navigation_rosetta_grammar.json",
+      "target_sha256": "8a686d79a218a92f0f63d685898b8a648bbabe0d5549f55d01c0458c4abb5023"
+    },
+    {
+      "anchor_count": 5,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "byte_count": 26045,
+      "classification": "copied_non_secret_macro_body",
+      "line_count": 346,
+      "material_class": "public_macro_tool_body",
+      "module_id": "navigation_rosetta_math_paper_body_import",
+      "required_anchors": [
+        "# Navigation Rosetta Math",
+        "Coverage before depth",
+        "Relation verbs are operational",
+        "## Code loci",
+        "## Mathematical Core"
+      ],
+      "sha256_match": true,
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_or_live_kernel_export",
+      "source_ref": "codex/doctrine/paper_modules/navigation_rosetta_math.md",
+      "source_role": "Doctrine paper module explaining coverage-first Rosetta navigation math, relation-verb semantics, layer-depth adequacy, and code loci for the packet builder and standards.",
+      "source_sha256": "8c2d2ee3c0c9a4c0beaecc9cdbfe0b9544e10a3cf5d108c1959befa7cb1b1a8d",
+      "target_ref": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/codex/doctrine/paper_modules/navigation_rosetta_math.md",
+      "target_sha256": "8c2d2ee3c0c9a4c0beaecc9cdbfe0b9544e10a3cf5d108c1959befa7cb1b1a8d"
+    }
+  ],
+  "public_runtime_policy": "public validation uses exact source digests, anchor checks, syntax compilation into /tmp, and import-time packet probes; copied source modules are body evidence, not authority to run the live macro kernel or inspect private state",
+  "receipt_body_policy": "receipts report paths hashes counts and anchor results but never duplicate full source bodies or live private/kernel/provider/session payloads",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "navigation_context_rosetta_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_context_rosetta.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/navigation_context_rosetta.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/navigation_context_rosetta.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "kind_band_contract_audit_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/kind_band_contract_audit.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/kind_band_contract_audit.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/kind_band_contract_audit.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "navigation_context_rosetta_test_body_import",
+      "path": "microcosm-substrate/examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_navigation_context_rosetta.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/server/tests/test_navigation_context_rosetta.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/server/tests/test_navigation_context_rosetta.py"
+    }
+  ],
+  "schema_version": "macro_projection_navigation_context_rosetta_source_module_manifest_v1",
+  "secret_exclusion_boundary": [
+    "api keys",
+    "credentials",
+    "cookies",
+    "account/session state",
+    "provider payload bodies",
+    "browser/HUD live-access material",
+    "operator thread bodies",
+    "recipient-send state",
+    "private account control",
+    "credential-equivalent payloads"
+  ],
+  "source_open_payload_boundary": "open_source_everything_but_keys"
+}

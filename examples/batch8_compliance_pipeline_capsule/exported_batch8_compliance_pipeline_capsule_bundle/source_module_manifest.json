@@ -1,0 +1,144 @@
+{
+  "body_copied": true,
+  "body_in_receipt": false,
+  "module_count": 0,
+  "modules": [],
+  "organ_id": "batch8_compliance_pipeline_capsule",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/compliance/__init__.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/compliance/__init__.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/compliance/__init__.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/compliance/compliance_coverage_adapter.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/compliance/compliance_coverage_adapter.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/compliance/compliance_coverage_adapter.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/compliance/standard_baseline_adapter.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/compliance/standard_baseline_adapter.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/compliance/standard_baseline_adapter.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/compliance/microcosm_adapter.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/compliance/microcosm_adapter.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/compliance/microcosm_adapter.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/tools/meta/factory/build_compliance_ledger.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/factory/build_compliance_ledger.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/factory/build_compliance_ledger.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/pipeline/stage_extract.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/pipeline/stage_extract.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/pipeline/stage_extract.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/pipeline/stage_select.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/pipeline/stage_select.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/pipeline/stage_select.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/pipeline/stage_emit.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/pipeline/stage_emit.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/pipeline/stage_emit.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/pipeline/stage_compile.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/pipeline/stage_compile.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/pipeline/stage_compile.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/pipeline/stage_execute.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/pipeline/stage_execute.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/pipeline/stage_execute.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/pipeline/stage_process.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/pipeline/stage_process.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/pipeline/stage_process.py"
+    }
+  ],
+  "schema_version": "batch8_compliance_pipeline_capsule_source_module_manifest_v1",
+  "source_import_class": "copied_non_secret_macro_body",
+  "source_to_target_relation": "exact_copy"
+}

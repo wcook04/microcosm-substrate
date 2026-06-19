@@ -1,0 +1,323 @@
+{
+  "standard_id": "std_microcosm_doctrine_enrichment",
+  "schema_version": "public_microcosm_standard_v2",
+  "title": "Doctrine enrichment envelope",
+  "status": "active",
+  "source_authority": "json_is_contract_markdown_is_projection",
+  "kind_id": "doctrine_enrichment",
+  "kind_name": "Doctrine enrichment envelope",
+  "skills": {
+    "author": {
+      "skill_id": "skill.microcosm.doctrine_roof.author",
+      "status": "active",
+      "purpose": "author governed doctrine-enrichment envelope rows under the doctrine roof authority ceiling"
+    },
+    "refine_instance": {
+      "skill_id": "skill.microcosm.doctrine_roof.refine_instance",
+      "status": "active",
+      "purpose": "refine doctrine-enrichment projections without treating reader fields or health counts as support evidence"
+    },
+    "refine_standard_and_propagate": {
+      "skill_id": "skill.microcosm.doctrine_roof.refine_standard_and_propagate",
+      "status": "active",
+      "purpose": "change the doctrine-enrichment standard and propagate through checker, health projection, and focused tests"
+    }
+  },
+  "relationships": {
+    "used_by_organs": []
+  },
+  "validator_refs": [
+    "scripts/build_doctrine_enrichment_health.py --check",
+    "scripts/check_doctrine_formal_soundness.py --check",
+    "scripts/check_doctrine_reader_ladder.py --check"
+  ],
+  "receipt_refs": [
+    "core/doctrine_enrichment_health.json"
+  ],
+  "purpose": "Define the reader-enrichment envelope that turns a doctrine object (axiom, principle, anti-principle) from a one-line rule row into a drill-down doctrine cell: a deep reading, a formal statement with a symbol table, the problem it governs, what it requires and refuses, a worked example wired to a real component, the tempting mistake, the enforcement routes, and the bound on what it proves. The same health gate also carries the routing-floor extension beyond those 49 reader cards: governed concept rows must expose source-backed, checker-readable routes to mechanism substrate, and governed mechanism rows must expose source-backed, checker-readable routes to sibling concepts plus resolved runtime code loci without treating route presence as support evidence. Paper-module readiness is exposed as a separate frontier audit so legacy-only rows and required subject gaps remain visible without claiming paper-module floor completion.",
+  "source_of_record": "microcosm-substrate/core/doctrine_enrichment.json",
+  "source_refs": [
+    {
+      "field": "core/doctrine_enrichment.json",
+      "path": "core/doctrine_enrichment.json",
+      "role": "reader_enrichment_source_of_record"
+    },
+    {
+      "field": "core/axiom_organ_routing.json",
+      "path": "core/axiom_organ_routing.json",
+      "role": "axiom_formal_clause_source"
+    },
+    {
+      "field": "PRINCIPLES.md",
+      "path": "PRINCIPLES.md",
+      "role": "principle_formal_clause_source"
+    },
+    {
+      "field": "ANTI_PRINCIPLES.md",
+      "path": "ANTI_PRINCIPLES.md",
+      "role": "anti_principle_formal_clause_source"
+    },
+    {
+      "field": "concepts/concept.*.json",
+      "path": "concepts/concept.*.json",
+      "role": "concept_routing_floor_source"
+    },
+    {
+      "field": "mechanisms/mechanism.*.json",
+      "path": "mechanisms/mechanism.*.json",
+      "role": "mechanism_routing_floor_source"
+    },
+    {
+      "field": "paper_modules/*.json",
+      "path": "paper_modules/*.json",
+      "role": "paper_module_readiness_projection_instances"
+    },
+    {
+      "field": "scripts/build_doctrine_enrichment_health.py",
+      "path": "scripts/build_doctrine_enrichment_health.py",
+      "role": "health_projection_owner"
+    }
+  ],
+  "consumed_by": [
+    "tools/meta/dissemination/build_microcosm_public_site.py (doctrine_cards renderer)",
+    "microcosm-substrate/scripts/build_doctrine_enrichment_health.py (coverage projection)",
+    "microcosm-substrate/scripts/check_doctrine_formal_soundness.py (formal-statement soundness gate)",
+    "microcosm-substrate/scripts/check_doctrine_reader_ladder.py (reader-ladder accessibility gate)"
+  ],
+  "authority_boundary": "Enrichment is reader content, not law and not support evidence. The formal_clause source of record stays in core/axiom_organ_routing.json (axioms), PRINCIPLES.md (principles), and ANTI_PRINCIPLES.md (anti-principles); the latex here is a reviewed reader rendering of that clause. The concept and mechanism routing floors read governed JSON rows for source-backed relationship structure only. The paper-module readiness audit reads generated paper-module JSON instances as a projection over core/paper_module_capsules.json and legacy Markdown inventory; it is frontier visibility, not source authority and not permission to hand-edit generated paper-module rows. Neither an enrichment example, concept route, mechanism route, nor paper-module readiness route computes support, raises a claim ceiling, proves target correctness, proves runtime behavior, or becomes anti-axiom rejection. A generated page may expose this content but cannot raise the authority of the source it explains (P-15).",
+  "authority_ceiling": {
+    "claim_support_authority": false,
+    "concept_taxonomy_completeness_authority": false,
+    "formal_proof_authority": false,
+    "paper_module_completion_authority": false,
+    "private_data_equivalence_authority": false,
+    "release_authority": false,
+    "runtime_correctness_authority": false,
+    "source_mutation_authority": false,
+    "standard_authority": "reader_enrichment_and_routing_health_schema_only",
+    "status": "pass"
+  },
+  "anti_claim": "Doctrine enrichment is reader grammar and walkability metadata only; it does not raise support, proof, runtime-correctness, release, source-mutation, private-data-equivalence, concept-completeness, or paper-module-completion authority.",
+  "required_fields": [
+    "id",
+    "kind",
+    "one_line",
+    "deep",
+    "formal",
+    "governs",
+    "requires",
+    "refuses",
+    "example",
+    "counterexample",
+    "enforced_in",
+    "does_not_prove",
+    "reader_ladder"
+  ],
+  "validation_rules": [
+    "require reader-enrichment rows to preserve id, kind, one_line, deep, formal, governs, requires, refuses, example, counterexample, enforced_in, does_not_prove, and reader_ladder fields",
+    "require formal statements to stay within the bounded source-clause grammar and pass scripts/check_doctrine_formal_soundness.py --check",
+    "require reader-ladder plain and analogy fields to pass scripts/check_doctrine_reader_ladder.py --check without using analogy as proof",
+    "require concept routing rows to expose source-backed resolved mechanism routes before counting the concept routing floor",
+    "require mechanism routing rows to expose source-backed sibling concept routes and resolved existing code loci before counting the mechanism routing floor",
+    "require paper-module readiness rows to remain a frontier audit until this standard explicitly promotes that section to a completion gate",
+    "reject support, proof, runtime-correctness, release, source-mutation, private-data-equivalence, concept-completeness, and paper-module-completion claims"
+  ],
+  "validator_contract": {
+    "minimum_checks": [
+      "reader_enrichment_field_presence",
+      "formal_soundness",
+      "reader_ladder_accessibility",
+      "concept_routing_floor",
+      "mechanism_routing_floor",
+      "paper_module_readiness_frontier_audit",
+      "authority_boundary"
+    ],
+    "required": true,
+    "validator_id": "validator.microcosm.doctrine_enrichment_health"
+  },
+  "receipt_contract": {
+    "must_record": [
+      "reader_enrichment_total_objects",
+      "governed_floor_total_objects",
+      "routing_floor",
+      "formal_soundness",
+      "reader_ladder",
+      "paper_module_readiness_audit",
+      "completion_gate_sections",
+      "frontier_audit_sections",
+      "authority_boundary",
+      "anti_claim"
+    ],
+    "receipt_id": "core/doctrine_enrichment_health.json",
+    "required": true
+  },
+  "receipt_expectations": [
+    "core/doctrine_enrichment_health.json",
+    "receipt must expose reader-enrichment coverage, doctrine routing floor status, formal-soundness status, reader-ladder status, paper-module readiness frontier audit status, section model, authority boundary, and anti-claim without treating counts as support evidence"
+  ],
+  "public_private_boundary": {
+    "allowed_public_inputs": [
+      "public doctrine JSON rows",
+      "public principle and anti-principle markdown clauses",
+      "public concept JSON rows",
+      "public mechanism JSON rows",
+      "generated public paper-module JSON instances",
+      "public-root file refs",
+      "validator command refs",
+      "health projection counts",
+      "authority ceilings"
+    ],
+    "default_posture": "public_safe_when_source_backed_and_authority_ceiling_preserved",
+    "forbidden_public_inputs": [
+      "live_raw_seed",
+      "prompt_shelf_bodies",
+      "provider_payload_bodies",
+      "operator_thread_content",
+      "recipient_or_publication_surfaces",
+      "private_data_equivalence_claims",
+      "secrets",
+      "credential_equivalent_live_access"
+    ]
+  },
+  "envelope": {
+    "required_fields": ["id", "kind"],
+    "reader_fields": {
+      "one_line": "Compact reading for the card summary; the routing band.",
+      "deep": "Two to four sentences of load-bearing reading: the substance, not drama. Richer per line than a restated title.",
+      "formal": {
+        "latex": "Source LaTeX for the formal statement, within the bounded build-time grammar (no environments, no \\not, no underscores inside \\mathrm). Renders to offline HTML; out-of-grammar input degrades to code with a recorded render gap.",
+        "reads": "Plain-language reading of the formula. It must read THIS formula faithfully and must not claim more than the source clause (necessity stated as implication, a definitional criterion as a biconditional).",
+        "symbols": "List of {sym, meaning} entries. The table must be SOUND with respect to the formula: every free variable and every named operator (\\mathrm{...}, \\mathcal{...}) used in the latex has an entry, and every declared entry appears in the latex (no dangling symbol). Standard logical / relational / lattice connectives, grouping delimiters, and self-describing \\mathsf{...} verdict constants are common vocabulary and need no entry."
+      },
+      "governs": "The problem or boundary the object governs.",
+      "requires": "What the object requires.",
+      "refuses": "The shortcut it refuses (the anti-axiom for axioms; the failure shape for anti-principles).",
+      "example": {
+        "text": "A positive, source-routed case where the object is enforced or witnessed.",
+        "refs": "Public component ids the example is grounded in."
+      },
+      "counterexample": {
+        "text": "The tempting failure the object exists to refuse."
+      },
+      "enforced_in": "Public component ids where the object is witnessed or governs, rendered as links.",
+      "does_not_prove": "The explicit bound: what the object and its example do NOT establish.",
+      "reader_ladder": {
+        "plain": "One short, literal lay sentence (no jargon, no symbols). A non-expert grasps the point from this alone, before any disclosure opens.",
+        "analogy": {
+          "text": "One concrete, familiar everyday analogy that preserves the object's exact core invariant.",
+          "maps": "List of {doctrine, analogy} correspondences making the analogy's fidelity inspectable (the anti-laundering map).",
+          "boundary": "Where the analogy STOPS: what it does not prove or imply. Mandatory; an analogy without a boundary is a laundering vector."
+        },
+        "why_it_matters": "Why a reader should care, in practical terms.",
+        "potential_misread": "The tempting but wrong takeaway."
+      }
+    }
+  },
+  "reader_ladder_invariant": {
+    "statement": "The reader ladder is a governed reader primitive, not decoration. Every object carries a plain reading and a bounded analogy. The analogy must preserve the object's core invariant (the maps make that inspectable) and must name its limit (the boundary). An analogy without a boundary is the same laundering failure the doctrine refuses: it lets a vivid metaphor stand in for doctrine the source never carried.",
+    "ladder_order": ["plain", "analogy", "analogy.boundary", "expert reading (governs/requires/refuses + formal.reads)", "formal statement (latex/symbols)", "support/non-laundering boundary (does_not_prove)"],
+    "accessibility_rules": "Lay fields use literal language first, short sentences, no jargon, no symbols, no public-vocab-banned visible terms, and make no proof/guarantee claim in the affirmative fields (plain, analogy.text, why_it_matters); a 'does not prove' disclaimer belongs in the boundary or potential_misread. The analogy is optional support for understanding, never the only explanation and never proof.",
+    "gate": "scripts/check_doctrine_reader_ladder.py (--check exits non-zero on any defect; consumed by build_doctrine_enrichment_health.py and tests/test_doctrine_reader_ladder.py)"
+  },
+  "formal_soundness_invariant": {
+    "statement": "A formal block is sound when the symbol table and the formula agree (no undefined symbol, no dangling symbol) and the formula does not assert more than the source clause. This is a reader-soundness property of symbol/formula agreement, NOT a proof of mathematical correctness or of axiom support; correctness is reviewed, soundness is gated.",
+    "gate": "scripts/check_doctrine_formal_soundness.py (--check exits non-zero on any defect; consumed by build_doctrine_enrichment_health.py and tests/test_doctrine_formal_soundness.py)",
+    "source_of_record_ceiling": "The latex may not exceed the formal_clause it renders (axiom_organ_routing.json for axioms, PRINCIPLES.md / ANTI_PRINCIPLES.md for principles / anti-principles). Necessity is rendered as implication; only a definitional criterion is rendered as a biconditional."
+  },
+  "routing_floor": {
+    "statement": "The doctrine-health checker extends beyond the 49 reader-enrichment cards by checking concept and mechanism routing structure. A counted concept route must be source-backed, typed, resolved, justified, and able to reach runnable substrate through at least one resolved mechanism edge. A counted mechanism route must be source-backed, typed, justified, able to reach an interpretive sibling concept, and able to reach runnable substrate through at least one resolved existing code locus.",
+    "covered_kinds": ["concept", "mechanism"],
+    "source_of_record": {
+      "concept": "concepts/concept.*.json",
+      "mechanism": "mechanisms/mechanism.*.json"
+    },
+    "required_structures_by_kind": {
+      "concept": [
+        "source_refs",
+        "valid_json_object",
+        "validator_refs",
+        "receipt_refs",
+        "anti_claims",
+        "entry_surface_contract",
+        "cluster_flag",
+        "relationships.edges",
+        "relationships.unpopulated_selective_relations == []",
+        "at least one resolved mechanism edge"
+      ],
+      "mechanism": [
+        "source_refs",
+        "valid_json_object",
+        "validator_refs",
+        "receipt_refs",
+        "anti_claims",
+        "entry_surface_contract",
+        "organ_refs",
+        "mechanism_payload contract fields",
+        "relationships.edges",
+        "at least one resolved concept edge",
+        "at least one resolved existing code_loci path",
+        "residual selective relations counted separately, not used as support evidence or topology completeness"
+      ]
+    },
+    "gate": "scripts/build_doctrine_enrichment_health.py --check",
+    "non_goal": "This is not concept taxonomy completeness, mechanism topology completeness, target mechanism correctness, runtime behavior proof, support evidence, release authority, or proof authority. Paper-module routing is audited separately as frontier readiness, not counted in this completion floor."
+  },
+  "paper_module_readiness_audit": {
+    "statement": "The doctrine-health checker also exposes a paper-module readiness audit over generated paper-module JSON instances. A ready paper module must be JSON-capsule backed, carry source/validator/receipt-list/anti-claim structure, expose a resolved explained organ or mechanism route, expose a resolved governing concept route, and expose a resolved existing code locus. Required residual relations block readiness; selective residual relations are counted as frontier pressure.",
+    "source_of_record": {
+      "paper_module_instances": "paper_modules/*.json",
+      "instance_owner": "microcosm_core.doctrine_lattice",
+      "upstream_sources": [
+        "core/paper_module_capsules.json",
+        "paper_modules/*.md legacy inventory"
+      ]
+    },
+    "completion_gate_policy": "The paper-module readiness audit is not folded into governed_floor_complete until the standard explicitly promotes it to the completion floor. While it is frontier status, incomplete rows must remain checker-readable and cannot be counted as a green paper-module floor.",
+    "required_structures": [
+      "valid_json_object",
+      "source_refs",
+      "validator_refs",
+      "receipt_refs list present",
+      "anti_claims",
+      "relationships.source_authority == json_capsule",
+      "relationships.edges",
+      "at least one resolved paper_module.explains.organ_or_mechanism edge",
+      "at least one resolved paper_module.governed_by.concept edge",
+      "at least one resolved existing code locus",
+      "required residual relations counted as blockers",
+      "selective residual relations counted as frontier pressure"
+    ],
+    "gate": "scripts/build_doctrine_enrichment_health.py --check",
+    "non_goal": "This audit is not support evidence, proof authority, release readiness, runtime correctness, paper-module topology completeness, or authority to hand-edit generated paper-module JSON."
+  },
+  "health_projection_section_model": {
+    "statement": "The generated health projection is a typed multi-section read model, not a single enrichment gate. The projection output itself declares projection_role, plane, completion_gate_sections, frontier_audit_sections, and a per-section taxonomy with gate_role, sources_of_record, proves, and does_not_prove, so a cold reader never infers the gate composition from checker code.",
+    "projection_role": "microcosm_doctrine_and_readiness_health_projection",
+    "plane": "microcosm_substrate_public_read_model",
+    "plane_rule": "The projection reads microcosm-substrate sources only. External orchestration or control planes that operate on this repository are not represented in the projection and are never sources of record for it; every declared source of record must resolve inside the microcosm root.",
+    "completion_gate_sections": ["reader_enrichment_floor", "formal_soundness", "reader_ladder", "doctrine_routing_floor"],
+    "frontier_audit_sections": ["paper_module_readiness_audit"],
+    "promotion_rule": "Moving a section from frontier_audit_sections into completion_gate_sections is an explicit standard change plus a deliberate checker and regression-test update, never an implicit checker edit. A frontier audit's status must never be read as, or folded into, governed_floor_complete while it remains unpromoted.",
+    "gate": "tests/test_doctrine_enrichment_health.py (section-model boundary tests)"
+  },
+  "non_laundering_rules": [
+    "An example is reader illustration, never a support case; it does not pass the support_case_shape and does not raise support.",
+    "An enforced_in route is a navigation aid, not proof that the object is obligation-supported or complete.",
+    "The latex rendering is a projection of the source clause and cannot become a competing source of record.",
+    "An analogy is reader illustration, never proof; it explains the object and is bounded by an explicit limit, and it never establishes the object or computes support.",
+    "Coverage of an enrichment field is presence, not correctness; correctness (formal soundness, analogy fidelity, boundary honesty) is reviewed and gated, not counted.",
+    "Coverage of a concept routing edge is walkability, not proof of the target, support of the source concept, or completeness of the concept taxonomy.",
+    "Coverage of a mechanism routing edge or code locus is walkability, not runtime correctness, topology completeness, support of the mechanism, or proof of the target concept.",
+    "Coverage of a paper-module readiness edge is walkability, not support evidence, release readiness, runtime correctness, or proof of the cited organ, mechanism, concept, or code locus."
+  ],
+  "anti_claims": [
+    "This standard does not flip source authority for any axiom, principle, or anti-principle.",
+    "This standard does not flip source authority for any concept row.",
+    "This standard does not flip source authority for any mechanism row.",
+    "A fully enriched doctrine object is not therefore a strong or witnessed object; admission, support, and enrichment are independent axes.",
+    "A fully routed concept is not therefore a complete ontology node, mature subsystem, or proof of its target mechanisms.",
+    "A fully routed mechanism is not therefore runtime-correct, topology-complete, mature, release-ready, or proof of its target concept/code locus.",
+    "Adding enrichment fields is reader grammar, not release or proof authority.",
+    "A paper module passing the readiness audit is not therefore a complete paper module, support case, runtime proof, or release-ready artifact."
+  ]
+}

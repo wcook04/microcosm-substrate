@@ -1,0 +1,214 @@
+{
+  "body_copied_material_count": 7,
+  "body_in_receipt": false,
+  "bundle_id": "public_route_compliance_audit_runtime_example",
+  "module_count": 3,
+  "modules": [
+    {
+      "anchor_count": 4,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "body_text_in_receipt": false,
+      "byte_count": 7252,
+      "line_count": 156,
+      "material_class": "public_macro_pattern_body",
+      "module_id": "trace_rules_source_body_import",
+      "path": "source_modules/codex/doctrine/process/trace_rules.json",
+      "public_reference_sanitized": false,
+      "required_anchors": [
+        "\"navigation_reference_sequence\"",
+        "\"route_compliance_floor_warning\"",
+        "\"anti_pattern_grep_before_kernel\"",
+        "\"privacy_rule\""
+      ],
+      "sha256": "a696cb8222156d4f9082e15e802133febd2a025e2e1cfae765299857ccfcbe7c",
+      "sha256_match": true,
+      "source_import_class": "copied_non_secret_macro_body",
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_provider_payload_browser_hud_live_access_account_session_credentials_live_hook_state_or_recipient_send_state",
+      "source_ref": "codex/doctrine/process/trace_rules.json",
+      "source_role": "Trace-route rules that define the public navigation reference sequence, route-compliance floor warning, anti-pattern classes, and metadata-only privacy rule consumed by agent execution trace checks.",
+      "source_sha256": "sha256:a696cb8222156d4f9082e15e802133febd2a025e2e1cfae765299857ccfcbe7c",
+      "source_to_target_relation": "exact_copy",
+      "target_ref": "microcosm-substrate/examples/agent_route_observability_runtime/exported_route_compliance_audit_bundle/source_modules/codex/doctrine/process/trace_rules.json",
+      "target_sha256": "sha256:a696cb8222156d4f9082e15e802133febd2a025e2e1cfae765299857ccfcbe7c",
+      "validation_refs": [
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_route_compliance_audit_bundle_validates_runtime_shape",
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_route_compliance_audit_bundle_receipt_is_public_safe"
+      ]
+    },
+    {
+      "anchor_count": 5,
+      "body_copied": true,
+      "body_in_receipt": false,
+      "body_text_in_receipt": false,
+      "byte_count": 50351,
+      "line_count": 679,
+      "material_class": "public_standard_body",
+      "module_id": "agent_execution_trace_standard_body_import",
+      "path": "source_modules/codex/standards/std_agent_execution_trace.json",
+      "public_reference_sanitized": false,
+      "required_anchors": [
+        "\"schema_version\"",
+        "\"strict_boundary\"",
+        "\"trace_ontology_contract\"",
+        "\"navigation_reference_sequence_contract\"",
+        "\"types\""
+      ],
+      "sha256": "9997ee8e79bc32a867b72e1c23fbdedd0f24e115135cfba7811fad8b682ca753",
+      "sha256_match": true,
+      "source_import_class": "copied_non_secret_macro_body",
+      "source_open_payload_boundary": "body_in_bundle_source_modules_not_receipt_provider_payload_browser_hud_live_access_account_session_credentials_live_hook_state_or_recipient_send_state",
+      "source_ref": "codex/standards/std_agent_execution_trace.json",
+      "source_role": "Agent execution trace standard that defines the strict privacy boundary, trace ontology, route-reference sequence contract, and generated artifact types used by route-compliance accounting.",
+      "source_sha256": "sha256:9997ee8e79bc32a867b72e1c23fbdedd0f24e115135cfba7811fad8b682ca753",
+      "source_to_target_relation": "exact_copy",
+      "target_ref": "microcosm-substrate/examples/agent_route_observability_runtime/exported_route_compliance_audit_bundle/source_modules/codex/standards/std_agent_execution_trace.json",
+      "target_sha256": "sha256:9997ee8e79bc32a867b72e1c23fbdedd0f24e115135cfba7811fad8b682ca753",
+      "validation_refs": [
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_route_compliance_audit_bundle_validates_runtime_shape",
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_route_compliance_audit_bundle_receipt_is_public_safe"
+      ]
+    },
+    {
+      "anchor_count": 4,
+      "body_copied": false,
+      "body_in_receipt": false,
+      "body_text_in_receipt": false,
+      "byte_count": 1375190,
+      "line_count": 18809,
+      "material_class": "public_macro_pattern_body",
+      "module_id": "route_compliance_pattern_binding_source_body_import",
+      "path": "source_modules/state_sidecars/microcosm_portfolio/extracted_pattern_substrate_bindings.json",
+      "public_reference_sanitized": true,
+      "required_anchors": [
+        "\"pattern_id\": \"agent_route_compliance_audit\"",
+        "\"source_function_anchors\"",
+        "\"system/lib/agent_execution_trace.py::_compute_route_compliance\"",
+        "\"microcosm-substrate/examples/agent_route_observability_runtime/exported_route_compliance_audit_bundle/bundle_manifest.json\""
+      ],
+      "sanitization_receipt": {
+        "authority_boundary": "source_sha256 names unsanitized macro source authority; target_sha256 names the public-safe sanitized bundle projection; sha256_match=false is expected.",
+        "blocker_count": 0,
+        "policy_id": "microcosm_public_path_secret_policy_v1",
+        "public_safe": true,
+        "replacement_class_counts": {
+          "private_macro_source_ref_transform": 73,
+          "private_raw_seed_root_transform": 29
+        },
+        "replacement_count": 102,
+        "schema_version": "microcosm_public_reference_sanitization_receipt_v1",
+        "source_byte_count": 1376313,
+        "source_line_count": 18809,
+        "source_ref": "state/microcosm_portfolio/extracted_pattern_substrate_bindings.json",
+        "source_sha256": "sha256:2f63260fd4c7579df1fa28729c2ae394ebed1436ab3d98ba3ec98b6910e3dfc2",
+        "source_to_target_relation": "public_reference_sanitized_projection",
+        "status": "transformed",
+        "target_byte_count": 1375190,
+        "target_line_count": 18809,
+        "target_ref": "microcosm-substrate/examples/agent_route_observability_runtime/exported_route_compliance_audit_bundle/source_modules/state_sidecars/microcosm_portfolio/extracted_pattern_substrate_bindings.json",
+        "target_sha256": "sha256:656d5cdc7735bd814a0b1c925bf7ae909961a5eeb896190c4ec9083589f93f54"
+      },
+      "sha256": "656d5cdc7735bd814a0b1c925bf7ae909961a5eeb896190c4ec9083589f93f54",
+      "sha256_match": false,
+      "source_byte_count": 1376313,
+      "source_import_class": "public_reference_sanitized_macro_body",
+      "source_line_count": 18809,
+      "source_open_payload_boundary": "body_in_bundle_source_modules_public_reference_sanitized_not_receipt_provider_payload_browser_hud_live_access_account_session_credentials_live_hook_state_or_recipient_send_state",
+      "source_ref": "state/microcosm_portfolio/extracted_pattern_substrate_bindings.json",
+      "source_role": "Public-reference-sanitized projection of the generated pattern-binding sidecar row set; preserves route-compliance anchors while replacing private raw-seed and macro-root references.",
+      "source_sanitization_policy_id": "microcosm_public_path_secret_policy_v1",
+      "source_sanitization_ref": "tools/meta/microcosm_public_safety/public_reference_sanitizer.py::sanitize_public_reference_text",
+      "source_sha256": "sha256:2f63260fd4c7579df1fa28729c2ae394ebed1436ab3d98ba3ec98b6910e3dfc2",
+      "source_to_target_relation": "public_reference_sanitized_projection",
+      "target_byte_count": 1375190,
+      "target_line_count": 18809,
+      "target_ref": "microcosm-substrate/examples/agent_route_observability_runtime/exported_route_compliance_audit_bundle/source_modules/state_sidecars/microcosm_portfolio/extracted_pattern_substrate_bindings.json",
+      "target_sha256": "sha256:656d5cdc7735bd814a0b1c925bf7ae909961a5eeb896190c4ec9083589f93f54",
+      "validation_refs": [
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_route_compliance_audit_bundle_validates_runtime_shape",
+        "microcosm-substrate/tests/test_agent_route_observability_runtime.py::test_route_compliance_audit_bundle_receipt_is_public_safe"
+      ]
+    }
+  ],
+  "omitted_material": [
+    "provider payload bodies",
+    "browser/HUD live-access",
+    "account/session state",
+    "cookies",
+    "recipient-send state",
+    "credential-equivalent material",
+    "raw private transcript bodies",
+    "live process-audit bodies"
+  ],
+  "public_reference_sanitized_material_count": 1,
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "agent_execution_trace_source_body_import",
+      "path": "source_modules/system/lib/agent_execution_trace.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/agent_execution_trace.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/agent_execution_trace.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "navigation_coverage_matrix_source_body_import",
+      "path": "source_modules/system/lib/navigation_coverage_matrix.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/navigation_coverage_matrix.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/navigation_coverage_matrix.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "agent_execution_trace_builder_source_body_import",
+      "path": "source_modules/tools/meta/factory/build_agent_execution_trace.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/factory/build_agent_execution_trace.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/factory/build_agent_execution_trace.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "extracted_pattern_substrate_bindings_builder_source_body_import",
+      "path": "source_modules/tools/meta/factory/build_extracted_pattern_substrate_bindings.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "tools/meta/factory/build_extracted_pattern_substrate_bindings.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "tools/meta/factory/build_extracted_pattern_substrate_bindings.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "strict_json_source_body_import",
+      "path": "source_modules/system/lib/strict_json.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/strict_json.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/strict_json.py"
+    }
+  ],
+  "sanitization_receipt_count": 1,
+  "schema_version": "agent_route_observability_runtime_route_compliance_audit_source_module_manifest_v1",
+  "source_import_class": "mixed_copied_non_secret_macro_body_and_public_reference_sanitized_macro_body",
+  "source_import_classes": [
+    "copied_non_secret_macro_body",
+    "public_reference_sanitized_macro_body"
+  ],
+  "validation_ref_count": 2
+}

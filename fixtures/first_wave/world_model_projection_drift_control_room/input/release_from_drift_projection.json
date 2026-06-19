@@ -1,0 +1,35 @@
+{
+  "schema_version": "world_model_projection_drift_control_negative_case_v1",
+  "case_id": "release_from_drift_projection",
+  "drift_row": {
+    "drift_row_id": "entry_payload_admission_nonnegotiable_floor",
+    "source_signal": "entry payloads must cite admission floors and rejection receipts",
+    "source_ref": "state/microcosm_portfolio/extracted_patterns_ledger.jsonl::entry_payload_admission_nonnegotiable_floor",
+    "repair_route": "microcosm intake -> microcosm reveal -> microcosm drift-control",
+    "validation_ref": "receipts/runtime_shell/public_ten_minute_tour.json",
+    "target_ref": "fixtures/first_wave/world_model_projection_drift_control_room/input/drift_rows.json::entry_payload_admission_nonnegotiable_floor",
+    "body_in_receipt": false,
+    "source_authority_claim": false,
+    "live_repair_authorized": false,
+    "source_mutation_authorized": false,
+    "automatic_doctrine_promotion_authorized": false,
+    "release_authorized": true,
+    "fact_authority": {
+      "authority_ref": "state/microcosm_portfolio/extracted_patterns_ledger.jsonl::entry_payload_admission_nonnegotiable_floor",
+      "appearance_refs": [
+        "fixtures/first_wave/world_model_projection_drift_control_room/input/drift_rows.json::entry_payload_admission_nonnegotiable_floor",
+        "receipts/runtime_shell/public_ten_minute_tour.json"
+      ],
+      "derivation_path": [
+        "source_ref",
+        "source_signal",
+        "repair_route",
+        "target_ref",
+        "validation_ref"
+      ],
+      "guard_ref": "receipts/runtime_shell/public_ten_minute_tour.json",
+      "treatment": "guarded_public_projection",
+      "residual_route": "microcosm intake -> microcosm reveal -> microcosm drift-control"
+    }
+  }
+}

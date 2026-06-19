@@ -1,0 +1,34 @@
+{
+  "body_in_receipt": false,
+  "bundle_id": "doctrine_fact_claim_audit_runtime_example",
+  "module_count": 0,
+  "modules": [],
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/derived_fact_hologram.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/derived_fact_hologram.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/derived_fact_hologram.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": null,
+      "path": "source_modules/system/lib/paper_modules.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/paper_modules.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/paper_modules.py"
+    }
+  ],
+  "schema_version": "microcosm_doctrine_fact_claim_audit_source_module_manifest_v1",
+  "source_import_class": "copied_non_secret_macro_body"
+}

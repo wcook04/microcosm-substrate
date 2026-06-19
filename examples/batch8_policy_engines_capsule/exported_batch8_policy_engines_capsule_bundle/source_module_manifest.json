@@ -1,0 +1,47 @@
+{
+  "body_in_receipt": false,
+  "claim_ceiling": "Exact copied non-secret policy-engine source bodies plus public synthetic exercises only.",
+  "module_count": 0,
+  "modules": [],
+  "organ_id": "batch8_policy_engines_capsule",
+  "release_substitution_omissions": [
+    {
+      "body_in_receipt": false,
+      "module_id": "lab_contract_audit_deterministic_red_gate",
+      "path": "source_modules/system/lib/lab_contract_audit.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/lab_contract_audit.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/lab_contract_audit.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "market_fusion_readiness_fail_closed_gate",
+      "path": "source_modules/system/lib/market_fusion_readiness.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/market_fusion_readiness.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/market_fusion_readiness.py"
+    },
+    {
+      "body_in_receipt": false,
+      "module_id": "campaign_dispatch_status_transition_adjudicator",
+      "path": "source_modules/system/lib/campaign_state_transition.py",
+      "release_substitution": {
+        "body_in_receipt": false,
+        "contamination_class": "private_body_exact_match",
+        "matched_private_ref": "system/lib/campaign_state_transition.py",
+        "substitution": "public_safe_stub"
+      },
+      "source_ref": "system/lib/campaign_state_transition.py"
+    }
+  ],
+  "schema_version": "batch8_policy_engines_capsule_source_module_manifest_v1",
+  "source_import_class": "copied_non_secret_macro_body"
+}

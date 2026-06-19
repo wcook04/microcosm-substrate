@@ -1,0 +1,437 @@
+{
+  "anti_claim": "This standard is a public-safe schema contract projection only; it does not authorize release, provider calls, private-data equivalence, or whole-system correctness.",
+  "anti_claim_contract": {
+    "required": false,
+    "rule": "fixture-backed proof must state what it does not prove"
+  },
+  "anti_claims": [
+    "This public standard does not copy private source bodies or prove public runtime completeness.",
+    "This public standard does not authorize release, hosted-public readiness, publication, recipient work, provider calls, or private-data equivalence."
+  ],
+  "authority_boundary": "public_safe_schema_standard_projected_from_macro_manifest_not_source_body_authority",
+  "authority_ceiling": {
+    "private_data_equivalence_authority": false,
+    "release_authority": false,
+    "source_body_authority": false,
+    "standard_authority": "schema_contract_and_validator_expectation_only",
+    "status": "pass"
+  },
+  "entry_surface_contract": {
+    "agent_entry_ref": "AGENTS.md::Concept And Mechanism Entry",
+    "authority": "entry_discoverability_only_not_doctrine_source_authority",
+    "first_screen_ref": "microcosm first-screen <project>::doctrine_effect_frame",
+    "public_drilldowns": [
+      "standards/std_microcosm_mechanism.json",
+      "core/standards_registry.json::standards[standard_id=std_microcosm_mechanism]",
+      "core/public_standard_pressure.json::mechanism_handle_requires_runnable_contract"
+    ],
+    "reader_rule": "Use mechanism rows as operational transformation handles that name state, proof, routing, or doctrine effects plus validator attachment; do not treat them as feature prose.",
+    "required": true
+  },
+  "population_specimen_contract": {
+    "agent_entry_ref": "AGENTS.md::Concept And Mechanism Entry",
+    "authority": "specimen_route_contract_not_macro_doctrine_source_authority",
+    "loop_ref": "atlas/entry_packet.json::concept_mechanism_entry_route.population_specimens",
+    "minimum_specimen_count": 3,
+    "required_for_population": true,
+    "row_must_bind": [
+      "mechanism_role",
+      "concept_pair_ref",
+      "source_refs",
+      "transformation_shape",
+      "state_or_proof_effect",
+      "omission_receipt",
+      "anti_claims",
+      "validator_refs"
+    ],
+    "reader_rule": "A populated mechanism row must point to at least one runnable or inspectable specimen that shows the transformation and validator lane; feature prose is insufficient."
+  },
+  "activation_receipt_contract": {
+    "agent_entry_ref": "AGENTS.md::Concept And Mechanism Entry",
+    "authority": "pressure_activation_receipt_not_feature_registry_or_task_ledger_authority",
+    "loop_ref": "atlas/entry_packet.json::concept_mechanism_entry_route.activation_receipts",
+    "required_for_pressure_activation": true,
+    "row_must_bind": [
+      "pressure_id",
+      "selected_specimen_id",
+      "mechanism_role",
+      "concept_pair_ref",
+      "residual_disposition",
+      "reentry_condition",
+      "source_ref",
+      "validator_refs",
+      "omission_receipt",
+      "anti_claims",
+      "authority_boundary"
+    ],
+    "reader_rule": "A real pressure activation must record the transformation/proof commitment that carried the pressure; a mechanism row cannot pass as feature prose or a frontend plan."
+  },
+  "first_wave_required": true,
+  "kind_id": "mechanism",
+  "kind_name": "Mechanism",
+  "omission_receipt": {
+    "drilldown": "state/microcosm_portfolio/reconstruction/standards_manifest_v1.json",
+    "omitted": [
+      "source pattern bodies",
+      "private source bodies",
+      "prompt/provider/operator/HUD bodies"
+    ],
+    "reason": "public standard carries schema and id refs only"
+  },
+  "omission_receipt_contract": {
+    "required": false,
+    "rule": "compressed views must list omitted bodies and drilldown refs"
+  },
+  "paper_module_contract": {
+    "module_slug": "mechanism_standard",
+    "required": true
+  },
+  "public_private_boundary": {
+    "allowed_public_inputs": [
+      "synthetic_fixtures",
+      "schema_only_rows",
+      "redacted_source_capsules",
+      "public_safe_macro_code_when_refactored"
+    ],
+    "default_posture": "public_safe_when_synthetic_or_source_capsuled",
+    "forbidden_public_inputs": [
+      "live_raw_seed",
+      "prompt_shelf_bodies",
+      "provider_payload_bodies",
+      "operator_thread_content",
+      "live_task_ledger_rows",
+      "market_or_prediction_private_material"
+    ]
+  },
+  "receipt_contract": {
+    "must_record": [
+      "command_or_validator",
+      "result",
+      "evidence_refs",
+      "omissions",
+      "authority_ceiling"
+    ],
+    "receipt_id": "receipt.microcosm.mechanism",
+    "required": true
+  },
+  "receipt_expectations": [
+    "receipt.microcosm.mechanism",
+    "receipt must cite validator_id, input fixture ids, output artifact refs, omissions, and anti_claim ids"
+  ],
+  "receipt_refs": [
+    "receipt.microcosm.mechanism"
+  ],
+  "relationships": {
+    "canonical_organ_model_ref": null,
+    "source_pattern_id_count": 258,
+    "source_pattern_id_sample": [
+      "actionability_driven_alerting_d4",
+      "actor_context_injection_subagentstart",
+      "affordance_passport_selection_gate",
+      "agent_entry_surfaces_canonical_first_move",
+      "agent_harness_configuration_audit",
+      "agent_mission_status_noise_demotion_reducer",
+      "agent_principle_failure_cap_assimilation_loop",
+      "agent_route_compliance_audit",
+      "agent_seed_substrate",
+      "agent_seed_substrate_isolation",
+      "agent_session_attribution",
+      "aiw_movement_typed_cross_plane_proposal",
+      "annex_substrate_wedge_theseus_lifecycle",
+      "approval_inbox_human_in_loop",
+      "archaeological_voice_coverage_gate",
+      "authority_chain_handle_resolver",
+      "autonomous_proof_gate_promotion_rule_amber_bounded_retry",
+      "autonomous_proof_gate_three_color_default",
+      "autonomy_plan_baton_closeout_contract",
+      "autonomy_runtime_metabolism_loop"
+    ],
+    "used_by_organs": [
+      "executable_doctrine_grammar",
+      "mission_transaction_work_spine",
+      "voice_to_doctrine_self_improvement_loop"
+    ]
+  },
+  "required_fields": [
+    "id",
+    "kind",
+    "schema_version",
+    "authority_boundary",
+    "source_refs",
+    "status",
+    "created_at",
+    "relationships",
+    "entry_surface_contract",
+    "population_specimen_contract",
+    "activation_receipt_contract",
+    "validator_refs",
+    "receipt_refs",
+    "omission_receipt",
+    "anti_claims",
+    "mechanism_payload"
+  ],
+  "schema_version": "public_microcosm_standard_v2",
+  "source_coupling_contract": {
+    "required": false,
+    "rule": "if generated or projected, record source input digest and stale-source behavior"
+  },
+  "source_refs": [
+    {
+      "field": "standards[standard_id=std_microcosm_mechanism]",
+      "path": "state/microcosm_portfolio/reconstruction/standards_manifest_v1.json",
+      "role": "macro_manifest_source"
+    },
+    {
+      "path": "AGENTS.md",
+      "role": "public_agent_entry_route_for_concept_and_mechanism_population"
+    },
+    {
+      "path": "src/microcosm_core/first_screen_composition.py",
+      "role": "doctrine_effect_frame_projection"
+    },
+    {
+      "path": "atlas/entry_packet.json",
+      "role": "concept_mechanism_population_specimen_route"
+    },
+    {
+      "path": "src/microcosm_core/validators/concept_mechanism_population.py",
+      "role": "activation_receipt_validator"
+    },
+    {
+      "role": "id_refs_only_no_source_bodies",
+      "source_pattern_id_count": 258,
+      "source_pattern_id_sample": [
+        "actionability_driven_alerting_d4",
+        "actor_context_injection_subagentstart",
+        "affordance_passport_selection_gate",
+        "agent_entry_surfaces_canonical_first_move",
+        "agent_harness_configuration_audit",
+        "agent_mission_status_noise_demotion_reducer",
+        "agent_principle_failure_cap_assimilation_loop",
+        "agent_route_compliance_audit",
+        "agent_seed_substrate",
+        "agent_seed_substrate_isolation",
+        "agent_session_attribution",
+        "aiw_movement_typed_cross_plane_proposal",
+        "annex_substrate_wedge_theseus_lifecycle",
+        "approval_inbox_human_in_loop",
+        "archaeological_voice_coverage_gate",
+        "authority_chain_handle_resolver",
+        "autonomous_proof_gate_promotion_rule_amber_bounded_retry",
+        "autonomous_proof_gate_three_color_default",
+        "autonomy_plan_baton_closeout_contract",
+        "autonomy_runtime_metabolism_loop"
+      ]
+    }
+  ],
+  "standard_id": "std_microcosm_mechanism",
+  "standard_payload": {
+    "anti_purpose": "A narrative description of a feature.",
+    "compression_bands": [],
+    "failure_modes": [
+      "untyped artifact admitted into rebuilt substrate",
+      "mechanism standard exists but is not reachable from the agent entry or first-screen doctrine frame",
+      "current public microcosm surface treated as sufficient without coverage check",
+      "private source material exposed instead of synthetic/schema-only fixture",
+      "projection claims source authority without coupling receipt"
+    ],
+    "ontology": "A reusable operational transformation that changes state, proof, routing, or doctrine.",
+    "rebuild_action": "project",
+    "teleology": "Explain how organs actually work and where validators attach."
+  },
+  "status": "active",
+  "validation_rules": [
+    "validate required fields and enum values against this standard",
+    "reject missing source_refs unless the fixture declares synthetic origin",
+    "reject authority upgrades not backed by receipt_refs",
+    "require entry_surface_contract so mechanism rows are discoverable from AGENTS.md and the first-screen doctrine_effect_frame",
+    "require population_specimen_contract so mechanism rows route from entry to at least one runnable or inspectable validation loop",
+    "require activation_receipt_contract so real population pressure records a selected specimen, residual disposition, and reentry condition instead of spawning a feature-prose projection",
+    "require public_private_boundary before public projection"
+  ],
+  "validator_contract": {
+    "minimum_checks": [
+      "schema",
+      "source_boundary",
+      "receipt_presence",
+      "negative_case_when_fixture_backed"
+    ],
+    "required": true,
+    "validator_id": "validator.microcosm.mechanism"
+  },
+  "validator_refs": [
+    "validator.microcosm.mechanism"
+  ],
+  "wave": "w1_core_contract_and_grammar",
+  "source_format": "json",
+  "source_authority": "json_is_contract_markdown_is_projection",
+  "source_authority_ref": "microcosm-substrate/AXIOMS.md#1 (JSON is contract; Markdown is projection)",
+  "source_location": "microcosm-substrate/mechanisms/*.json",
+  "doctrine_kind_envelope": {
+    "governed_by": "std_microcosm_standard",
+    "envelope_version": "doctrine_kind_envelope_v2",
+    "note": "This standard conforms to the universal doctrine-kind envelope; markdown/mermaid/atlas are generated projections of this JSON source."
+  },
+  "instance_schema": {
+    "required_keys": [
+      "id",
+      "kind",
+      "statement",
+      "status",
+      "code_loci"
+    ],
+    "optional_keys": [
+      "concept_edges",
+      "organ_refs",
+      "upstream",
+      "downstream",
+      "flow",
+      "drift_sensitivity",
+      "anti_mechanism"
+    ],
+    "field_semantics": {
+      "id": "mech_NNN",
+      "statement": "the code-grounded how that instantiates a concept",
+      "code_loci": "list of {path, functions?, role, resolution: resolved|planned} \u2014 REQUIRED, must resolve or be marked planned"
+    }
+  },
+  "lattice_edges": {
+    "required": [
+      {
+        "to_kind": "code_locus",
+        "relation_verb": "grounded_in",
+        "reverse_verb": "implements",
+        "cardinality": "one_to_many",
+        "requirement": "required",
+        "rule": "resolve_or_marked_planned"
+      }
+    ],
+    "selective": [
+      {
+        "to_kind": "concept",
+        "relation_verb": "grounds",
+        "reverse_verb": "grounded_by",
+        "cardinality": "zero_to_many",
+        "requirement": "selective"
+      },
+      {
+        "to_kind": "organ",
+        "relation_verb": "runs_in",
+        "reverse_verb": "operates_through",
+        "cardinality": "zero_to_many",
+        "requirement": "selective"
+      },
+      {
+        "to_kind": "mechanism",
+        "relation_verb": "upstream_of",
+        "reverse_verb": "downstream_of",
+        "cardinality": "zero_to_many",
+        "requirement": "selective"
+      }
+    ],
+    "edge_shape": [
+      "to_kind",
+      "relation_verb",
+      "reverse_verb",
+      "cardinality",
+      "requirement"
+    ],
+    "cardinality_enum": [
+      "one_to_one",
+      "one_to_many",
+      "zero_to_one",
+      "zero_to_many"
+    ],
+    "requirement_enum": [
+      "required",
+      "selective",
+      "forbidden"
+    ],
+    "bidirectional_gloss_required": true
+  },
+  "skills": {
+    "author": {
+      "skill_id": "skill.microcosm.mechanism.author",
+      "status": "planned",
+      "purpose": "create a valid mechanism instance"
+    },
+    "refine_instance": {
+      "skill_id": "skill.microcosm.mechanism.refine_instance",
+      "status": "planned",
+      "purpose": "improve an existing mechanism without corrupting authority"
+    },
+    "refine_standard_and_propagate": {
+      "skill_id": "skill.microcosm.mechanism.refine_standard_and_propagate",
+      "status": "planned",
+      "purpose": "change std_microcosm_mechanism and propagate through every governed artifact + projection"
+    }
+  },
+  "projections": {
+    "markdown": {
+      "generated": true,
+      "builder": "microcosm-substrate/scripts/build_doctrine_projection.py (PLANNED)",
+      "path_pattern": "microcosm-substrate/mechanisms/<id>.md",
+      "note": "human-readable projection; never source"
+    },
+    "mermaid": {
+      "generated": true,
+      "compiled_from": "lattice_edges + instance edges",
+      "note": "diagram projection; never source"
+    },
+    "atlas_card": {
+      "generated": true,
+      "surface": "agent entry / option-surface band / atlas card",
+      "note": "agent-routing projection; must link back to JSON source"
+    }
+  },
+  "validation": {
+    "schema_check": {
+      "required": true,
+      "validator_id": "validator.microcosm.mechanism",
+      "rule": "instance validates against instance_schema"
+    },
+    "link_resolution": {
+      "required": true,
+      "rule": "every required/selective lattice edge target must resolve to an existing instance id OR be marked planned"
+    },
+    "projection_freshness": {
+      "required": true,
+      "rule": "generated markdown/mermaid/atlas must be regenerable from JSON source; a stale projection is a trust downgrade, not source authority"
+    }
+  },
+  "compression": {
+    "rule": "Russian-rule fan-in-weighted compression (see macro std_paper_module.compression_formula)",
+    "required_on_instance": [
+      "one_line"
+    ],
+    "one_line_max_chars": 160,
+    "bands": [
+      "one_line",
+      "card",
+      "tldr"
+    ],
+    "purpose": "one_line drives the compressed per-instance row projection (e.g. the 77-organ atlas) for agent entry + routing"
+  },
+  "provisional_policy": {
+    "public_source_status": "active",
+    "proof_required_for_axiom": false,
+    "axiom_posture": "imposed constitutional commitment; provenance optional; never evidence-gated",
+    "principle_posture": "operative commitment authored substantively",
+    "forbidden_shipped_status": [
+      "candidate",
+      "provisional",
+      "seed",
+      "draft"
+    ],
+    "candidate_lane": "candidate/provisional doctrine may exist ONLY in an explicit import/drafting lane OUTSIDE public source, never as a shipped public-doctrine status",
+    "overrides": "macro candidate-axiom 'pressure only / not active law' posture does NOT apply to shipped microcosm public doctrine"
+  },
+  "refinement_provenance": {
+    "refined_by": "claude_code",
+    "wave": "microcosm_doctrine_kind_envelope_v2",
+    "workflow_run": "wf_7540e090-390",
+    "cap": "cap_quick_microcosm_doctrine_kind_standard_refinem_1a57b8a34ca3",
+    "base": "public_microcosm_standard_v1 @ git HEAD",
+    "method": "additive_envelope_merge; required_fields/authority_ceiling/anti_claims preserved verbatim; envelope landed as new keys (not via required_fields)"
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "schema_version": "public_microcosm_standard_v2",
+  "standard_id": "std_microcosm_target_shape_tactic_routing_gate",
+  "kind_id": "microcosm_runtime_organ",
+  "status": "active",
+  "authority_boundary": {
+    "owner": "target_shape_tactic_routing_gate",
+    "allowed_claim": "Public target-shape route cases can admit only tactics that were both probed and available before proof execution.",
+    "forbidden_claims": [
+      "the selected tactic proves the goal",
+      "Lean/Lake or Mathlib-dependent proof execution is authorized",
+      "providers may be called",
+      "proof bodies or post-oracle execution labels may be exposed",
+      "release or publication is authorized"
+    ]
+  },
+  "source_refs": [
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/run_summary.json",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/failure_taxonomy_report.json",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/graph_update_candidates.json",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/oracle_repair_graph_v0/run_summary.json",
+    "receipts/first_wave/formal_math_verifier_trace_repair_loop/formal_math_verifier_trace_repair_loop_result.json",
+    "receipts/first_wave/formal_evidence_cell_anchor_resolver/formal_evidence_cell_anchor_resolver_result.json",
+    "receipts/first_wave/proof_diagnostic_evidence_spine/proof_evidence_validation_receipt.json"
+  ],
+  "source_digests": {
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/run_summary.json": "sha256:93304410f32d40f5cad1c161c1d01a5d6f353ee10b7cf3fecbaaf7b068b43008",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/failure_taxonomy_report.json": "sha256:8b054c57001c432942a7ed97cbd4dca2a2e2b174d9cd31d9121c38c5ecc933af",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/premise_retrieval_graph_v0/graph_update_candidates.json": "sha256:6c7eb0bc4ebf1c9a2689720ea8cfe9aa72298c136fdfebd6e1a4aae78986890f",
+    "state/runs/PROVER_BENCHMARK_RING2_20260510_premise_retrieval_v0/oracle_repair_graph_v0/run_summary.json": "sha256:7669c8d91ddf7de75b6a7c7e688e70e4ba211ff3c00ceb9bca32d3202c5739b4"
+  },
+  "body_material_status": "real_ring2_target_shape_routing_refs",
+  "source_artifact_status": "copied_ring2_target_shape_routing_source_bodies",
+  "source_artifact_count": 4,
+  "source_artifact_digest_verification_required": true,
+  "routing_evidence_status": "real_ring2_problem_domain_failure_class_route_refs",
+  "relationships": {
+    "organ_id": "target_shape_tactic_routing_gate",
+    "fixture_manifest": "core/fixture_manifests/target_shape_tactic_routing_gate.fixture_manifest.json",
+    "paper_module": "paper_modules/target_shape_tactic_routing.md",
+    "depends_on": [
+      "corpus_readiness_mathlib_absence_gate",
+      "mathematical_strategy_atlas_hypothesis_scorer"
+    ],
+    "feeds": [
+      "formal_math_premise_retrieval",
+      "formal_math_lean_proof_witness"
+    ]
+  },
+  "required_fields": [
+    "tactic_portfolio_availability.tactics[].tactic_id",
+    "tactic_portfolio_availability.tactics[].availability_status",
+    "target_shape_routes.route_cases[].target_shape",
+    "target_shape_routes.route_cases[].allowed_tactic_ids",
+    "target_shape_routes.route_cases[].selected_tactic_id",
+    "target_shape_routes.route_cases[].route_stage"
+  ],
+  "validation_rules": [
+    "Every allowed tactic id must exist in the public tactic portfolio.",
+    "Every allowed tactic id must be marked available before proof execution.",
+    "Every selected tactic id must match the computed shape-preferred available tactic for the target shape.",
+    "Every route case must be pre_execution.",
+    "Every required Ring2 target-shape source artifact must be copied into source_artifacts under the fixture or bundle input.",
+    "Every copied Ring2 target-shape source artifact sha256 digest must match source_digests.",
+    "Proof, provider, and Lean source body fields are forbidden.",
+    "Release, provider, proof-authority, and Lean/Lake authority overclaims are rejected."
+  ],
+  "receipt_expectations": [
+    "result receipt with scored route decisions",
+    "board receipt with public contract and routing projection",
+    "validation receipt with negative-case coverage",
+    "fixture acceptance receipt",
+    "source artifact import rows with copied-body and digest-match status",
+    "source_module_manifest.json with copied Ring2 source-body rows, source refs, target refs, sha256, line_count, material_class, and body_in_receipt=false"
+  ],
+  "validator_contract": {
+    "module": "microcosm_core.organs.target_shape_tactic_routing_gate",
+    "actions": [
+      "run",
+      "run-routing-bundle"
+    ],
+    "negative_case_count": 6
+  },
+  "receipt_contract": {
+    "result": "receipts/first_wave/target_shape_tactic_routing_gate/target_shape_tactic_routing_result.json",
+    "board": "receipts/first_wave/target_shape_tactic_routing_gate/target_shape_tactic_routing_board.json",
+    "validation": "receipts/first_wave/target_shape_tactic_routing_gate/target_shape_tactic_routing_validation_receipt.json",
+    "acceptance": "receipts/acceptance/first_wave/target_shape_tactic_routing_gate_fixture_acceptance.json",
+    "required_public_fields": [
+      "source_artifact_status",
+      "source_artifact_count",
+      "copied_source_artifact_count",
+      "source_artifacts_pass",
+      "source_artifact_imports",
+      "source_module_manifest_ref",
+      "source_open_body_imports",
+      "shape_preferred_tactic_computed",
+      "declared_selection_must_match_computed_preference",
+      "scored_route_cases[].shape_preferred_tactic_ids",
+      "scored_route_cases[].computed_selected_tactic_id",
+      "scored_route_cases[].declared_selected_tactic_id"
+    ]
+  },
+  "public_private_boundary": {
+    "private_source_bodies_included": false,
+    "non_secret_macro_source_bodies_included": true,
+    "proof_bodies_included": false,
+    "provider_payloads_included": false,
+    "oracle_labels_included": false,
+    "fixture_kind": "real_ring2_problem_domain_failure_class_route_refs_with_copied_source_bodies",
+    "source_module_manifest_included": true
+  },
+  "authority_ceiling": {
+    "lean_lake_execution_authorized": false,
+    "formal_proof_authority": false,
+    "provider_calls_authorized": false,
+    "release_authorized": false
+  },
+  "standard_payload": {
+    "ontology": "target-shape tactic routing is a pre-execution Ring2 route gate backed by copied non-secret macro run artifacts plus public fixture decisions",
+    "teleology": "raise the body floor by making the actual Ring2 target-shape run summaries, failure taxonomy, and graph-update candidates present and digest-checked in Microcosm before routing claims are accepted",
+    "anti_purpose": "do not treat copied route artifacts as theorem proof authority, provider payload authority, release authority, or private macro equivalence",
+    "compression_bands": [
+      "source_artifacts are copied body evidence and must be digest-checked",
+      "route cases are public projections over the copied Ring2 source bodies",
+      "shape preference is computed from target shape, probe availability, and admissible tactics before any declared selection is trusted",
+      "receipts may name source artifacts and digests but must not echo proof/provider/private bodies",
+      "source_module_manifest and source_open_body_imports make copied target-shape Ring2 bodies countable by status and workingness without exporting body text in receipts"
+    ],
+    "failure_modes": [
+      "copied Ring2 target-shape source artifact is missing from the public fixture or bundle",
+      "copied Ring2 target-shape source artifact digest differs from the macro source digest",
+      "route admits a tactic absent from the public probe portfolio",
+      "route admits a tactic marked unavailable by the public probe",
+      "declared selected tactic overrides the computed target-shape preferred available tactic",
+      "route case is selected after Lean/proof execution evidence exists",
+      "proof body, provider payload, or Lean source body appears in public output",
+      "graph-update candidate is treated as theorem proof authority",
+      "release, provider, or Lean execution authority is implied by pre-execution routing metadata"
+    ],
+    "rebuild_action": "PYTHONPATH=src ../repo-python -m microcosm_core.organs.target_shape_tactic_routing_gate run --input fixtures/first_wave/target_shape_tactic_routing_gate/input --out receipts/first_wave/target_shape_tactic_routing_gate --acceptance-out receipts/acceptance/first_wave/target_shape_tactic_routing_gate_fixture_acceptance.json",
+    "contract_version": "public_microcosm_standard_v2",
+    "contract_projection_basis": {
+      "source_schema_version": "public_microcosm_standard_v2",
+      "source_status": "active",
+      "runtime_acceptance_status": "accepted",
+      "previous_source_schema_version": "std_microcosm_target_shape_tactic_routing_gate_v1",
+      "previous_source_status": "accepted",
+      "validator_refs": [
+        "validator.microcosm.organs.target_shape_tactic_routing_gate"
+      ],
+      "receipt_refs": [
+        "receipt.microcosm.target_shape_tactic_routing_gate"
+      ],
+      "authority_boundary": "computed standard-lattice contract only; existing authority_ceiling remains the operative claim ceiling."
+    }
+  },
+  "anti_claim": "This standard governs real Ring2 target-shape routing refs only; it does not certify theorem correctness, tactic success, provider output, release readiness, or private macro equivalence.",
+  "skills": {
+    "author": {
+      "skill_id": "skill.microcosm.microcosm_runtime_organ.author",
+      "status": "planned",
+      "purpose": "create a valid Target shape tactic routing gate instance"
+    },
+    "refine_instance": {
+      "skill_id": "skill.microcosm.microcosm_runtime_organ.refine_instance",
+      "status": "planned",
+      "purpose": "improve an existing Target shape tactic routing gate without corrupting authority"
+    },
+    "refine_standard_and_propagate": {
+      "skill_id": "skill.microcosm.microcosm_runtime_organ.refine_standard_and_propagate",
+      "status": "planned",
+      "purpose": "change std_microcosm_target_shape_tactic_routing_gate and propagate through governed artifacts plus generated lattice projections"
+    }
+  },
+  "runtime_acceptance_status": "accepted",
+  "source_format": "json",
+  "source_authority": "json_is_contract_markdown_is_projection",
+  "source_authority_ref": "microcosm-substrate/AXIOMS.md#1 (JSON is contract; Markdown is projection)",
+  "source_location": "microcosm-substrate/standards/std_microcosm_target_shape_tactic_routing_gate.json",
+  "doctrine_kind_envelope": {
+    "envelope_version": "doctrine_kind_envelope_v2",
+    "governed_by": "std_microcosm_standard",
+    "note": "This standard conforms to the universal doctrine-kind envelope; markdown, Mermaid, Atlas, coverage, health, and entry-card views are generated projections of this JSON source."
+  },
+  "validator_refs": [
+    "validator.microcosm.organs.target_shape_tactic_routing_gate"
+  ],
+  "receipt_refs": [
+    "receipt.microcosm.target_shape_tactic_routing_gate"
+  ],
+  "anti_claims": [
+    "This standard governs real Ring2 target-shape routing refs only; it does not certify theorem correctness, tactic success, provider output, release readiness, or private macro equivalence.",
+    "Active v2 standard status is a source JSON contract state only; it does not expand release, publication, provider dispatch, private-root equivalence, product-readiness, or whole-system correctness authority beyond the authority_ceiling."
+  ],
+  "runtime_acceptance_refs": {
+    "registry_row_ref": "core/standards_registry.json::standard_id=std_microcosm_target_shape_tactic_routing_gate",
+    "registry_status": "draft",
+    "source_status_before_v2_uplift": "accepted",
+    "source_schema_before_v2_uplift": "std_microcosm_target_shape_tactic_routing_gate_v1",
+    "uplift_basis": "registry-backed source standard already carried accepted, active, source-body-import, or body-floor status; this update narrows it into the active v2 JSON contract shape without raising its authority ceiling.",
+    "validator_id": "validator.microcosm.organs.target_shape_tactic_routing_gate",
+    "receipt_id": "receipt.microcosm.target_shape_tactic_routing_gate",
+    "validator_refs": [
+      "validator.microcosm.organs.target_shape_tactic_routing_gate"
+    ],
+    "receipt_refs": [
+      "receipt.microcosm.target_shape_tactic_routing_gate"
+    ]
+  }
+}

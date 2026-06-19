@@ -1,0 +1,6684 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+from collections import Counter, defaultdict
+from pathlib import Path
+from typing import Any, Iterator
+
+from microcosm_core.secret_exclusion_scan import (
+    PASS,
+    classify_public_safe_macro_import,
+    load_forbidden_classes,
+    public_relative_path,
+    scan_paths,
+)
+from microcosm_core.receipts import (
+    normalize_public_receipt_paths,
+    utc_now,
+    write_json_atomic,
+)
+from microcosm_core.schemas import read_json_strict
+from microcosm_core.validators.source_module_boundary import (
+    evaluate_source_module_boundary,
+)
+
+
+ORGAN_ID = "macro_projection_import_protocol"
+FIXTURE_ID = "first_wave.macro_projection_import_protocol"
+VALIDATOR_ID = "validator.microcosm.organs.macro_projection_import_protocol"
+
+RESULT_NAME = "macro_projection_import_protocol_result.json"
+BOARD_NAME = "projection_import_board.json"
+INTAKE_BOARD_NAME = "projection_import_intake_board.json"
+VALIDATION_RECEIPT_NAME = "projection_import_validation_receipt.json"
+ACCEPTANCE_RECEIPT_REL = (
+    "receipts/acceptance/first_wave/"
+    "macro_projection_import_protocol_fixture_acceptance.json"
+)
+BUNDLE_RESULT_NAME = "exported_projection_import_bundle_validation_result.json"
+PUBLIC_ROOT_POLICY_REL = Path("core/private_state_forbidden_classes.json")
+MODULE_PUBLIC_ROOT = Path(__file__).resolve().parents[3]
+PRIVATE_MACRO_SOURCE_MODULE_ROOT = Path(
+    "examples/macro_projection_import_protocol/"
+    "exported_projection_import_bundle/source_modules"
+)
+DEPENDENCY_PREFLIGHT_RECEIPT_REL = Path("receipts/preflight/dependency_preflight.json")
+ORGAN_REGISTRY_REL = Path("core/organ_registry.json")
+ORGAN_LIFECYCLE_ACCEPTED_COUNT_FIELDS = (
+    "accepted_organ_count",
+    "runtime_step_count",
+    "acceptance_plan_organ_count",
+    "evidence_class_row_count",
+    "fixture_check_count",
+)
+ORGAN_LIFECYCLE_PRODUCT_AUTHORITY_COUNT_FIELDS = (
+    "public_authority_expected_organ_count",
+    "organ_authority_row_count",
+)
+ORGAN_LIFECYCLE_COUNT_FIELDS = (
+    *ORGAN_LIFECYCLE_ACCEPTED_COUNT_FIELDS,
+    *ORGAN_LIFECYCLE_PRODUCT_AUTHORITY_COUNT_FIELDS,
+)
+
+INPUT_NAMES = (
+    "projection_protocol.json",
+    "cleaning_policy.json",
+    "import_plan.json",
+)
+NEGATIVE_INPUT_NAMES = (
+    "forbidden_body_import_overclaim.json",
+    "missing_omission_receipt.json",
+    "authority_upgrade_overclaim.json",
+    "missing_validation_ref.json",
+    "release_or_private_equivalence_overclaim.json",
+    "standalone_dependency_leak.json",
+)
+
+EXPECTED_NEGATIVE_CASES = {
+    "forbidden_body_import_overclaim": ["MACRO_PROJECTION_FORBIDDEN_BODY_IMPORT"],
+    "missing_omission_receipt": ["MACRO_PROJECTION_OMISSION_RECEIPT_MISSING"],
+    "authority_upgrade_overclaim": ["MACRO_PROJECTION_AUTHORITY_UPGRADE"],
+    "missing_validation_ref": ["MACRO_PROJECTION_VALIDATION_REF_MISSING"],
+    "release_or_private_equivalence_overclaim": [
+        "MACRO_PROJECTION_RELEASE_OR_EQUIVALENCE_OVERCLAIM"
+    ],
+    "standalone_dependency_leak": ["MACRO_PROJECTION_STANDALONE_DEPENDENCY_LEAK"],
+}
+
+TRUE_FORBIDDEN_MATERIAL_CLASSES = {
+    "raw_seed_body",
+    "operator_thread_body",
+    "provider_payload_body",
+    "non_public_evidence_body",
+    "private_operator_source_body",
+    "credential",
+    "secret",
+    "recipient_packet_body",
+    "release_packet_body",
+}
+PUBLIC_SAFE_BODY_MATERIAL_CLASSES = {
+    "public_macro_pattern_body",
+    "public_macro_standard_body",
+    "public_macro_tool_body",
+    "public_macro_receipt_body",
+    "public_macro_proof_body",
+}
+PUBLIC_SAFE_BODY_COPY_POLICY = "verified_macro_body_with_claim_floor"
+METADATA_COPY_POLICY = "metadata_or_regression_wrapper_no_body_import"
+MACRO_ORIGIN_REF_POLICY = "macro_origin_refs_are_provenance_only_not_runtime_dependencies"
+STANDALONE_RUNTIME_ROOT_REF = "microcosm-substrate"
+FINANCE_EVAL_BODY_IMPORT_CLAIM_CEILING = (
+    "public finance forecast evaluation source-module body import only; not trading, "
+    "financial advice, live provider calls, account/private portfolio state, optimizer "
+    "or calculator mutation, recipient send, source mutation, release, publication, "
+    "or hosted authority"
+)
+DEFAULT_SOURCE_MODULE_PROTOCOL_REFS = (
+    Path(
+        "examples/macro_projection_import_protocol/exported_projection_import_bundle/"
+        "projection_protocol.json"
+    ),
+    Path("fixtures/first_wave/macro_projection_import_protocol/input/projection_protocol.json"),
+)
+STANDALONE_RUNTIME_ALLOWED_PREFIXES = (
+    "AGENTS.md",
+    "README.md",
+    "core/",
+    "examples/",
+    "fixtures/",
+    "paper_modules/",
+    "pyproject.toml",
+    "receipts/",
+    "src/",
+    "standards/",
+    "tests/",
+)
+STANDALONE_RUNTIME_BLOCKED_PREFIXES = (
+    "/",
+    "../",
+    "codex/ledger/",
+    "formal_math/",
+    "obsidian/",
+    "state/",
+    "tools/meta/",
+)
+STANDALONE_RUNTIME_BLOCKED_TOKENS = (
+    "credential",
+    "operator_thread",
+    "private_root",
+    "provider_payload",
+    "raw_seed",
+    "recipient_packet",
+    "release_packet",
+)
+PUBLIC_BOUND_PRIVATE_ROOT_TOKENS = (
+    "private_root",
+    "self-indexing-cognitive-substrate",
+)
+FORBIDDEN_MATERIAL_CLASSES = TRUE_FORBIDDEN_MATERIAL_CLASSES
+FORBIDDEN_AUTHORITY_FLAGS = (
+    "source_authority_above_macro_contracts",
+    "live_macro_source_authority",
+    "private_root_equivalence_authorized",
+    "whole_system_correctness_claim",
+)
+
+AUTHORITY_CEILING = {
+    "status": PASS,
+    "authority_ceiling": "macro_projection_protocol_verified_body_import_or_secret_exclusion_only",
+    "public_safe_bodies_imported_with_provenance": True,
+    "credential_or_account_bound_bodies_exported": False,
+    "raw_seed_body_read": False,
+    "operator_thread_body_read": False,
+    "provider_payload_body_read": False,
+    "release_authorized": False,
+    "publication_authorized": False,
+    "recipient_work_authorized": False,
+    "private_data_equivalence_claim": False,
+    "source_authority_above_macro_contracts": False,
+    "live_macro_source_authority": False,
+    "whole_system_correctness_claim": False,
+}
+BODY_DIGEST_PREFIX = "sha256:"
+BODY_DIGEST_HEX_LENGTH = 64
+BODY_DIGEST_CHUNK_SIZE = 1024 * 1024
+PLACEHOLDER_DIGEST_TOKENS = ("placeholder", "todo", "example")
+BODY_IMPORT_VERIFICATION_MODES = {
+    "exact_source_digest_match",
+    "verified_light_edit_recipe",
+}
+EXACT_COPY_SOURCE_TO_TARGET_RELATIONS = frozenset(
+    {
+        "exact_copy",
+        "exact_copy_macro_body_plus_source_faithful_public_exercise",
+        "exact_public_safe_macro_copy",
+        "exact_public_safe_source_copy",
+        "source_faithful_public_safe_exact_copy",
+    }
+)
+# exact_copy_reference_for_python_port is deliberately NOT refreshable: its
+# target pins the reference version the port was written against, so live
+# macro-source evolution must not overwrite it.
+VERIFIED_LIGHT_EDIT_SOURCE_TO_TARGET_RELATIONS = frozenset(
+    {
+        "public_light_edit_private_path_redaction",
+        "public_replacement_source_body",
+        "source_faithful_json_slice",
+        "source_faithful_normalized_copy",
+        "source_faithful_public_light_edit",
+        "source_faithful_public_query_slice",
+        "source_faithful_public_route_row_projection",
+        "source_faithful_public_safe_normalized_copy",
+        "source_faithful_public_safe_path_normalized_copy",
+        "verified_public_safe_private_path_rewrite",
+    }
+)
+ANTI_CLAIM = (
+    "The macro projection import protocol validates verified non-secret macro "
+    "body imports and honest demotions. Metadata, provenance, and public runtime "
+    "refs are not body imports. The only hard omissions are secrets, credentials, "
+    "operator conversation bodies, provider payloads, and account-bound material; "
+    "hosted publication remains a separate action."
+)
+CELL_STATUS_PROTOCOL = {
+    "schema_version": "macro_projection_cell_status_protocol_v1",
+    "status_field": "projection_status",
+    "cell_state_field": "cell_state",
+    "open_action_field": "action_required",
+    "closed_statuses": [
+        "public_runtime_import_landed",
+        "self_hosted_status_protocol_landed",
+        "runtime_bridge_landed",
+    ],
+    "open_statuses": [
+        "ready_for_projection",
+        "blocked",
+    ],
+    "authority_ceiling": "cell_status_only_not_body_import_or_secret_exclusion",
+    "anti_claim": (
+        "Cell status is intake coordination. It is not an imported macro body, "
+        "a capability proof, or a reason to avoid importing real non-secret substrate."
+    ),
+}
+LANDING_PROJECTION_STATUSES = set(CELL_STATUS_PROTOCOL["closed_statuses"])
+CELL_STATUS_OVERRIDES: dict[str, dict[str, Any]] = {
+    "formal_math_readiness_extensions": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The formal-math readiness extension cell has a public runtime import board "
+            "with premise, tactic, routing, provider-context, source-intake, and validation refs."
+        ),
+        "landed_evidence_refs": [
+            "receipts/first_wave/formal_math_readiness_gate/formal_math_readiness_extension_board.json",
+            "receipts/first_wave/formal_math_readiness_gate/formal_math_readiness_validation_receipt.json",
+            "paper_modules/formal_math_readiness_gate.md",
+        ],
+        "next_runtime_surface": (
+            "microcosm formal-math-readiness-gate plan --input "
+            "fixtures/first_wave/formal_math_readiness_gate/input"
+        ),
+    },
+    "proof_diagnostic_evidence_spine_runtime_artifacts": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The proof-diagnostic evidence spine now carries exact copied public-safe "
+            "Ring2 diagnostic runtime artifact bodies with digest coupling, excluding "
+            "proof bodies, provider payload bodies, credentials, sessions, browser/HUD "
+            "live access, recipient-send state, and release authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/proof_diagnostic_evidence_spine/exported_evidence_bundle/bundle_manifest.json",
+            "examples/proof_diagnostic_evidence_spine/exported_evidence_bundle/source_artifacts/ring2_runs",
+            "standards/std_microcosm_proof_diagnostic_evidence_spine.json",
+            "microcosm-substrate/tests/test_proof_diagnostic_evidence_spine.py::test_proof_diagnostic_evidence_spine_exported_bundle_copies_ring2_artifacts",
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py::test_proof_diagnostic_runtime_artifact_body_import_is_unified_under_macro_projection_spine",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_proof_diagnostic_evidence_spine.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py::"
+            "test_proof_diagnostic_runtime_artifact_body_import_is_unified_under_macro_projection_spine"
+        ),
+    },
+    "projection_protocol_self_host": {
+        "projection_status": "self_hosted_status_protocol_landed",
+        "cell_state": "consumed_protocol_self_host",
+        "action_required": False,
+        "status_reason": (
+            "The macro projection protocol now emits this cell-status state machine "
+            "directly in plan, run, receipts, and runtime intake views."
+        ),
+        "landed_evidence_refs": [
+            "standards/std_microcosm_macro_projection_import_protocol.json",
+            "paper_modules/macro_projection_import_protocol.md",
+            "receipts/first_wave/macro_projection_import_protocol/projection_import_intake_board.json",
+            "receipts/first_wave/macro_projection_import_protocol/projection_import_validation_receipt.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm macro-projection-import-protocol plan --input "
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle"
+        ),
+    },
+    "executable_grammar_metabolism_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The executable-grammar metabolism specimen now carries exact copied "
+            "non-secret README, grammar-board, and receipt bodies inside "
+            "Microcosm, bound to the executable doctrine grammar standard and "
+            "validated by digest, anchor, runtime, and secret-exclusion checks."
+        ),
+        "landed_evidence_refs": [
+            "examples/executable_doctrine_grammar/exported_executable_grammar_metabolism_bundle",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/executable_grammar_metabolism_source_module_manifest.json",
+            "standards/std_microcosm_executable_doctrine_grammar.json",
+            "receipts/first_wave/executable_doctrine_grammar/exported_executable_grammar_metabolism_bundle_validation_result.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm executable-doctrine-grammar "
+            "validate-executable-grammar-metabolism-bundle --input "
+            "examples/executable_doctrine_grammar/exported_executable_grammar_metabolism_bundle"
+        ),
+    },
+    "runtime_reveal_import_bridge": {
+        "projection_status": "runtime_bridge_landed",
+        "cell_state": "bridged_runtime_surface",
+        "action_required": False,
+        "status_reason": (
+            "The reveal/import bridge is landed as microcosm intake with a runtime receipt "
+            "and first-run path through spine, intake, reveal, and evidence."
+        ),
+        "landed_evidence_refs": [
+            "receipts/runtime_shell/intake_bridge/runtime_reveal_import_bridge.json",
+            "receipts/runtime_shell/intake_bridge/organs/public_reveal_walkthrough/exported_public_reveal_bundle_validation_result.json",
+            "paper_modules/public_reveal_walkthrough.md",
+        ],
+        "next_runtime_surface": "microcosm intake",
+    },
+    "agent_execution_trace_refactor": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent execution trace refactor is landed as a public macro tool body "
+            "and consumed by the route observability runtime bundle."
+        ),
+        "landed_evidence_refs": [
+            "src/microcosm_core/macro_tools/agent_execution_trace.py",
+            "examples/agent_route_observability_runtime/exported_computer_use_action_trace_bundle/projection_protocol.json",
+            "receipts/runtime_shell/demo_project/organs/agent_route_observability_runtime/exported_computer_use_action_trace_bundle_validation_result.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm agent-route-observability-runtime validate-computer-use-bundle "
+            "--input examples/agent_route_observability_runtime/exported_computer_use_action_trace_bundle"
+        ),
+    },
+    "agent_trace_route_repair_observability_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent trace-to-route-repair observability lane is landed as a "
+            "source-faithful public route-repair macro tool and consumed by the "
+            "route observability runtime bundle."
+        ),
+        "landed_evidence_refs": [
+            "src/microcosm_core/macro_tools/agent_trace_route_repair.py",
+            "examples/agent_route_observability_runtime/exported_agent_trace_route_repair_bundle",
+            "receipts/first_wave/agent_route_observability_runtime/exported_agent_trace_route_repair_bundle_validation_result.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm agent-route-observability-runtime "
+            "validate-agent-trace-route-repair-bundle --input "
+            "examples/agent_route_observability_runtime/exported_agent_trace_route_repair_bundle"
+        ),
+    },
+    "agent_observability_store_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent observability store is landed as a source-faithful public "
+            "AgentTraceStore macro tool and consumed by the route observability "
+            "runtime bundle."
+        ),
+        "landed_evidence_refs": [
+            "src/microcosm_core/macro_tools/agent_observability_store.py",
+            "examples/agent_route_observability_runtime/exported_agent_observability_store_bundle",
+            "receipts/first_wave/agent_route_observability_runtime/exported_agent_observability_store_bundle_validation_result.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm agent-route-observability-runtime "
+            "validate-agent-observability-store-bundle --input "
+            "examples/agent_route_observability_runtime/exported_agent_observability_store_bundle"
+        ),
+    },
+    "agent_session_attribution_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent session-attribution join is landed as an exact public macro tool "
+            "body and consumed by the route observability runtime session-attribution bundle."
+        ),
+        "landed_evidence_refs": [
+            "src/microcosm_core/macro_tools/agent_session_attribution.py",
+            "examples/agent_route_observability_runtime/exported_session_attribution_bundle",
+            "receipts/runtime_shell/demo_project/organs/agent_route_observability_runtime/exported_session_attribution_bundle_validation_result.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm agent-route-observability-runtime validate-session-attribution-bundle "
+            "--input examples/agent_route_observability_runtime/exported_session_attribution_bundle"
+        ),
+    },
+    "agent_route_session_attribution_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent-route observability session-attribution bundle now "
+            "exposes the exact non-secret attribution source body as a "
+            "verified public macro body import, without exporting live home "
+            "session logs, raw transcripts, Work Ledger mutation authority, "
+            "provider payloads, browser/HUD live access, account state, or "
+            "release authority."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/agent_route_observability_runtime/"
+                "exported_session_attribution_bundle/source_module_manifest.json"
+            ),
+            (
+                "examples/agent_route_observability_runtime/"
+                "exported_session_attribution_bundle/source_modules/system/lib/"
+                "agent_session_attribution.py"
+            ),
+            (
+                "tests/test_macro_projection_import_protocol.py::"
+                "test_agent_route_session_attribution_source_modules_body_import_is_unified_under_macro_projection_spine"
+            ),
+        ],
+        "next_runtime_surface": (
+            "microcosm agent-route-observability-runtime "
+            "validate-session-attribution-bundle --input "
+            "examples/agent_route_observability_runtime/"
+            "exported_session_attribution_bundle"
+        ),
+    },
+    "multi_agent_fanin_replay_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The multi-agent fan-in replay lane is landed as source-faithful public "
+            "continuation-packet and bridge-resume macro tools plus exported fan-in "
+            "and dispatch/yield/resume metadata bundles."
+        ),
+        "landed_evidence_refs": [
+            "src/microcosm_core/macro_tools/continuation_packet.py",
+            "src/microcosm_core/macro_tools/bridge_resume.py",
+            "examples/agent_route_observability_runtime/exported_multi_agent_fanin_replay_bundle",
+            "examples/agent_route_observability_runtime/exported_bridge_dispatch_yield_resume_bundle",
+            "receipts/runtime_shell/demo_project/organs/agent_route_observability_runtime/exported_multi_agent_fanin_replay_bundle_validation_result.json",
+            "receipts/runtime_shell/demo_project/organs/agent_route_observability_runtime/exported_bridge_dispatch_yield_resume_bundle_validation_result.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm agent-route-observability-runtime validate-bridge-dispatch-yield-resume-bundle "
+            "--input examples/agent_route_observability_runtime/exported_bridge_dispatch_yield_resume_bundle"
+        ),
+    },
+    "agent_route_fanin_continuation_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent-route observability fan-in bundle now exposes the exact "
+            "non-secret continuation-packet source body as a verified public "
+            "macro body import, without exporting live bridge dispatch, worker "
+            "transcripts, provider payloads, browser/HUD live access, account "
+            "state, or release authority."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/agent_route_observability_runtime/"
+                "exported_multi_agent_fanin_replay_bundle/"
+                "source_module_manifest.json"
+            ),
+            (
+                "examples/agent_route_observability_runtime/"
+                "exported_multi_agent_fanin_replay_bundle/source_modules/"
+                "system/lib/continuation_packet.py"
+            ),
+            (
+                "tests/test_macro_projection_import_protocol.py::"
+                "test_agent_route_fanin_continuation_source_modules_body_import_is_unified_under_macro_projection_spine"
+            ),
+        ],
+        "next_runtime_surface": (
+            "microcosm agent-route-observability-runtime "
+            "validate-multi-agent-fanin-bundle --input "
+            "examples/agent_route_observability_runtime/"
+            "exported_multi_agent_fanin_replay_bundle"
+        ),
+    },
+    "controller_continuity_heartbeat_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The controller-continuity heartbeat is landed as a source-faithful public "
+            "macro tool body plus an exported runtime replay bundle covering 5x5 "
+            "heartbeat validation, event identity, response-schema wrapping, dedupe, "
+            "and stale generic problem regeneration."
+        ),
+        "landed_evidence_refs": [
+            "src/microcosm_core/macro_tools/controller_heartbeat.py",
+            "examples/agent_route_observability_runtime/exported_controller_heartbeat_bundle",
+            "receipts/runtime_shell/demo_project/organs/agent_route_observability_runtime/exported_controller_heartbeat_bundle_validation_result.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm agent-route-observability-runtime validate-controller-heartbeat-bundle "
+            "--input examples/agent_route_observability_runtime/exported_controller_heartbeat_bundle"
+        ),
+    },
+    "navigation_route_plane_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The navigation route plane now carries copied non-secret macro route rows "
+            "and exact route/control source modules inside Microcosm, then validates "
+            "them through the route-plane runtime consumer."
+        ),
+        "landed_evidence_refs": [
+            "examples/navigation_hologram_route_plane/exported_route_plane_bundle/route_rows.json",
+            "examples/navigation_hologram_route_plane/exported_route_plane_bundle/source_module_manifest.json",
+            "standards/std_microcosm_navigation_hologram_route_plane.json",
+            "receipts/first_wave/navigation_hologram_route_plane/exported_route_plane_bundle_validation_result.json",
+            "src/microcosm_core/organs/navigation_hologram_route_plane.py",
+        ],
+        "next_runtime_surface": (
+            "microcosm navigation-hologram-route-plane validate-route-plane-bundle "
+            "--input examples/navigation_hologram_route_plane/exported_route_plane_bundle"
+        ),
+    },
+    "finance_eval_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The finance forecast evaluation spine carries exact copied tools/finance "
+            "source modules inside Microcosm and validates them through the finance "
+            "eval bundle without trading, advice, provider-call, account, optimizer, "
+            "calculator-mutation, publication, or release authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/finance_forecast_evaluation_spine/exported_finance_eval_bundle",
+            "receipts/first_wave/finance_forecast_evaluation_spine/exported_finance_eval_bundle_validation_result.json",
+            "src/microcosm_core/macro_tools/finance_eval_spine.py",
+        ],
+        "next_runtime_surface": (
+            "microcosm finance-eval-spine validate-finance-eval-bundle "
+            "--input examples/finance_forecast_evaluation_spine/exported_finance_eval_bundle"
+        ),
+    },
+    "work_landing_control_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The work-landing control spine carries exact copied control-plane "
+            "source modules inside Microcosm and validates them through the "
+            "work-landing control bundle without live Task Ledger, Work Ledger, "
+            "Git, private-index execution, provider, publication, or release authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/work_landing_control_spine/exported_work_landing_control_bundle",
+            "receipts/first_wave/work_landing_control_spine/exported_work_landing_control_bundle_validation_result.json",
+            "src/microcosm_core/macro_tools/work_landing_control_spine.py",
+        ],
+        "next_runtime_surface": (
+            "microcosm work-landing-control-spine validate-control-bundle "
+            "--input examples/work_landing_control_spine/exported_work_landing_control_bundle"
+        ),
+    },
+    "task_ledger_control_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The Task Ledger control-plane source modules are landed as exact copied "
+            "non-secret macro bodies inside the mission transaction bundle and "
+            "consumed by the mission transaction work spine runtime."
+        ),
+        "landed_evidence_refs": [
+            "examples/mission_transaction_work_spine/exported_mission_transaction_bundle",
+            "examples/mission_transaction_work_spine/exported_mission_transaction_bundle/source_module_manifest.json",
+            "examples/mission_transaction_work_spine/exported_mission_transaction_bundle/task_ledger_control_runtime_contract.json",
+            "receipts/first_wave/mission_transaction_work_spine/exported_mission_transaction_bundle_validation_result.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm mission-transaction-work-spine validate-mission-bundle "
+            "--input examples/mission_transaction_work_spine/exported_mission_transaction_bundle"
+        ),
+    },
+    "work_ledger_control_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The Work Ledger control-plane source modules are landed as exact copied "
+            "non-secret macro bodies inside the mission transaction bundle and "
+            "consumed by the mission transaction work spine runtime."
+        ),
+        "landed_evidence_refs": [
+            "examples/mission_transaction_work_spine/exported_mission_transaction_bundle",
+            "examples/mission_transaction_work_spine/exported_mission_transaction_bundle/work_ledger_source_module_manifest.json",
+            "examples/mission_transaction_work_spine/exported_mission_transaction_bundle/work_ledger_control_runtime_contract.json",
+            "receipts/first_wave/mission_transaction_work_spine/exported_mission_transaction_bundle_validation_result.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm mission-transaction-work-spine validate-mission-bundle "
+            "--input examples/mission_transaction_work_spine/exported_mission_transaction_bundle"
+        ),
+    },
+    "checkpoint_lane_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The checkpoint lane source modules are landed as exact copied "
+            "non-secret macro bodies inside the mission transaction bundle and "
+            "consumed by the mission transaction work spine runtime."
+        ),
+        "landed_evidence_refs": [
+            "examples/mission_transaction_work_spine/exported_mission_transaction_bundle",
+            "examples/mission_transaction_work_spine/exported_mission_transaction_bundle/checkpoint_source_module_manifest.json",
+            "examples/mission_transaction_work_spine/exported_mission_transaction_bundle/checkpoint_lane_runtime_contract.json",
+            "receipts/first_wave/mission_transaction_work_spine/exported_mission_transaction_bundle_validation_result.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm mission-transaction-work-spine validate-mission-bundle "
+            "--input examples/mission_transaction_work_spine/exported_mission_transaction_bundle"
+        ),
+    },
+    "command_output_projection_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The command-output projection and sidecar substrate is landed as "
+            "exact copied non-secret macro source inside Microcosm, with the "
+            "standalone projection and sidecar helpers available as public "
+            "macro tools and the macro audit/standard bodies carried in the "
+            "projection bundle."
+        ),
+        "landed_evidence_refs": [
+            "src/microcosm_core/macro_tools/command_output_projection.py",
+            "src/microcosm_core/macro_tools/command_output_sidecar.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/command_output_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/command_output_projection_runtime_contract.json",
+            "receipts/first_wave/macro_projection_import_protocol/projection_import_validation_receipt.json",
+        ],
+        "next_runtime_surface": (
+            "microcosm macro-projection-import-protocol plan --input "
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle"
+        ),
+    },
+    "trace_capsule_prompt_edit_capture_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The trace-capsule prompt/edit-capture lane carries exact copied "
+            "non-secret cli_prompt_trace and Agent Trace Structurer source "
+            "modules inside the projection bundle, and validates them through "
+            "public fixture rendering plus the deterministic parser test suite "
+            "without reading live provider payloads, browser/HUD state, "
+            "account/session state, cookies, credentials, or recipient-send "
+            "material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/trace_capsule_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/meta/observability/cli_prompt_trace.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/agent_trace_structurer/parser.mjs",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "route_selection_control_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The route-selection control plane carries exact copied non-secret "
+            "entry packet, context-pack, option-surface, route-intervention, "
+            "and navigation-contract source bodies inside the projection bundle, "
+            "validated by digest/anchor checks plus a fixture route-repair call "
+            "without live macro kernel execution or private/provider/session "
+            "payload access."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/route_selection_control_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_context_pack.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/kernel/commands/comprehension_snapshot.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "route_worker_packet_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The route-worker packet lane now carries exact copied non-secret "
+            "node-card, candidate-pair, graph-ranker, EDC canonicalization, "
+            "verb-correction, retrieval-hint, and regression-test bodies "
+            "inside the projection bundle. Validation uses digest/anchor "
+            "checks, syntax compilation, and neutral passage assertions only; "
+            "it does not call live provider endpoints or export provider "
+            "payloads, browser/HUD state, account/session state, cookies, "
+            "credentials, prompt/operator thread bodies, or recipient-send "
+            "material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/route_worker_packet_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/route_node_card_builder.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/route_candidate_builder.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_route_worker_packet.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "route_operator_court_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The route-operator court lane now carries exact copied non-secret "
+            "adjudication, scoring, leakage-detection, routing-pilot harness, "
+            "and focused regression-test bodies inside the projection bundle. "
+            "Validation uses digest/anchor checks and syntax compilation only; "
+            "it does not call live provider endpoints, mutate route graphs, or "
+            "export provider payloads, browser/HUD state, account/session "
+            "state, cookies, credentials, prompt/operator thread bodies, or "
+            "recipient-send material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/route_operator_court_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/route_operator_court.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/meta/control/routing_pilot_harness.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_route_operator_court.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "route_discovery_confirmation_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The route-discovery confirmation lane now carries the exact copied "
+            "non-secret confirmation source body inside the projection bundle. "
+            "Validation uses digest/anchor checks, syntax compilation, and "
+            "read-only confirmation smoke checks; it does not call live provider "
+            "endpoints, append accepted edges, mutate route graphs, or export "
+            "provider payloads, browser/HUD state, account/session state, "
+            "cookies, credentials, prompt/operator thread bodies, accepted-edge "
+            "private state, or recipient-send material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/route_discovery_confirmation_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/meta/control/route_discovery_confirmation.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "projection_loss_audit_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The projection-loss audit lane now carries the exact copied "
+            "non-secret route compression-loss audit source body inside the "
+            "projection bundle. Validation uses digest/anchor checks, syntax "
+            "compilation, and read-only audit smoke checks; it does not call "
+            "live provider endpoints, write projection-loss audit receipts, "
+            "mutate route graphs, or export provider payloads, browser/HUD "
+            "state, account/session state, cookies, credentials, prompt/"
+            "operator thread bodies, baseline private payload bodies, or "
+            "recipient-send material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/projection_loss_audit_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/meta/control/projection_loss_audit.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "semantic_route_quality_audit_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The semantic route-quality audit lane now carries the exact copied "
+            "non-secret drift-snapshot audit source body inside the projection "
+            "bundle. Validation uses digest/anchor checks, syntax compilation, "
+            "and dry-run provider gating checks; it does not call live provider "
+            "endpoints, export provider payloads, mutate route graphs directly, "
+            "append route evidence outside governed runtime, or expose browser/"
+            "HUD state, account/session state, cookies, credentials, prompt/"
+            "operator thread bodies, route-quality audit output bodies, or "
+            "recipient-send material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/semantic_route_quality_audit_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/meta/control/semantic_route_quality_audit.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "reaction_wiring_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The reaction-wiring lane now carries exact copied non-secret "
+            "reaction config, resident reaction engine, and proof CLI source "
+            "bodies inside the projection bundle. Validation uses digest/"
+            "anchor checks, syntax compilation, and no-execute boundary "
+            "checks; it does not call live provider endpoints, fire reactions, "
+            "export runtime reaction state or ledger bodies, mutate source, "
+            "or expose browser/HUD state, account/session state, credentials, "
+            "operator thread bodies, provider payloads, or recipient-send "
+            "material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/reaction_wiring_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/reactions.yaml",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/meta/control/reactions_engine.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/tools/meta/control/reaction_proof.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "navigation_context_rosetta_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The navigation Rosetta context surface now carries exact copied "
+            "non-secret packet-builder, contract-audit, focused regression-test, "
+            "grammar-standard, and paper-module bodies inside the projection "
+            "bundle, closing the route-selection body's Rosetta dependency "
+            "without live macro kernel execution, provider payload access, or "
+            "private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/navigation_context_rosetta_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_context_rosetta.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/kind_band_contract_audit.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/codex/standards/std_navigation_rosetta_grammar.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/codex/doctrine/paper_modules/navigation_rosetta_math.md",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "bootstrap_route_surface_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The bootstrap route surface now carries exact copied non-secret "
+            "agent_bootstrap_live, routing_hologram, agent_bootstrap_projection, "
+            "and routing_projection bodies inside the projection bundle, "
+            "validated by digest/anchor checks, route-row assertions, and "
+            "syntax compilation without live macro projection refresh authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/bootstrap_route_surface_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/codex/doctrine/agent_bootstrap_live.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/agent_bootstrap_projection.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "agent_operating_packet_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent operating packet now carries exact copied non-secret "
+            "agent_operating_packet sidecar and owner-module bodies inside the "
+            "projection bundle, validated by digest/anchor checks, principle "
+            "packet assertions, and syntax compilation without live doctrine "
+            "refresh or raw-seed body authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/agent_operating_packet_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/codex/doctrine/agent_operating_packet.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/agent_operating_packet.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "active_execution_constellation_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The active-execution constellation now carries exact copied "
+            "non-secret projection and focused regression-test bodies inside "
+            "the projection bundle, validated by digest/anchor checks and "
+            "syntax compilation without live Task Ledger, Work Ledger, "
+            "kernel mutation, or phase-demotion authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/active_execution_constellation_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/active_execution_constellation.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_active_execution_constellation.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "task_ledger_startup_pressure_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The Task Ledger startup-pressure lane split now carries exact "
+            "copied non-secret scheduler, kernel-navigation, doctrine, and "
+            "focused regression-test bodies inside the projection bundle, "
+            "validated by digest/anchor checks and syntax compilation without "
+            "exporting live Task Ledger rows, Work Ledger claims, kernel "
+            "mutation authority, provider payloads, browser/HUD live access, "
+            "account/session state, credentials, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "task_ledger_startup_pressure_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "task_ledger_priority.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "kernel/commands/navigate.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/server/"
+                "tests/test_task_ledger_priority_scheduler.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "world_model_projection_drift_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The world-model projection drift control room now carries exact "
+            "copied non-secret world-model reducer, /api/drift endpoint, "
+            "view-quality action-map, and focused regression-test bodies "
+            "inside public source-module bundles, validated by digest, "
+            "anchor, syntax, and source-module manifest checks without "
+            "exporting live browser/HUD access, provider payloads, "
+            "account/session state, route-repair authority, or source "
+            "mutation authority."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/world_model_projection_drift_control_room/"
+                "exported_projection_drift_control_bundle/source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "world_model_projection_drift_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/server/"
+                "world_model.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "observability/view_quality_census.py"
+            ),
+            "tests/test_world_model_projection_drift_control_room.py",
+            "tests/test_macro_projection_import_protocol.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_world_model_projection_drift_control_room.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "spatial_world_model_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The spatial world-model replay organ now carries exact copied "
+            "non-secret Station geometry checker, regression-test, and UI "
+            "build-wiring bodies inside public source-module bundles, "
+            "validated by digest, anchor, source-module manifest, payload "
+            "boundary, and secret-exclusion checks without exporting browser/"
+            "HUD live access, account/session state, provider payloads, "
+            "credential-equivalent material, private video, raw sensor bodies, "
+            "or simulator-product authority."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/spatial_world_model_counterfactual_simulation_replay/"
+                "exported_spatial_world_model_simulation_bundle/source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "spatial_world_model_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "factory/check_station_geometry.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/server/"
+                "tests/test_station_geometry_check.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/server/"
+                "ui/package.json"
+            ),
+            "tests/test_spatial_world_model_counterfactual_simulation_replay.py",
+            "tests/test_macro_projection_import_protocol.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/"
+            "test_spatial_world_model_counterfactual_simulation_replay.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "mechanistic_oracle_attribution_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The mechanistic interpretability replay now carries exact copied "
+            "non-secret Oracle attribution-map node bodies inside public "
+            "source-module bundles, validated by digest, anchor, source-module "
+            "manifest, and secret-exclusion checks without exporting provider "
+            "payloads, private model weights, raw activations, hidden reasoning, "
+            "browser/HUD live access, account/session state, benchmark "
+            "authority, release, or publication authority."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/mechanistic_interpretability_circuit_attribution_replay/"
+                "exported_circuit_attribution_bundle/source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "mechanistic_oracle_attribution_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/codex/nodes/"
+                "oracle/oracle_attribution_map.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/codex/substrate/"
+                "nodes/oracle/oracle_attribution_map.json"
+            ),
+            "tests/test_mechanistic_interpretability_circuit_attribution_replay.py",
+            "tests/test_macro_projection_import_protocol.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/"
+            "test_mechanistic_interpretability_circuit_attribution_replay.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "navigation_coverage_matrix_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The navigation coverage matrix now carries exact copied non-secret "
+            "coverage-enforcement composer and focused regression-test bodies "
+            "inside the projection bundle, validated by digest/anchor checks "
+            "and syntax compilation without live macro kernel execution, "
+            "provider payload access, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/navigation_coverage_matrix_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_coverage_matrix.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_navigation_coverage_matrix.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "navigation_metabolism_ledger_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The navigation metabolism ledger now carries exact copied "
+            "non-secret route-ratchet source and focused regression-test "
+            "bodies inside the projection bundle, validated by digest/anchor "
+            "checks and syntax compilation without live macro kernel "
+            "execution, provider payload access, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/navigation_metabolism_ledger_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_metabolism_ledger.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_navigation_metabolism_ledger.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "navigation_surface_audit_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The navigation surface audit now carries exact copied non-secret "
+            "route-overflow diagnostic, shared surface-contract, and focused "
+            "regression-test bodies inside the projection bundle, validated by "
+            "digest/anchor checks and syntax compilation without live macro "
+            "kernel execution, provider payload access, or private-state "
+            "authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/navigation_surface_audit_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_surface_audit.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_surface_contracts.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_navigation_surface_audit.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "command_node_cache_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The command-node cache now carries exact copied non-secret "
+            "persistent CLI cache, shared pulse-cache sidecar, and focused "
+            "regression-test bodies inside the projection bundle, validated by "
+            "digest/anchor checks and syntax compilation without live macro "
+            "kernel execution, provider payload access, private command-cache "
+            "state, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/command_node_cache_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/command_node_cache.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/kernel/pulse_cache.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_command_node_cache.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "work_admission_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The work-admission lane now carries exact copied non-secret "
+            "work-start admission and focused regression-test bodies inside "
+            "the projection bundle, validated by digest/anchor checks and "
+            "syntax compilation without launching live validation work, "
+            "terminating unknown-owner processes, mutating Work Ledger or "
+            "Task Ledger state, calling providers, exporting private trace "
+            "payloads, or claiming private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/work_admission_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/work_admission.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_work_admission.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "navigation_clusterability_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The navigation clusterability audit now carries exact copied "
+            "non-secret high-cardinality option-surface measurement and "
+            "focused regression-test bodies inside the projection bundle, "
+            "validated by digest/anchor checks and syntax compilation without "
+            "live macro kernel execution, provider payload access, annex "
+            "mutation, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/navigation_clusterability_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_clusterability.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_navigation_clusterability.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "annex_routing_coverage_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The annex routing coverage audit now carries exact copied "
+            "non-secret annex-pattern routing coverage and focused "
+            "regression-test bodies inside the projection bundle, validated "
+            "by digest/anchor checks and syntax compilation without annex "
+            "repository pulls, provider payload access, annex mutation, or "
+            "private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/annex_routing_coverage_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/annex_routing_coverage.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_annex_routing_coverage.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "annex_currentness_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The annex currentness read model now carries exact copied "
+            "non-secret annex-sync currentness and focused regression-test "
+            "bodies inside the projection bundle, validated by digest/anchor "
+            "checks and syntax compilation without live annex refresh, "
+            "provider payload access, annex mutation, or private-state "
+            "authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/annex_currentness_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/annex_currentness.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_annex_currentness.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "entrypoint_health_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The entrypoint health scanner now carries exact copied "
+            "non-secret first-contact route, budget, and generated-region "
+            "diagnostic bodies inside the projection bundle, validated by "
+            "digest/anchor checks and syntax compilation without live macro "
+            "kernel execution, generated entrypoint mutation, provider payload "
+            "access, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/entrypoint_health_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/entrypoint_health.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_entrypoint_health.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "agent_entrypoint_audit_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent entrypoint audit now carries exact copied non-secret "
+            "axis-coverage, generated-region drift, and entrypoint route "
+            "audit bodies inside the projection bundle, validated by "
+            "digest/anchor checks and syntax compilation without live macro "
+            "kernel execution, generated entrypoint mutation, provider "
+            "payload access, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/agent_entrypoint_audit_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/agent_entrypoint_audit.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_agent_entrypoint_audit.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "navigation_fitness_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The navigation fitness harness now carries exact copied "
+            "non-secret cold-task route-fitness and focused regression-test "
+            "bodies inside the projection bundle, validated by digest/anchor "
+            "checks and syntax compilation without live macro kernel "
+            "execution, semantic route-probe authority, provider payload "
+            "access, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/navigation_fitness_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/navigation_fitness.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_navigation_fitness.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "dynamic_paper_lattice_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The dynamic paper lattice builder now carries exact copied "
+            "non-secret paper-module lattice and focused regression-test "
+            "bodies inside the projection bundle, validated by digest/anchor "
+            "checks and syntax compilation without raw operator voice export, "
+            "live macro kernel execution, generated paper-sidecar authority, "
+            "provider payload access, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/dynamic_paper_lattice_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/dynamic_paper_lattice.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_dynamic_paper_lattice.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "kind_atlas_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The Kind Atlas control-plane enumerator now carries exact "
+            "copied non-secret artifact-kind enumeration and focused "
+            "regression-test bodies inside the projection bundle, validated "
+            "by digest/anchor checks and syntax compilation without live "
+            "macro kernel execution, generated Atlas mutation authority, "
+            "provider payload access, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/kind_atlas_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/kind_atlas.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_kind_atlas.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "semantic_routing_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The semantic routing control plane now carries exact copied "
+            "non-secret route graph, activation ladder, route-evidence "
+            "boundary, and focused regression-test bodies inside the "
+            "projection bundle, validated by digest/anchor checks and "
+            "syntax compilation without live macro kernel execution, "
+            "route refresh authority, route-evidence ledger mutation, "
+            "provider payload access, or private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/semantic_routing_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/semantic_routing.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_semantic_routing.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "embedding_substrate_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The faceted embedding substrate now carries exact copied "
+            "non-secret cache, search, activation-ladder, alignment, source "
+            "adapter, and focused regression-test bodies inside the "
+            "projection bundle, validated by digest/anchor checks and syntax "
+            "compilation without live provider calls, embedding cache/vector "
+            "export, provider payload access, credential access, or "
+            "private-state authority."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/embedding_substrate_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/embedding_substrate.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/embedding_sources.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_embedding_substrate.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "nvidia_nim_provider_boundary_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The NVIDIA NIM provider boundary now carries exact copied "
+            "non-secret hosted-provider adapter and model-profile registry "
+            "source bodies inside the projection bundle, validated by "
+            "digest/anchor checks, syntax compilation, and a no-live-probe "
+            "runtime-status contract without exporting API-key values, live "
+            "model visibility, provider request/response payload bodies, "
+            "account/session state, generated .env output, or credential "
+            "equivalent material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/nvidia_nim_provider_boundary_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/nvidia_nim.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/model_profile_registry.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "agent_provider_router_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The provider-router boundary now carries exact copied non-secret "
+            "agent_providers and guarded OpenRouter runtime source bodies inside "
+            "the projection bundle, validated by digest/anchor checks, syntax "
+            "compilation, resolver mapping, and a no-live-probe runtime-status "
+            "contract without calling providers, executing local CLIs, exporting "
+            "API-key values, provider request/response payload bodies, "
+            "account/session state, browser/HUD live access, recipient-send "
+            "state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/agent_provider_router_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/agent_providers.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/openrouter_free_runtime.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "bridge_route_config_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The bridge-route config boundary now carries exact copied "
+            "non-secret route-overlay helper and pure regression-test source "
+            "bodies inside the projection bundle, validated by digest/anchor "
+            "checks, syntax compilation, and route behavior assertions without "
+            "calling providers, executing local CLIs, exporting API-key values, "
+            "provider request/response payload bodies, account/session state, "
+            "browser/HUD live access, recipient-send state, generated state, "
+            "or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/bridge_route_config_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/bridge_routes.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_bridge_routes.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "kernel_bridge_config_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The kernel bridge-runtime config boundary now carries exact copied "
+            "non-secret master_config resolver, kernel state, and parity-test "
+            "source bodies inside the projection bundle, validated by digest/"
+            "anchor checks, syntax compilation, and tmpdir config behavior "
+            "assertions without calling providers, executing local CLIs, "
+            "exporting API-key values, provider request/response payload bodies, "
+            "account/session state, browser/HUD live access, recipient-send "
+            "state, generated state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/kernel_bridge_config_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/kernel/config.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/kernel/state.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_master_config_loader_parity.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "observe_runtime_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The grouped observe-runtime boundary now carries exact copied "
+            "non-secret path, markdown-routing, observe-memory, observe-surface, "
+            "and observe-runtime source bodies inside the projection bundle, "
+            "validated by digest/anchor checks, syntax compilation, and local "
+            "tmpdir grouped-runtime behavior assertions without calling providers, "
+            "dispatching bridge work, executing local CLIs, exporting API-key "
+            "values, provider request/response payload bodies, account/session "
+            "state, browser/HUD live access, recipient-send state, generated "
+            "state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/observe_runtime_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/observe_runtime.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/observe_surfaces.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "kernel_state_registry_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The kernel state dependency boundary now carries exact copied "
+            "non-secret observe-assets path registry and standards-registry "
+            "loader source bodies inside the projection bundle, validated by "
+            "digest/anchor checks, syntax compilation, and local tmpdir path "
+            "and registry behavior assertions without calling providers, "
+            "dispatching bridge work, executing local CLIs, exporting API-key "
+            "values, provider request/response payload bodies, account/session "
+            "state, browser/HUD live access, recipient-send state, generated "
+            "state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/kernel_state_registry_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/observe_assets.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/standards_registry.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "agent_execution_trace_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent-execution trace boundary now carries exact copied "
+            "non-secret process-trace runtime, strict JSON helper, focused "
+            "synthetic-fixture regression test, and trace standard bodies "
+            "inside the projection bundle, validated by digest/anchor checks, "
+            "syntax compilation, and synthetic privacy-boundary trace-shape "
+            "assertions without scanning live ~/.claude or ~/.codex sessions, "
+            "calling providers, executing local CLIs, exporting prompt/"
+            "provider/tool-output bodies, account/session state, hidden "
+            "reasoning, browser/HUD live access, recipient-send state, "
+            "generated state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/agent_execution_trace_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/agent_execution_trace.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/strict_json.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_agent_execution_trace.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/codex/standards/std_agent_execution_trace.json",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "agent_observability_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent-observability boundary now carries exact copied "
+            "non-secret append-only trace store and focused synthetic-fixture "
+            "regression test bodies inside the projection bundle, validated "
+            "by digest/anchor checks, syntax compilation, and synthetic "
+            "payload-compaction assertions without scanning live ~/.claude or "
+            "~/.codex sessions, calling providers, executing local CLIs, "
+            "exporting prompt/provider/tool-output bodies, account/session "
+            "state, hidden reasoning, browser/HUD live access, recipient-send "
+            "state, generated state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/agent_observability_source_module_manifest.json",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/lib/agent_observability.py",
+            "examples/macro_projection_import_protocol/exported_projection_import_bundle/source_modules/system/server/tests/test_agent_observability.py",
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "agent_observability_animation_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent-observability semantic-camera plane now carries exact "
+            "copied non-secret animation, coverage, session-attribution, and "
+            "focused synthetic-fixture regression test bodies inside the "
+            "projection bundle, validated by digest/anchor checks, syntax "
+            "compilation, and synthetic scene/delta/coverage/attribution "
+            "assertions without scanning live ~/.claude or ~/.codex sessions, "
+            "calling providers, executing local CLIs, exporting prompt/"
+            "provider/tool-output bodies, account/session state, hidden "
+            "reasoning, browser/HUD live access, recipient-send state, "
+            "generated state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "agent_observability_animation_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "agent_observability_animation.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "agent_observability_animation_coverage.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "agent_session_attribution.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/server/"
+                "tests/test_agent_observability_animation.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/server/"
+                "tests/test_agent_observability_animation_coverage.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/server/"
+                "tests/test_agent_session_attribution.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "agent_observability_classification_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent-observability telemetry-quality classifier now carries "
+            "the exact copied non-secret auth-failure-loop and stale-source "
+            "classification source body inside the projection bundle, "
+            "validated by digest/anchor checks, syntax compilation, and "
+            "synthetic classifier assertions without scanning live ~/.claude "
+            "or ~/.codex sessions, calling providers, executing local CLIs, "
+            "exporting prompt/provider/tool-output bodies, account/session "
+            "state, hidden reasoning, browser/HUD live access, recipient-send "
+            "state, generated state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "agent_observability_classification_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "agent_observability_classification.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "agent_mission_status_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The agent-observability mission-status reducer now carries the "
+            "exact copied non-secret reducer and server test source bodies "
+            "inside the projection bundle, validated by digest/anchor checks, "
+            "syntax compilation, and synthetic mission-status assertions "
+            "without scanning live ~/.claude or ~/.codex sessions, calling "
+            "providers, executing local CLIs, exporting trace/provider/"
+            "tool-output bodies, Work Ledger runtime state, account/session "
+            "state, hidden reasoning, browser/HUD live access, recipient-send "
+            "state, generated state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "agent_mission_status_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "agent_mission_status.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/server/"
+                "tests/test_agent_mission_status.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "operator_handoff_linkage_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The operator-handoff linkage confidence-edge projector now "
+            "carries the exact copied non-secret projector, prompt-fingerprint "
+            "dependency, and synthetic-only validator source bodies inside the "
+            "projection bundle, validated by digest/anchor checks, syntax "
+            "compilation, and synthetic confidence-edge assertions without "
+            "scanning live ~/.claude or ~/.codex sessions, reading prompt-shelf "
+            "raw events, calling providers, exporting prompt/provider/"
+            "tool-output bodies, account/session state, hidden reasoning, "
+            "browser/HUD live access, recipient-send state, generated state, "
+            "or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "operator_handoff_linkage_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "observability/operator_handoff_linkage.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "observability/prompt_shelf_fingerprints.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_operator_handoff_linkage.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "prompt_shelf_movement_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The prompt-shelf movement-index lane now carries the exact "
+            "copied non-secret terminal-cluster parser and synthetic-only "
+            "regression test source bodies inside the projection bundle, "
+            "validated by digest/anchor checks and syntax compilation "
+            "without exporting prompt bodies, raw prompt-shelf event bodies, "
+            "provider payloads, account/session state, browser/HUD live "
+            "access, generated state, recipient-send state, movement-row "
+            "promotion authority, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "prompt_shelf_movement_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "observability/prompt_shelf_movement_index.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_prompt_shelf_movement_index.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "prompt_shelf_uppropagation_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The prompt-shelf uppropagation-index lane now carries the exact "
+            "copied non-secret versioned-block parser and synthetic-only "
+            "regression test source bodies inside the projection bundle, "
+            "validated by digest/anchor checks and syntax compilation "
+            "without exporting prompt bodies, raw prompt-shelf event bodies, "
+            "provider payloads, account/session state, browser/HUD live "
+            "access, generated state, recipient-send state, uppropagation-row "
+            "promotion authority, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "prompt_shelf_uppropagation_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "observability/prompt_shelf_uppropagation_index.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_prompt_shelf_uppropagation_index.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "prompt_shelf_uppropagation_digest_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The prompt-shelf uppropagation-digest lane now carries the exact "
+            "copied non-secret digest projector and synthetic-only regression "
+            "test source bodies inside the projection bundle, validated by "
+            "digest/anchor checks and syntax compilation without exporting "
+            "prompt bodies, raw prompt-shelf event bodies, provider payloads, "
+            "account/session state, browser/HUD live access, generated digest "
+            "state, recipient-send state, digest-candidate promotion "
+            "authority, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "prompt_shelf_uppropagation_digest_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "observability/prompt_shelf_uppropagation_digest.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_prompt_shelf_uppropagation_digest.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "prompt_shelf_runs_index_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The prompt-shelf runs-index lane now carries the exact copied "
+            "non-secret runs-index projector, B3 packet-lint dependency, "
+            "synthetic regression test source body, and validation-only "
+            "negative fixture inside the projection bundle, validated by "
+            "digest/anchor checks and syntax compilation without counting "
+            "the synthetic fixture as product substrate or exporting prompt "
+            "bodies, raw prompt-shelf event bodies, provider payloads, "
+            "account/session state, browser/HUD live access, generated "
+            "runs-index state, recipient-send state, runtime mutation "
+            "authority, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "prompt_shelf_runs_index_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "observability/prompt_shelf_runs_index.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "observability/b3_packet_lint.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_prompt_shelf_runs_index.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "standard_option_surface_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The standard option-surface lane now carries the exact copied "
+            "non-secret option-surface builder and focused regression-test "
+            "source bodies inside the projection bundle, validated by "
+            "digest/anchor checks and syntax compilation without exporting "
+            "generated option-surface outputs, live Task Ledger mutations, "
+            "prompt bodies, raw seed bodies, provider payloads, account/session "
+            "state, browser/HUD live access, recipient-send state, or "
+            "credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "standard_option_surface_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "standard_option_surface.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_standard_option_surface.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "bridge_runtime_continuity_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The bridge dispatch-yield-resume continuity lane now carries "
+            "the exact copied non-secret bridge-resume, controller-heartbeat, "
+            "continuation-packet, and focused synthetic validator source "
+            "bodies inside the projection bundle, validated by digest/anchor "
+            "checks and syntax compilation without reading live session jsonl "
+            "bodies, injecting into Claude Desktop, calling providers, "
+            "exporting prompt/provider/tool-output bodies, account/session "
+            "state, hidden reasoning, browser/HUD live access, recipient-send "
+            "state, generated state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "bridge_runtime_continuity_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "bridge/bridge_resume.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "controller_heartbeat.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "continuation_packet.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py"
+        ),
+    },
+    "session_heartbeat_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The session heartbeat liveness lane now carries the exact copied "
+            "non-secret source and focused validator source bodies inside the "
+            "projection bundle, validated by digest/anchor checks and syntax "
+            "compilation without exporting live transport JSON bodies, session "
+            "jsonl transcript bodies, browser/HUD live access, provider "
+            "payloads, account/session state, recipient-send state, generated "
+            "state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "session_heartbeat_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "session_heartbeat.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_session_heartbeat.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "orchestration_overnight_control_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The orchestration and overnight-control lane now carries exact copied "
+            "non-secret orchestration state, pipeline advance, overnight arm, "
+            "compatibility launcher, and focused validator source bodies inside "
+            "the projection bundle, validated by digest/anchor checks and syntax "
+            "compilation without running launch agents, dispatching bridges, "
+            "calling providers, reading raw seed bodies, exporting account/session "
+            "state, mutating generated state, sending recipient work, or claiming "
+            "release authority."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "orchestration_overnight_control_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/control/"
+                "orchestration.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/"
+                "pipeline_advance.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/"
+                "pipeline_overnight.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "seed_distillation_subagent_lane_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The raw-seed subagent lane now carries the exact copied non-secret "
+            "coordinator and focused regression-test source bodies inside the "
+            "projection bundle, validated by digest/anchor checks and syntax "
+            "compilation. This imports backlog slicing, dispatch packet "
+            "preparation, advisory bundle import, and ledger status summary "
+            "source body without exporting raw-seed operator voice, subagent "
+            "transcript bodies, live agent dispatch authority, provider "
+            "payloads, account/session state, browser/HUD live access, "
+            "recipient-send state, generated state, live ledger mutation "
+            "authority, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "seed_distillation_subagent_lane_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "seed_distillation_subagent_lane.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_seed_distillation_subagent_lane.py"
+            ),
+            "tests/test_macro_projection_import_protocol.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "seed_distillation_dependency_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The seed-distillation dependency closure now carries exact copied "
+            "non-secret atomization, bridge distillation, registry, validator, "
+            "paragraph-ledger, attempt-recovery, and focused recovery-test "
+            "source bodies inside the projection bundle, validated by digest, "
+            "anchor checks, syntax compilation, and the macro projection spine. "
+            "This imports the lane support body needed to understand dispatch "
+            "preparation, shard import, paragraph lifecycle state, stale-attempt "
+            "fencing, and recovery semantics without exporting raw operator "
+            "seed bodies, subagent transcript bodies, provider payloads, account "
+            "or session state, browser/HUD live access, recipient-send state, "
+            "ledger mutation authority, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "seed_distillation_dependency_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "seed_atomization.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "seed_distillation.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "seed_registry.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "seed_distillation_validator.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "seed_paragraph_ledger.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "seed_attempt_recovery.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_seed_attempt_recovery.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+            "tests/test_macro_projection_import_protocol.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py::"
+            "test_seed_distillation_dependency_sources_compile_and_preserve_source_boundary "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py::"
+            "test_seed_distillation_dependency_source_modules_body_import_is_unified_under_"
+            "macro_projection_spine"
+        ),
+    },
+    "artifact_projection_debt_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The artifact projection debt lane now carries the exact copied "
+            "non-secret source and focused validator source bodies inside the "
+            "projection bundle, validated by digest/anchor checks and syntax "
+            "compilation. This imports the debt composer as source body without "
+            "exporting generated projection output bodies, live Task Ledger or "
+            "Work Ledger mutation authority, provider row patches, provider "
+            "payload bodies, account/session state, browser/HUD live access, "
+            "recipient-send state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "artifact_projection_debt_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "artifact_projection_debt.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_artifact_projection_debt.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "navigation_trace_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The navigation trace lane now carries the exact copied "
+            "non-secret source and focused regression-test bodies inside the "
+            "projection bundle, validated by digest/anchor checks and syntax "
+            "compilation. This imports the trace recorder and attention-frame "
+            "boundary as source body without exporting live navigation event "
+            "bodies, live Task Ledger or Work Ledger mutation authority, "
+            "prompt/provider/tool-output bodies, account/session state, "
+            "browser/HUD live access, recipient-send state, generated state "
+            "output, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "navigation_trace_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "navigation_trace.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_navigation_trace.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "generated_projection_control_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The generated-projection control lane now carries exact copied "
+            "non-secret registry, drainer, and focused regression-test bodies "
+            "inside the projection bundle, validated by digest/anchor checks "
+            "and syntax compilation. This imports owner lookup and settlement "
+            "planning as source body without exporting generated projection "
+            "output bodies, live generated-state mutation authority, live Task "
+            "Ledger or Work Ledger mutation authority, prompt/provider/tool "
+            "payload bodies, account/session state, browser/HUD live access, "
+            "recipient-send state, or credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "generated_projection_control_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "generated_projection_registry.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "generated_state_drainer.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/server/tests/"
+                "test_generated_state_drainer.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "shared_worktree_guard_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The shared-worktree git guard lane now carries exact copied "
+            "non-secret guard and regression-test bodies inside the projection "
+            "bundle, validated by digest/anchor checks and syntax compilation. "
+            "This imports dirty-worktree git risk classification and preflight "
+            "coverage as source body without exporting live .git index state, "
+            "dirty-worktree payload bodies, live Task Ledger or Work Ledger "
+            "mutation authority, prompt/provider/tool payload bodies, account/"
+            "session state, browser/HUD live access, recipient-send state, "
+            "release authority, publication authority, or credential-equivalent "
+            "material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "shared_worktree_guard_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/lib/"
+                "shared_worktree_guard.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/system/"
+                "server/tests/test_work_ledger_core.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "raw_git_commit_guard_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The raw shared-index git commit guard lane now carries exact copied "
+            "non-secret PreToolUse parser, repo git hook dispatcher, githook "
+            "shim, and regression-test bodies inside the projection bundle. "
+            "This imports guard source body without exporting live .git index "
+            "state, dirty-worktree payload bodies, live Task Ledger or Work "
+            "Ledger mutation authority, prompt/provider/tool payload bodies, "
+            "account/session state, browser/HUD live access, recipient-send "
+            "state, release authority, publication authority, or "
+            "credential-equivalent material."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "raw_git_commit_guard_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/.claude/"
+                "hooks/runtime_hook.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/run_git.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/.githooks/"
+                "prepare-commit-msg"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "control/test_raw_git_commit_guard.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "formal_math_proofline_spine_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The formal-math proofline spine now carries exact copied "
+            "non-secret proofline and repair-lane source bodies plus focused "
+            "validator source inside the projection bundle. The import is "
+            "validated by digest/anchor checks and syntax compilation while "
+            "excluding private proof receipts, proof bodies, ground-truth "
+            "answers, prompt payloads, provider outputs, hidden answers, "
+            "account/session state, browser/HUD live access, release, "
+            "publication, and benchmark-correctness authority."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/"
+                "formal_math_proofline_spine_source_module_manifest.json"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "factory/build_formal_math_proofline_spine.py"
+            ),
+            (
+                "examples/macro_projection_import_protocol/"
+                "exported_projection_import_bundle/source_modules/tools/meta/"
+                "factory/build_formal_math_proof_repair_lane.py"
+            ),
+            "tests/test_command_output_projection_runtime.py",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_command_output_projection_runtime.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+    "provider_context_source_modules_import": {
+        "projection_status": "public_runtime_import_landed",
+        "cell_state": "consumed_verified_import",
+        "action_required": False,
+        "status_reason": (
+            "The provider-context recipe budget policy carries exact copied "
+            "non-secret graph-benchmark, formal-ladder evaluator, provider "
+            "receipt reducer, batch calibration report, and provider boundary "
+            "standard bodies inside its public bundle. The import is validated "
+            "by digest and anchor checks while excluding provider payload bodies, "
+            "proof bodies, live access state, credentials, and release authority."
+        ),
+        "landed_evidence_refs": [
+            (
+                "examples/provider_context_recipe_budget_policy/"
+                "exported_provider_context_budget_bundle/"
+                "source_module_manifest.json"
+            ),
+            (
+                "examples/provider_context_recipe_budget_policy/"
+                "exported_provider_context_budget_bundle/source_modules/"
+                "tools/meta/factory/run_prover_graph_benchmark.py"
+            ),
+            (
+                "examples/provider_context_recipe_budget_policy/"
+                "exported_provider_context_budget_bundle/source_modules/"
+                "tools/meta/factory/run_prover_formal_problem_ladder_eval.py"
+            ),
+            (
+                "examples/provider_context_recipe_budget_policy/"
+                "exported_provider_context_budget_bundle/source_modules/"
+                "tools/meta/factory/reduce_prover_provider_receipts.py"
+            ),
+            (
+                "examples/provider_context_recipe_budget_policy/"
+                "exported_provider_context_budget_bundle/source_modules/"
+                "tools/meta/factory/"
+                "build_prover_provider_batch_context_calibration_report.py"
+            ),
+            (
+                "examples/provider_context_recipe_budget_policy/"
+                "exported_provider_context_budget_bundle/source_modules/"
+                "codex/standards/std_provider_adapter.json"
+            ),
+            (
+                "examples/provider_context_recipe_budget_policy/"
+                "exported_provider_context_budget_bundle/source_modules/"
+                "codex/standards/std_compute_provider.json"
+            ),
+            (
+                "examples/provider_context_recipe_budget_policy/"
+                "exported_provider_context_budget_bundle/source_modules/"
+                "codex/standards/std_provider_navigation_transform_receipt.json"
+            ),
+            (
+                "receipts/runtime_shell/demo_project/organs/"
+                "provider_context_recipe_budget_policy/"
+                "exported_provider_context_budget_bundle_validation_result.json"
+            ),
+            "standards/std_microcosm_provider_context_recipe_budget_policy.json",
+        ],
+        "next_runtime_surface": (
+            "pytest microcosm-substrate/tests/test_provider_context_recipe_budget_policy.py "
+            "microcosm-substrate/tests/test_macro_projection_import_protocol.py"
+        ),
+    },
+}
+
+
+def _is_public_root(candidate: Path) -> bool:
+    return (candidate / PUBLIC_ROOT_POLICY_REL).is_file()
+
+
+def _public_root_for_path(path: str | Path) -> Path:
+    resolved = Path(path).resolve(strict=False)
+    start = resolved if resolved.is_dir() else resolved.parent
+    candidates = [
+        start,
+        *start.parents,
+        Path.cwd().resolve(strict=False),
+        MODULE_PUBLIC_ROOT,
+    ]
+    seen: set[Path] = set()
+    for candidate in candidates:
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        if _is_public_root(candidate):
+            return candidate
+    return MODULE_PUBLIC_ROOT
+
+
+def _display(path: Path, *, public_root: Path) -> str:
+    return public_relative_path(path, display_root=public_root)
+
+
+def _stored_receipt_paths(paths: list[str]) -> list[str]:
+    normalized = normalize_public_receipt_paths({"receipt_paths": paths})
+    values = normalized.get("receipt_paths") if isinstance(normalized, dict) else paths
+    if isinstance(values, list) and all(isinstance(path, str) for path in values):
+        return values
+    return paths
+
+
+def _input_paths(input_dir: Path, *, include_negative: bool) -> list[Path]:
+    names = (*INPUT_NAMES, *(NEGATIVE_INPUT_NAMES if include_negative else ()))
+    return [input_dir / name for name in names]
+
+
+def _has_negative_input_set(input_dir: Path) -> bool:
+    return all((input_dir / name).is_file() for name in NEGATIVE_INPUT_NAMES)
+
+
+def _exported_bundle_run_compatibility_route() -> dict[str, str]:
+    return {
+        "requested_action": "run",
+        "resolved_action": "run-projection-bundle",
+        "reason": "exported projection bundles do not carry fixture negative-case inputs",
+        "fixture_action": "run",
+        "exported_bundle_action": "run-projection-bundle",
+    }
+
+
+def _load_payloads(input_dir: Path, *, include_negative: bool) -> dict[str, Any]:
+    return {
+        path.stem: read_json_strict(path)
+        for path in _input_paths(input_dir, include_negative=include_negative)
+    }
+
+
+def _rows(payload: object, key: str) -> list[dict[str, Any]]:
+    if not isinstance(payload, dict):
+        return []
+    rows = payload.get(key, [])
+    if not isinstance(rows, list):
+        return []
+    return [row for row in rows if isinstance(row, dict)]
+
+
+def _strings(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value if isinstance(item, str) and item]
+
+
+def _strip_public_root_prefix(ref: str) -> str:
+    prefix = f"{STANDALONE_RUNTIME_ROOT_REF}/"
+    return ref[len(prefix) :] if ref.startswith(prefix) else ref
+
+
+def _digest_with_prefix(value: object) -> str:
+    text = str(value or "")
+    if not text:
+        return ""
+    return text if text.startswith("sha256:") else f"sha256:{text}"
+
+
+def _public_bound_private_root_token(ref: str) -> str:
+    normalized = _normalize_runtime_root_ref(ref.split("::", 1)[0])
+    for token in PUBLIC_BOUND_PRIVATE_ROOT_TOKENS:
+        if token in normalized:
+            return token
+    return ""
+
+
+def _finance_material_id_for_source_ref(source_ref: str) -> str:
+    path = Path(source_ref)
+    if path.parts[:2] != ("tools", "finance") or path.suffix != ".py":
+        return ""
+    return f"finance_{path.stem}_body_import"
+
+
+def _manifest_ref_path(ref: str, *, public_root: Path, input_dir: Path) -> Path | None:
+    if not ref.endswith("source_module_manifest.json"):
+        return None
+    ref_path = Path(_strip_public_root_prefix(ref))
+    candidates = [
+        public_root / ref_path,
+        input_dir / ref_path,
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def _manifest_body_row_from_source_module(
+    module_row: dict[str, Any],
+    *,
+    material_id: str,
+    cell_row: dict[str, Any],
+    manifest_ref: str,
+) -> dict[str, Any] | None:
+    source_ref = str(module_row.get("source_ref") or "")
+    target_ref = _strip_public_root_prefix(
+        str(module_row.get("target_ref") or module_row.get("path") or "")
+    )
+    digest = _digest_with_prefix(module_row.get("target_sha256") or module_row.get("sha256"))
+    source_digest = _digest_with_prefix(module_row.get("source_sha256") or module_row.get("sha256"))
+    if not source_ref or not target_ref or not digest or not source_digest:
+        return None
+    line_count = int(module_row.get("line_count") or 0)
+    validation_refs = _strings(cell_row.get("validation_refs"))
+    runtime_consumed_by = [
+        *validation_refs,
+        *(
+            [str(cell_row["next_runtime_surface"])]
+            if isinstance(cell_row.get("next_runtime_surface"), str)
+            else []
+        ),
+    ]
+    stem = Path(source_ref).stem
+    source_refs = [
+        source_ref,
+        manifest_ref,
+        *[
+            ref
+            for ref in _strings(cell_row.get("source_refs"))
+            if ref.endswith("runtime_contract.json")
+        ],
+    ]
+    return {
+        "applied_edits": [
+            f"exact_copy_tools_finance_{stem}_module_into_public_finance_eval_bundle",
+            "bind_finance_forecast_evaluation_source_module_to_macro_projection_body_floor",
+            "preserve_no_advice_no_live_provider_no_account_or_portfolio_control_authority_ceiling",
+        ],
+        "body_copied": True,
+        "body_digest": digest,
+        "body_import_verification": {
+            "runtime_consumed_by": runtime_consumed_by,
+            "source_body_digest": source_digest,
+            "source_line_count": line_count,
+            "source_ref": source_ref,
+            "source_to_target_relation": "exact_copy",
+            "target_body_digest": digest,
+            "target_line_count": line_count,
+            "target_ref": target_ref,
+            "verification_mode": "exact_source_digest_match",
+            "verification_status": "verified",
+        },
+        "body_in_receipt": False,
+        "body_line_count": line_count,
+        "claim_ceiling": FINANCE_EVAL_BODY_IMPORT_CLAIM_CEILING,
+        "credential_exposure_risk": "low",
+        "material_class": "public_macro_tool_body",
+        "material_id": material_id,
+        "provenance_refs": [
+            manifest_ref,
+            "codex/standards/std_microcosm.json#direct_import_with_verification",
+        ],
+        "public_safe_mode": "direct_verified_macro_body",
+        "source_ref": source_ref,
+        "source_refs": source_refs,
+        "target_ref": target_ref,
+        "validation_refs": validation_refs,
+    }
+
+
+def _augment_protocol_from_source_module_manifests(
+    protocol_payload: object,
+    plan_payload: object,
+    *,
+    input_dir: Path,
+    public_root: Path,
+) -> dict[str, Any]:
+    protocol = dict(protocol_payload) if isinstance(protocol_payload, dict) else {}
+    plan = plan_payload if isinstance(plan_payload, dict) else {}
+    copied_material = list(_rows(protocol, "copied_material"))
+    known_ids = {str(row.get("material_id") or "") for row in copied_material}
+    additions: list[dict[str, Any]] = []
+
+    for cell_row in _rows(plan, "proposed_cells"):
+        missing_ids = [
+            material_id
+            for material_id in _strings(cell_row.get("public_safe_body_material_ids"))
+            if material_id not in known_ids
+        ]
+        if not missing_ids:
+            continue
+        missing_id_set = set(missing_ids)
+        for manifest_ref in _strings(cell_row.get("source_refs")):
+            manifest_path = _manifest_ref_path(
+                manifest_ref,
+                public_root=public_root,
+                input_dir=input_dir,
+            )
+            if manifest_path is None:
+                continue
+            manifest = read_json_strict(manifest_path)
+            for module_row in _rows(manifest, "modules"):
+                source_ref = str(module_row.get("source_ref") or "")
+                material_id = _finance_material_id_for_source_ref(source_ref)
+                if material_id not in missing_id_set:
+                    continue
+                body_row = _manifest_body_row_from_source_module(
+                    module_row,
+                    material_id=material_id,
+                    cell_row=cell_row,
+                    manifest_ref=_strip_public_root_prefix(manifest_ref),
+                )
+                if body_row is None:
+                    continue
+                additions.append(body_row)
+                known_ids.add(material_id)
+                missing_id_set.remove(material_id)
+                if not missing_id_set:
+                    break
+            if not missing_id_set:
+                break
+
+    if additions:
+        protocol["copied_material"] = [*copied_material, *additions]
+    return protocol
+
+
+def _finding(
+    code: str,
+    message: str,
+    *,
+    case_id: str,
+    subject_id: str,
+    subject_kind: str,
+) -> dict[str, Any]:
+    return {
+        "error_code": code,
+        "message": message,
+        "negative_case_id": case_id,
+        "subject_id": subject_id,
+        "subject_kind": subject_kind,
+        "body_in_receipt": False,
+    }
+
+
+def _record(
+    findings: list[dict[str, Any]],
+    observed: dict[str, set[str]],
+    code: str,
+    message: str,
+    *,
+    case_id: str,
+    subject_id: str,
+    subject_kind: str,
+) -> None:
+    findings.append(
+        _finding(
+            code,
+            message,
+            case_id=case_id,
+            subject_id=subject_id,
+            subject_kind=subject_kind,
+        )
+    )
+    observed[case_id].add(code)
+
+
+def _merge_observed(*results: dict[str, Any]) -> dict[str, list[str]]:
+    merged: dict[str, set[str]] = defaultdict(set)
+    for result in results:
+        for case_id, codes in result.get("observed_negative_cases", {}).items():
+            for code in codes:
+                merged[case_id].add(str(code))
+    return {case_id: sorted(codes) for case_id, codes in sorted(merged.items())}
+
+
+def _merge_findings(*results: dict[str, Any]) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
+    for result in results:
+        findings.extend(result.get("findings", []))
+    return sorted(
+        findings,
+        key=lambda row: (
+            str(row.get("negative_case_id") or ""),
+            str(row.get("subject_kind") or ""),
+            str(row.get("subject_id") or ""),
+            str(row.get("error_code") or ""),
+        ),
+    )
+
+
+def _accepted_organ_count(public_root: Path) -> int | None:
+    registry_path = public_root / ORGAN_REGISTRY_REL
+    if not registry_path.is_file():
+        return None
+    registry = read_json_strict(registry_path)
+    rows = registry.get("implemented_organs", []) if isinstance(registry, dict) else []
+    if not isinstance(rows, list):
+        return None
+    return sum(
+        1
+        for row in rows
+        if isinstance(row, dict) and str(row.get("status") or "") == "accepted_current_authority"
+    )
+
+
+def _lifecycle_accepted_count(coverage_counts: dict[str, Any]) -> int | None:
+    count = coverage_counts.get("accepted_organ_count")
+    return count if isinstance(count, int) else None
+
+
+def _add_dependency_preflight_defect(
+    defects: list[dict[str, Any]],
+    findings: list[dict[str, Any]],
+    *,
+    defect_code: str,
+    error_code: str,
+    message: str,
+    subject_id: str,
+    subject_kind: str = "dependency_preflight_receipt",
+) -> None:
+    defects.append(
+        {
+            "defect_code": defect_code,
+            "error_code": error_code,
+            "message": message,
+            "subject_id": subject_id,
+            "subject_kind": subject_kind,
+            "body_in_receipt": False,
+        }
+    )
+    findings.append(
+        _finding(
+            error_code,
+            message,
+            case_id="dependency_preflight_lifecycle_gate",
+            subject_id=subject_id,
+            subject_kind=subject_kind,
+        )
+    )
+
+
+def _dependency_preflight_lifecycle_gate(public_root: Path) -> dict[str, Any]:
+    receipt_path = public_root / DEPENDENCY_PREFLIGHT_RECEIPT_REL
+    receipt_ref = _display(receipt_path, public_root=public_root)
+    defects: list[dict[str, Any]] = []
+    findings: list[dict[str, Any]] = []
+    receipt: dict[str, Any] = {}
+    lifecycle: dict[str, Any] = {}
+    coverage_counts: dict[str, Any] = {}
+    accepted_registry_count = _accepted_organ_count(public_root)
+    expected_count: int | None = None
+
+    if not receipt_path.is_file():
+        _add_dependency_preflight_defect(
+            defects,
+            findings,
+            defect_code="dependency_preflight_receipt_missing",
+            error_code="MACRO_PROJECTION_DEPENDENCY_PREFLIGHT_MISSING",
+            message="Runtime severance requires the dependency preflight receipt.",
+            subject_id=receipt_ref,
+        )
+    else:
+        receipt = read_json_strict(receipt_path)
+        if not isinstance(receipt, dict):
+            _add_dependency_preflight_defect(
+                defects,
+                findings,
+                defect_code="dependency_preflight_receipt_invalid",
+                error_code="MACRO_PROJECTION_DEPENDENCY_PREFLIGHT_INVALID",
+                message="Dependency preflight receipt must be a JSON object.",
+                subject_id=receipt_ref,
+            )
+        elif receipt.get("status") != PASS:
+            _add_dependency_preflight_defect(
+                defects,
+                findings,
+                defect_code="dependency_preflight_status_blocked",
+                error_code="MACRO_PROJECTION_DEPENDENCY_PREFLIGHT_BLOCKED",
+                message="Dependency preflight must pass before runtime severance can pass.",
+                subject_id=receipt_ref,
+            )
+        lifecycle_value = receipt.get("organ_lifecycle_coverage") if isinstance(receipt, dict) else None
+        if not isinstance(lifecycle_value, dict):
+            _add_dependency_preflight_defect(
+                defects,
+                findings,
+                defect_code="organ_lifecycle_coverage_missing",
+                error_code="MACRO_PROJECTION_ORGAN_LIFECYCLE_COVERAGE_MISSING",
+                message="Dependency preflight receipt must include organ_lifecycle_coverage_v1.",
+                subject_id=receipt_ref,
+            )
+        else:
+            lifecycle = lifecycle_value
+            coverage_counts_value = lifecycle.get("coverage_counts", {})
+            coverage_counts = coverage_counts_value if isinstance(coverage_counts_value, dict) else {}
+            expected_count = _lifecycle_accepted_count(coverage_counts)
+            if lifecycle.get("status") != PASS:
+                _add_dependency_preflight_defect(
+                    defects,
+                    findings,
+                    defect_code="organ_lifecycle_coverage_blocked",
+                    error_code="MACRO_PROJECTION_ORGAN_LIFECYCLE_COVERAGE_BLOCKED",
+                    message="Organ lifecycle coverage must pass before runtime severance can pass.",
+                    subject_id=receipt_ref,
+                )
+            if lifecycle.get("defect_count", 0) not in (0, "0"):
+                _add_dependency_preflight_defect(
+                    defects,
+                    findings,
+                    defect_code="organ_lifecycle_coverage_defects_present",
+                    error_code="MACRO_PROJECTION_ORGAN_LIFECYCLE_COVERAGE_BLOCKED",
+                    message="Organ lifecycle coverage reports blocking lifecycle defects.",
+                    subject_id=receipt_ref,
+                )
+            if accepted_registry_count is None:
+                _add_dependency_preflight_defect(
+                    defects,
+                    findings,
+                    defect_code="accepted_organ_registry_missing",
+                    error_code="MACRO_PROJECTION_ACCEPTED_ORGAN_REGISTRY_MISSING",
+                    message="Runtime severance must compare lifecycle coverage against accepted organs.",
+                    subject_id=str(ORGAN_REGISTRY_REL),
+                    subject_kind="organ_registry",
+                )
+            elif expected_count is None:
+                _add_dependency_preflight_defect(
+                    defects,
+                    findings,
+                    defect_code="organ_lifecycle_accepted_count_missing",
+                    error_code="MACRO_PROJECTION_ORGAN_LIFECYCLE_COVERAGE_STALE",
+                    message=(
+                        "Organ lifecycle coverage must name the demotion-aware "
+                        "accepted organ count before runtime severance can pass."
+                    ),
+                    subject_id="accepted_organ_count",
+                    subject_kind="organ_lifecycle_count",
+                )
+            else:
+                for field in ORGAN_LIFECYCLE_ACCEPTED_COUNT_FIELDS:
+                    count = coverage_counts.get(field)
+                    if count != expected_count:
+                        _add_dependency_preflight_defect(
+                            defects,
+                            findings,
+                            defect_code="organ_lifecycle_coverage_stale_count",
+                            error_code="MACRO_PROJECTION_ORGAN_LIFECYCLE_COVERAGE_STALE",
+                            message=(
+                                "Organ lifecycle coverage count must match the accepted "
+                                "organ count for runtime severance."
+                            ),
+                            subject_id=field,
+                            subject_kind="organ_lifecycle_count",
+                        )
+                product_authority_count = coverage_counts.get(
+                    "public_authority_expected_organ_count"
+                )
+                if not isinstance(product_authority_count, int):
+                    _add_dependency_preflight_defect(
+                        defects,
+                        findings,
+                        defect_code="organ_lifecycle_coverage_stale_count",
+                        error_code="MACRO_PROJECTION_ORGAN_LIFECYCLE_COVERAGE_STALE",
+                        message=(
+                            "Organ lifecycle coverage must name the expected "
+                            "product authority count for runtime severance."
+                        ),
+                        subject_id="public_authority_expected_organ_count",
+                        subject_kind="organ_lifecycle_count",
+                    )
+                else:
+                    for field in ORGAN_LIFECYCLE_PRODUCT_AUTHORITY_COUNT_FIELDS:
+                        count = coverage_counts.get(field)
+                        if count != product_authority_count:
+                            _add_dependency_preflight_defect(
+                                defects,
+                                findings,
+                                defect_code="organ_lifecycle_coverage_stale_count",
+                                error_code="MACRO_PROJECTION_ORGAN_LIFECYCLE_COVERAGE_STALE",
+                                message=(
+                                    "Product authority lifecycle coverage count must "
+                                    "match the expected product-spine organ count for "
+                                    "runtime severance."
+                                ),
+                                subject_id=field,
+                                subject_kind="organ_lifecycle_count",
+                            )
+
+    return {
+        "schema_version": "macro_projection_dependency_preflight_gate_v1",
+        "status": PASS if not defects else "blocked",
+        "receipt_ref": receipt_ref,
+        "dependency_preflight_status": receipt.get("status") if receipt else "missing",
+        "organ_lifecycle_coverage_status": lifecycle.get("status") if lifecycle else "missing",
+        "expected_accepted_organ_count": expected_count,
+        "accepted_registry_count": accepted_registry_count,
+        "coverage_counts": coverage_counts,
+        "required_count_fields": list(ORGAN_LIFECYCLE_COUNT_FIELDS),
+        "defect_count": len(defects),
+        "defects": defects,
+        "findings": findings,
+        "anti_claim": (
+            "This check proves runtime severance consumed the preflight lifecycle "
+            "receipt. It is not a substitute for an imported macro body, provider "
+            "execution, or proof of organ semantics."
+        ),
+        "body_in_receipt": False,
+    }
+
+
+def _authority_upgrade(payload: object) -> bool:
+    if not isinstance(payload, dict):
+        return False
+    ceiling = payload.get("authority_ceiling", payload)
+    if not isinstance(ceiling, dict):
+        return False
+    return any(ceiling.get(flag) is True for flag in FORBIDDEN_AUTHORITY_FLAGS)
+
+
+def _release_or_equivalence_overclaim(payload: object) -> bool:
+    if not isinstance(payload, dict):
+        return False
+    ceiling = payload.get("authority_ceiling", payload)
+    if not isinstance(ceiling, dict):
+        return False
+    return any(
+        ceiling.get(flag) is True
+        for flag in (
+            "release_authorized",
+            "hosted_public_authorized",
+            "publication_authorized",
+            "recipient_work_authorized",
+            "private_data_equivalence_claim",
+            "private_root_equivalence_authorized",
+        )
+    )
+
+
+def _public_safe_import_status(
+    row: dict[str, Any],
+    *,
+    import_policy: dict[str, Any],
+) -> dict[str, Any] | None:
+    material_class = str(row.get("material_class") or "")
+    if material_class not in PUBLIC_SAFE_BODY_MATERIAL_CLASSES:
+        return None
+    return classify_public_safe_macro_import(row, forbidden_classes=import_policy)
+
+
+def _sha256_digest(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(BODY_DIGEST_CHUNK_SIZE), b""):
+            digest.update(chunk)
+    return f"{BODY_DIGEST_PREFIX}{digest.hexdigest()}"
+
+
+def _body_stats(path: Path) -> dict[str, Any]:
+    data = path.read_bytes()
+    digest = hashlib.sha256(data).hexdigest()
+    return {
+        "sha256": digest,
+        "body_digest": f"{BODY_DIGEST_PREFIX}{digest}",
+        "line_count": data.count(b"\n"),
+        "byte_count": len(data),
+        "text": data.decode("utf-8", errors="replace"),
+    }
+
+
+def _digest_for_existing_format(existing: Any, stats: dict[str, Any]) -> str:
+    if str(existing or "").startswith(BODY_DIGEST_PREFIX):
+        return str(stats["body_digest"])
+    return str(stats["sha256"])
+
+
+def _resolve_source_path(
+    source_ref: str,
+    *,
+    source_root: Path,
+    public_root: Path | None = None,
+) -> Path | None:
+    ref_path = Path(source_ref.split("::", 1)[0])
+    if ref_path.is_absolute() or ".." in ref_path.parts:
+        return None
+    candidates = [source_root / ref_path]
+    if public_root is not None:
+        candidates.extend([public_root / ref_path, public_root.parent / ref_path])
+        if ref_path.parts[:1] == ("private-macro-source",):
+            candidates.append(public_root / PRIVATE_MACRO_SOURCE_MODULE_ROOT / ref_path)
+    candidates.append(Path.cwd() / ref_path)
+
+    unique: list[Path] = []
+    seen: set[str] = set()
+    for candidate in candidates:
+        key = str(candidate.resolve(strict=False))
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(candidate)
+    for candidate in unique:
+        if candidate.is_file():
+            return candidate
+    return unique[0]
+
+
+def _pending_source_coupling(
+    source_refs: list[str],
+    *,
+    source_root: Path,
+    public_root: Path,
+) -> dict[str, Any]:
+    unique_refs = sorted({str(ref).split("::", 1)[0] for ref in source_refs if ref})
+    resolved_rows: list[dict[str, Any]] = []
+    for source_ref in unique_refs:
+        source_path = _resolve_source_path(
+            source_ref,
+            source_root=source_root,
+            public_root=public_root,
+        )
+        if source_path is None:
+            continue
+        resolved_rows.append(
+            {
+                "source_ref": source_ref,
+                "source_path": source_path.resolve(strict=False),
+            }
+        )
+
+    base = {
+        "schema_version": "macro_projection_exact_copy_source_coupling_v1",
+        "status": "not_checked",
+        "git_status_available": False,
+        "pending_source_ref_count": len(unique_refs),
+        "dirty_source_ref_count": 0,
+        "dirty_source_refs": [],
+        "untracked_sources_count_as_dirty": True,
+    }
+    if not resolved_rows:
+        return {
+            **base,
+            "status": "no_pending_source_refs",
+        }
+
+    git_root_result = subprocess.run(
+        ["git", "-C", str(source_root), "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if git_root_result.returncode != 0:
+        return {
+            **base,
+            "status": "git_status_unavailable",
+            "git_status_error": git_root_result.stderr.strip(),
+        }
+
+    git_root = Path(git_root_result.stdout.strip()).resolve(strict=False)
+    rel_paths: list[str] = []
+    ref_by_rel_path: dict[str, str] = {}
+    outside_git_root: list[dict[str, str]] = []
+    for row in resolved_rows:
+        source_path = row["source_path"]
+        try:
+            rel_path = source_path.relative_to(git_root).as_posix()
+        except ValueError:
+            outside_git_root.append(
+                {
+                    "source_ref": str(row["source_ref"]),
+                    "source_path": _display(source_path, public_root=public_root),
+                }
+            )
+            continue
+        rel_paths.append(rel_path)
+        ref_by_rel_path[rel_path] = str(row["source_ref"])
+
+    if not rel_paths:
+        return {
+            **base,
+            "status": "no_pending_source_refs_inside_git_root",
+            "git_status_available": True,
+            "git_root_ref": str(git_root),
+            "outside_git_root_source_refs": outside_git_root,
+        }
+
+    status_result = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(git_root),
+            "status",
+            "--porcelain=v1",
+            "--untracked-files=all",
+            "--",
+            *rel_paths,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if status_result.returncode != 0:
+        return {
+            **base,
+            "status": "git_status_unavailable",
+            "git_status_available": False,
+            "git_root_ref": str(git_root),
+            "git_status_error": status_result.stderr.strip(),
+        }
+
+    dirty_rows = []
+    for line in status_result.stdout.splitlines():
+        if not line:
+            continue
+        git_status = line[:2]
+        rel_path = line[3:]
+        if " -> " in rel_path:
+            rel_path = rel_path.rsplit(" -> ", 1)[-1]
+        dirty_rows.append(
+            {
+                "source_ref": ref_by_rel_path.get(rel_path, rel_path),
+                "git_path": rel_path,
+                "git_status": git_status,
+            }
+        )
+
+    return {
+        **base,
+        "status": "dirty_pending_sources_detected"
+        if dirty_rows
+        else "pending_sources_clean",
+        "git_status_available": True,
+        "git_root_ref": str(git_root),
+        "pending_git_source_ref_count": len(rel_paths),
+        "dirty_source_ref_count": len(dirty_rows),
+        "dirty_source_refs": dirty_rows,
+        "outside_git_root_source_refs": outside_git_root,
+    }
+
+
+def _git_status_rows_for_paths(
+    paths: list[tuple[str, Path]],
+    *,
+    git_probe_root: Path,
+    public_root: Path,
+    schema_version: str,
+    row_kind: str,
+) -> dict[str, Any]:
+    resolved_rows: list[dict[str, Any]] = []
+    seen_paths: set[str] = set()
+    roles_by_key: dict[str, list[str]] = defaultdict(list)
+    for role, path in paths:
+        key = str(path.resolve(strict=False))
+        if role not in roles_by_key[key]:
+            roles_by_key[key].append(role)
+        if key in seen_paths:
+            continue
+        seen_paths.add(key)
+        resolved_rows.append(
+            {
+                "path": path.resolve(strict=False),
+                "roles": roles_by_key[key],
+            }
+        )
+
+    plural = f"{row_kind}s"
+    base = {
+        "schema_version": schema_version,
+        "status": "not_checked",
+        "git_status_available": False,
+        f"pending_{row_kind}_count": len(resolved_rows),
+        f"dirty_{row_kind}_count": 0,
+        f"dirty_{plural}": [],
+        f"untracked_{plural}_count_as_dirty": True,
+    }
+    if not resolved_rows:
+        return {
+            **base,
+            "status": f"no_pending_{plural}",
+        }
+
+    git_root_result = subprocess.run(
+        ["git", "-C", str(git_probe_root), "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if git_root_result.returncode != 0:
+        return {
+            **base,
+            "status": "git_status_unavailable",
+            "git_status_error": git_root_result.stderr.strip(),
+        }
+
+    git_root = Path(git_root_result.stdout.strip()).resolve(strict=False)
+    rel_paths: list[str] = []
+    rows_by_rel_path: dict[str, dict[str, Any]] = {}
+    outside_git_root: list[dict[str, Any]] = []
+    for row in resolved_rows:
+        path = row["path"]
+        try:
+            rel_path = path.relative_to(git_root).as_posix()
+        except ValueError:
+            outside_git_root.append(
+                {
+                    f"{row_kind}_ref": _display(path, public_root=public_root),
+                    f"{row_kind}_roles": list(row["roles"]),
+                }
+            )
+            continue
+        rel_paths.append(rel_path)
+        rows_by_rel_path[rel_path] = row
+
+    if not rel_paths:
+        return {
+            **base,
+            "status": f"no_pending_{plural}_inside_git_root",
+            "git_status_available": True,
+            "git_root_ref": str(git_root),
+            f"outside_git_root_{plural}": outside_git_root,
+        }
+
+    status_result = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(git_root),
+            "status",
+            "--porcelain=v1",
+            "--untracked-files=all",
+            "--",
+            *sorted(rel_paths),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if status_result.returncode != 0:
+        return {
+            **base,
+            "status": "git_status_unavailable",
+            "git_status_available": False,
+            "git_root_ref": str(git_root),
+            "git_status_error": status_result.stderr.strip(),
+        }
+
+    dirty_rows = []
+    for line in status_result.stdout.splitlines():
+        if not line:
+            continue
+        git_status = line[:2]
+        rel_path = line[3:]
+        if " -> " in rel_path:
+            rel_path = rel_path.rsplit(" -> ", 1)[-1]
+        row = rows_by_rel_path.get(rel_path)
+        dirty_rows.append(
+            {
+                f"{row_kind}_ref": _display(row["path"], public_root=public_root)
+                if row is not None
+                else rel_path,
+                "git_path": rel_path,
+                "git_status": git_status,
+                f"{row_kind}_roles": list(row["roles"]) if row is not None else [],
+            }
+        )
+
+    return {
+        **base,
+        "status": f"dirty_pending_{plural}_detected"
+        if dirty_rows
+        else f"pending_{plural}_clean",
+        "git_status_available": True,
+        "git_root_ref": str(git_root),
+        f"pending_git_{row_kind}_count": len(rel_paths),
+        f"dirty_{row_kind}_count": len(dirty_rows),
+        f"dirty_{plural}": dirty_rows,
+        f"outside_git_root_{plural}": outside_git_root,
+    }
+
+
+def _pending_output_coupling(
+    paths: list[tuple[str, Path]],
+    *,
+    git_probe_root: Path,
+    public_root: Path,
+) -> dict[str, Any]:
+    return _git_status_rows_for_paths(
+        paths,
+        git_probe_root=git_probe_root,
+        public_root=public_root,
+        schema_version="macro_projection_exact_copy_output_coupling_v1",
+        row_kind="output_path",
+    )
+
+
+def _resolve_public_target_path(target_ref: str, *, public_root: Path) -> Path | None:
+    ref_path = Path(target_ref.split("::", 1)[0])
+    if ref_path.is_absolute() or ".." in ref_path.parts:
+        return None
+    if ref_path.parts[:1] == (STANDALONE_RUNTIME_ROOT_REF,):
+        return public_root.parent / ref_path
+    return public_root / ref_path
+
+
+def _resolve_manifest_target_path(
+    target_ref: str,
+    *,
+    manifest_path: Path,
+    public_root: Path,
+) -> Path | None:
+    ref_path = Path(target_ref.split("::", 1)[0])
+    if ref_path.is_absolute() or ".." in ref_path.parts:
+        return None
+    if ref_path.parts[:1] == (STANDALONE_RUNTIME_ROOT_REF,):
+        return public_root.parent / ref_path
+    public_root_prefixes = {
+        "core",
+        "examples",
+        "fixtures",
+        "paper_modules",
+        "receipts",
+        "src",
+        "standards",
+    }
+    if ref_path.parts[:1] and ref_path.parts[0] in public_root_prefixes:
+        return public_root / ref_path
+    return manifest_path.parent / ref_path
+
+
+def _iter_source_module_manifest_paths(root: Path, *, recursive: bool) -> Iterator[Path]:
+    if not root.is_dir():
+        return
+    try:
+        with os.scandir(root) as entries:
+            entry_rows = sorted(entries, key=lambda entry: entry.name)
+    except OSError:
+        return
+
+    for entry in entry_rows:
+        try:
+            if entry.is_file(follow_symlinks=False) and entry.name.endswith(
+                "source_module_manifest.json"
+            ):
+                yield Path(entry.path)
+            elif recursive and entry.is_dir(follow_symlinks=False):
+                yield from _iter_source_module_manifest_paths(
+                    Path(entry.path),
+                    recursive=True,
+                )
+        except OSError:
+            continue
+
+
+def _source_module_manifest_paths(
+    input_path: Path,
+    *,
+    public_root: Path,
+    all_examples: bool,
+) -> list[Path]:
+    candidates: list[Path] = []
+    if input_path.is_file() and input_path.name.endswith("source_module_manifest.json"):
+        candidates.append(input_path)
+    if input_path.is_dir():
+        candidates.extend(
+            _iter_source_module_manifest_paths(input_path, recursive=False)
+        )
+    if all_examples:
+        examples_root = public_root / "examples"
+        candidates.extend(
+            _iter_source_module_manifest_paths(examples_root, recursive=True)
+        )
+
+    unique: list[Path] = []
+    seen: set[str] = set()
+    for path in candidates:
+        key = str(path.resolve(strict=False))
+        if key in seen or not path.is_file():
+            continue
+        seen.add(key)
+        unique.append(path)
+    return unique
+
+
+def _target_adjacent_source_module_manifest_paths(
+    target_path: Path,
+    *,
+    public_root: Path,
+) -> list[Path]:
+    public_root_resolved = public_root.resolve(strict=False)
+    target_resolved = target_path.resolve(strict=False)
+    try:
+        target_resolved.relative_to(public_root_resolved)
+    except ValueError:
+        return []
+
+    current = target_path.parent
+    while True:
+        candidate = current / "source_module_manifest.json"
+        if candidate.is_file():
+            return [candidate]
+        if current.resolve(strict=False) == public_root_resolved or current.parent == current:
+            return []
+        current = current.parent
+
+
+def _bundle_manifest_for_target(target_path: Path, *, public_root: Path) -> Path | None:
+    public_root_resolved = public_root.resolve(strict=False)
+    try:
+        target_path.resolve(strict=False).relative_to(public_root_resolved)
+    except ValueError:
+        return None
+    current = target_path.parent
+    while True:
+        candidate = current / "bundle_manifest.json"
+        if candidate.is_file():
+            return candidate
+        if current.resolve(strict=False) == public_root_resolved or current.parent == current:
+            return None
+        current = current.parent
+
+
+def _co_update_bundle_manifest_expected_rows(
+    *,
+    exact_copy_targets: dict[str, tuple[Path, Path]],
+    json_updates: dict[str, tuple[Path, dict[str, Any]]],
+    public_root: Path,
+    defects: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """
+    - Teleology: a refresh must move every declared digest authority in one wave; bundle_manifest.json files[] rows carry expected_sha256/expected_line_count for copied bodies and silently go stale when only source_module_manifest.json is refreshed (split-provenance defect class).
+    - Guarantee: for every exact-copy target seen this wave, the nearest enclosing bundle_manifest.json files[] row matching the target's bundle-relative path is reconciled to the refreshed source stats; touched manifests join json_updates; returns one receipt row per changed entry. Re-running on a half-refreshed bundle repairs the stale rows even when bodies already match.
+    - Fails: never raises; files[] rows that reference a refreshed target without any expected_* field are path listings, not digest authorities, and are skipped untouched.
+    - Non-goal: does not invent files[] rows, does not touch bundle manifests that never reference a refreshed target, does not validate bundle semantics beyond digest/line coherence.
+    """
+    updated_rows: list[dict[str, Any]] = []
+    for source_path, target_path in exact_copy_targets.values():
+        bundle_manifest_path = _bundle_manifest_for_target(
+            target_path, public_root=public_root
+        )
+        if bundle_manifest_path is None:
+            continue
+        key = str(bundle_manifest_path.resolve(strict=False))
+        if key in json_updates:
+            payload = json_updates[key][1]
+        else:
+            payload = read_json_strict(bundle_manifest_path)
+        if not isinstance(payload, dict):
+            continue
+        files_rows = payload.get("files")
+        if not isinstance(files_rows, list):
+            continue
+        bundle_dir = bundle_manifest_path.parent
+        try:
+            rel_text = (
+                target_path.resolve(strict=False)
+                .relative_to(bundle_dir.resolve(strict=False))
+                .as_posix()
+            )
+        except ValueError:
+            continue
+        stats: dict[str, Any] | None = None
+        for row in files_rows:
+            if not isinstance(row, dict):
+                continue
+            if str(row.get("path") or "") != rel_text:
+                continue
+            if stats is None:
+                stats = _body_stats(source_path)
+            row_updates: dict[str, Any] = {}
+            if "expected_sha256" in row:
+                row_updates["expected_sha256"] = _digest_for_existing_format(
+                    row.get("expected_sha256"), stats
+                )
+            if "expected_line_count" in row:
+                row_updates["expected_line_count"] = stats["line_count"]
+            if "expected_byte_count" in row:
+                row_updates["expected_byte_count"] = stats["byte_count"]
+            if not row_updates:
+                continue
+            if all(row.get(field) == value for field, value in row_updates.items()):
+                continue
+            row.update(row_updates)
+            json_updates[key] = (bundle_manifest_path, payload)
+            updated_rows.append(
+                {
+                    "bundle_manifest_ref": _display(
+                        bundle_manifest_path, public_root=public_root
+                    ),
+                    "path": rel_text,
+                    "expected_sha256": row.get("expected_sha256"),
+                    "expected_line_count": row.get("expected_line_count"),
+                    "body_in_receipt": False,
+                }
+            )
+    return updated_rows
+
+
+def _reconcile_bundle_manifest_self_row(
+    *,
+    manifest_path: Path,
+    bundle_updates: dict[str, tuple[Path, dict[str, Any]]],
+    public_root: Path,
+    apply: bool,
+) -> list[dict[str, Any]]:
+    """
+    - Teleology: bundle_manifest.json files[] rows may pin the source_module_manifest.json file itself; rewriting the manifest stales that pin, so refresh must reconcile it from the manifest's post-write bytes (third digest authority in the split-provenance class).
+    - Guarantee: with apply=True (after the manifest file is written) the matching files[] row is updated from the on-disk manifest bytes and the touched bundle manifest joins bundle_updates; with apply=False it only reports the pending reconcile as deferred_digest_recompute rows.
+    - Fails: never raises; missing bundle manifest, missing files[] table, or rows without expected_* fields are skipped untouched.
+    - Non-goal: does not serialize-predict digests (disk bytes after write are the truth), does not touch rows for other files.
+    """
+    bundle_manifest_path = _bundle_manifest_for_target(
+        manifest_path, public_root=public_root
+    )
+    if bundle_manifest_path is None or bundle_manifest_path == manifest_path:
+        return []
+    key = str(bundle_manifest_path.resolve(strict=False))
+    if key in bundle_updates:
+        payload = bundle_updates[key][1]
+    else:
+        payload = read_json_strict(bundle_manifest_path)
+    if not isinstance(payload, dict):
+        return []
+    files_rows = payload.get("files")
+    if not isinstance(files_rows, list):
+        return []
+    try:
+        rel_text = (
+            manifest_path.resolve(strict=False)
+            .relative_to(bundle_manifest_path.parent.resolve(strict=False))
+            .as_posix()
+        )
+    except ValueError:
+        return []
+    rows: list[dict[str, Any]] = []
+    for row in files_rows:
+        if not isinstance(row, dict) or str(row.get("path") or "") != rel_text:
+            continue
+        if "expected_sha256" not in row and "expected_line_count" not in row:
+            continue
+        if not apply:
+            rows.append(
+                {
+                    "bundle_manifest_ref": _display(
+                        bundle_manifest_path, public_root=public_root
+                    ),
+                    "path": rel_text,
+                    "deferred_digest_recompute": True,
+                    "body_in_receipt": False,
+                }
+            )
+            continue
+        stats = _body_stats(manifest_path)
+        row_updates: dict[str, Any] = {}
+        if "expected_sha256" in row:
+            row_updates["expected_sha256"] = _digest_for_existing_format(
+                row.get("expected_sha256"), stats
+            )
+        if "expected_line_count" in row:
+            row_updates["expected_line_count"] = stats["line_count"]
+        if "expected_byte_count" in row:
+            row_updates["expected_byte_count"] = stats["byte_count"]
+        if all(row.get(field) == value for field, value in row_updates.items()):
+            continue
+        row.update(row_updates)
+        bundle_updates[key] = (bundle_manifest_path, payload)
+        rows.append(
+            {
+                "bundle_manifest_ref": _display(
+                    bundle_manifest_path, public_root=public_root
+                ),
+                "path": rel_text,
+                "expected_sha256": row.get("expected_sha256"),
+                "expected_line_count": row.get("expected_line_count"),
+                "body_in_receipt": False,
+            }
+        )
+    return rows
+
+
+def _source_module_protocol_paths(input_path: Path, *, public_root: Path) -> list[Path]:
+    candidates: list[Path] = []
+    if input_path.is_file() and input_path.name == "projection_protocol.json":
+        candidates.append(input_path)
+    if input_path.is_dir():
+        candidates.append(input_path / "projection_protocol.json")
+    candidates.extend(public_root / ref for ref in DEFAULT_SOURCE_MODULE_PROTOCOL_REFS)
+
+    unique: list[Path] = []
+    seen: set[str] = set()
+    for path in candidates:
+        key = str(path.resolve(strict=False))
+        if key in seen or not path.is_file():
+            continue
+        seen.add(key)
+        unique.append(path)
+    return unique
+
+
+def _source_module_row_is_exact_copy(row: dict[str, Any]) -> bool:
+    if row.get("body_in_receipt") is True:
+        return False
+    if row.get("body_copied") is False:
+        return False
+    classification = str(row.get("classification") or "")
+    source_relation = str(row.get("source_to_target_relation") or "")
+    source_import_class = str(row.get("source_import_class") or "")
+    copy_mode = str(row.get("copy_mode") or "")
+    if source_relation:
+        return (
+            source_relation in EXACT_COPY_SOURCE_TO_TARGET_RELATIONS
+            or source_relation.endswith("_exact_copy")
+        )
+    if copy_mode == "exact_file_copy":
+        return True
+    if row.get("sha256_match") is True:
+        return True
+    return (
+        classification.startswith("copied_non_secret_macro_")
+        or source_import_class == "copied_non_secret_macro_body"
+    )
+
+
+def _source_module_row_is_verified_light_edit(row: dict[str, Any]) -> bool:
+    if row.get("body_in_receipt") is True:
+        return False
+    if row.get("body_copied") is False:
+        return False
+    return (
+        str(row.get("source_to_target_relation") or "")
+        in VERIFIED_LIGHT_EDIT_SOURCE_TO_TARGET_RELATIONS
+    )
+
+
+def _source_module_row_is_refreshable(row: dict[str, Any]) -> bool:
+    return _source_module_row_is_exact_copy(row) or _source_module_row_is_verified_light_edit(row)
+
+
+def _source_module_row_material_id(row: dict[str, Any]) -> str:
+    return str(
+        row.get("module_id")
+        or row.get("material_id")
+        or row.get("source_ref")
+        or row.get("path")
+        or ""
+    )
+
+
+def _update_source_module_manifest_row(
+    row: dict[str, Any],
+    *,
+    manifest_path: Path,
+    public_root: Path,
+    source_root: Path,
+    target_copies: dict[str, tuple[Path, Path]],
+    defects: list[dict[str, Any]],
+    exact_copy_targets: dict[str, tuple[Path, Path]] | None = None,
+) -> dict[str, Any] | None:
+    material_id = _source_module_row_material_id(row)
+    source_ref = str(row.get("source_ref") or "")
+    target_ref = str(row.get("target_ref") or row.get("path") or "")
+    source_path = (
+        _resolve_source_path(
+            source_ref,
+            source_root=source_root,
+            public_root=public_root,
+        )
+        if source_ref
+        else None
+    )
+    target_path = (
+        _resolve_manifest_target_path(
+            target_ref,
+            manifest_path=manifest_path,
+            public_root=public_root,
+        )
+        if target_ref
+        else None
+    )
+    if not material_id or source_path is None or target_path is None:
+        defects.append(
+            {
+                "material_id": material_id or "unknown_source_module",
+                "manifest_ref": _display(manifest_path, public_root=public_root),
+                "defect_code": "source_module_refresh_unresolvable_ref",
+                "body_in_receipt": False,
+            }
+        )
+        return None
+    # Cross-tree write guard: when public-root resolution fell back to a tree
+    # that does not contain this manifest, a prefix-resolved target lands in
+    # the fallback tree and a write would pollute it. Fail closed on that row.
+    manifest_resolved = manifest_path.resolve(strict=False)
+    cross_target_resolved = target_path.resolve(strict=False)
+    cross_public_root_resolved = public_root.resolve(strict=False)
+    if (
+        cross_public_root_resolved in cross_target_resolved.parents
+        and cross_public_root_resolved not in manifest_resolved.parents
+    ):
+        defects.append(
+            {
+                "material_id": material_id,
+                "manifest_ref": str(manifest_resolved),
+                "target_ref": str(cross_target_resolved),
+                "resolved_public_root": str(cross_public_root_resolved),
+                "defect_code": "source_module_refresh_cross_tree_target",
+                "body_in_receipt": False,
+            }
+        )
+        return None
+    if not source_path.is_file():
+        defects.append(
+            {
+                "material_id": material_id,
+                "source_ref": source_ref,
+                "manifest_ref": _display(manifest_path, public_root=public_root),
+                "defect_code": "source_module_refresh_source_missing",
+                "body_in_receipt": False,
+            }
+        )
+        return None
+    relation = str(row.get("source_to_target_relation") or "")
+    verified_light_edit = relation in VERIFIED_LIGHT_EDIT_SOURCE_TO_TARGET_RELATIONS
+    if exact_copy_targets is not None and not verified_light_edit:
+        exact_copy_targets[str(target_path.resolve(strict=False))] = (
+            source_path,
+            target_path,
+        )
+    stats = _body_stats(source_path)
+    target_stats = _body_stats(target_path) if target_path.is_file() else None
+    if verified_light_edit and target_stats is None:
+        defects.append(
+            {
+                "material_id": material_id,
+                "target_ref": target_ref,
+                "manifest_ref": _display(manifest_path, public_root=public_root),
+                "defect_code": "source_module_refresh_light_edit_target_missing",
+                "body_in_receipt": False,
+            }
+        )
+        return None
+    desired_target_stats = target_stats if verified_light_edit and target_stats else stats
+    anchor_text = desired_target_stats["text"] if verified_light_edit else stats["text"]
+    missing_anchors = [
+        anchor for anchor in _strings(row.get("required_anchors")) if anchor not in anchor_text
+    ]
+    if missing_anchors:
+        defects.append(
+            {
+                "material_id": material_id,
+                "source_ref": source_ref,
+                "manifest_ref": _display(manifest_path, public_root=public_root),
+                "defect_code": "source_module_refresh_required_anchor_missing",
+                "missing_anchors": missing_anchors,
+                "body_in_receipt": False,
+            }
+        )
+        return None
+
+    source_target_match = stats["body_digest"] == desired_target_stats["body_digest"]
+    current_target_digest = _sha256_digest(target_path) if target_path.is_file() else ""
+    row_updates = {
+        "body_copied": True,
+        "source_sha256": _digest_for_existing_format(row.get("source_sha256"), stats),
+        "target_sha256": _digest_for_existing_format(
+            row.get("target_sha256"),
+            desired_target_stats,
+        ),
+        "sha256_match": source_target_match,
+        "line_count": desired_target_stats["line_count"],
+        "byte_count": desired_target_stats["byte_count"],
+    }
+    if "source_target_sha256_match" in row:
+        row_updates["source_target_sha256_match"] = source_target_match
+    if "target_expected_digest_match" in row:
+        row_updates["target_expected_digest_match"] = True
+    if "source_line_count" in row:
+        row_updates["source_line_count"] = stats["line_count"]
+    if "target_line_count" in row:
+        row_updates["target_line_count"] = desired_target_stats["line_count"]
+    if "source_byte_count" in row:
+        row_updates["source_byte_count"] = stats["byte_count"]
+    if "target_byte_count" in row:
+        row_updates["target_byte_count"] = desired_target_stats["byte_count"]
+    if "sha256" in row:
+        row_updates["sha256"] = _digest_for_existing_format(
+            row.get("sha256"),
+            desired_target_stats,
+        )
+    if "anchor_count" in row:
+        row_updates["anchor_count"] = len(_strings(row.get("required_anchors")))
+
+    metadata_changed = any(row.get(key) != value for key, value in row_updates.items())
+    target_changed = (
+        (not verified_light_edit) and current_target_digest != stats["body_digest"]
+    )
+    if not metadata_changed and not target_changed:
+        return None
+
+    target_key = str(target_path.resolve(strict=False))
+    previous = target_copies.get(target_key)
+    if previous is not None and previous[0].resolve(strict=False) != source_path.resolve(
+        strict=False
+    ):
+        defects.append(
+            {
+                "material_id": material_id,
+                "target_ref": target_ref,
+                "manifest_ref": _display(manifest_path, public_root=public_root),
+                "defect_code": "source_module_refresh_target_conflict",
+                "body_in_receipt": False,
+            }
+        )
+        return None
+    if target_changed:
+        target_copies[target_key] = (source_path, target_path)
+
+    row.update(row_updates)
+    return {
+        "material_id": material_id,
+        "source_ref": source_ref,
+        "target_ref": _display(target_path, public_root=public_root),
+        "manifest_ref": _display(manifest_path, public_root=public_root),
+        "target_refresh_required": target_changed,
+        "metadata_refresh_required": metadata_changed,
+        "line_count": stats["line_count"],
+        "byte_count": stats["byte_count"],
+        "body_in_receipt": False,
+    }
+
+
+def _update_protocol_refreshable_row(
+    row: dict[str, Any],
+    *,
+    protocol_path: Path,
+    public_root: Path,
+    source_root: Path,
+    target_copies: dict[str, tuple[Path, Path]],
+    defects: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    verification = row.get("body_import_verification")
+    if not isinstance(verification, dict):
+        return None
+    verification_mode = str(verification.get("verification_mode") or "")
+    relation = str(verification.get("source_to_target_relation") or "")
+    exact_copy = (
+        verification_mode == "exact_source_digest_match"
+        and relation in EXACT_COPY_SOURCE_TO_TARGET_RELATIONS
+    )
+    verified_light_edit = (
+        verification_mode == "verified_light_edit_recipe"
+        and relation in VERIFIED_LIGHT_EDIT_SOURCE_TO_TARGET_RELATIONS
+    )
+    if not exact_copy and not verified_light_edit:
+        return None
+
+    material_id = str(row.get("material_id") or "")
+    source_ref = str(
+        row.get("source_ref")
+        or verification.get("source_ref")
+        or (_strings(row.get("source_refs"))[0] if _strings(row.get("source_refs")) else "")
+    )
+    target_ref = str(row.get("target_ref") or verification.get("target_ref") or "")
+    source_path = (
+        _resolve_source_path(
+            source_ref,
+            source_root=source_root,
+            public_root=public_root,
+        )
+        if source_ref
+        else None
+    )
+    target_path = (
+        _resolve_public_target_path(target_ref, public_root=public_root)
+        if target_ref
+        else None
+    )
+    if not material_id or source_path is None or target_path is None:
+        defects.append(
+            {
+                "material_id": material_id or "unknown_protocol_material",
+                "protocol_ref": _display(protocol_path, public_root=public_root),
+                "defect_code": "source_module_refresh_protocol_unresolvable_ref",
+                "body_in_receipt": False,
+            }
+        )
+        return None
+    if not source_path.is_file():
+        if target_path.is_file():
+            target_stats = _body_stats(target_path)
+            target_digest = target_stats["body_digest"]
+            target_line_count = target_stats["line_count"]
+            protocol_already_matches_target = (
+                row.get("body_digest") == target_digest
+                and row.get("body_line_count") == target_line_count
+                and verification.get("source_body_digest") == target_digest
+                and verification.get("target_body_digest") == target_digest
+                and verification.get("source_line_count") == target_line_count
+                and verification.get("target_line_count") == target_line_count
+            )
+            if protocol_already_matches_target:
+                return None
+        defects.append(
+            {
+                "material_id": material_id,
+                "source_ref": source_ref,
+                "protocol_ref": _display(protocol_path, public_root=public_root),
+                "defect_code": "source_module_refresh_protocol_source_missing",
+                "body_in_receipt": False,
+            }
+        )
+        return None
+
+    stats = _body_stats(source_path)
+    target_stats = _body_stats(target_path) if target_path.is_file() else None
+    if verified_light_edit and target_stats is None:
+        defects.append(
+            {
+                "material_id": material_id,
+                "target_ref": target_ref,
+                "protocol_ref": _display(protocol_path, public_root=public_root),
+                "defect_code": "source_module_refresh_protocol_light_edit_target_missing",
+                "body_in_receipt": False,
+            }
+        )
+        return None
+    desired_target_stats = target_stats if verified_light_edit and target_stats else stats
+    current_target_digest = _sha256_digest(target_path) if target_path.is_file() else ""
+    target_changed = (
+        (not verified_light_edit) and current_target_digest != stats["body_digest"]
+    )
+    row_updates = {
+        "body_digest": desired_target_stats["body_digest"],
+        "body_line_count": desired_target_stats["line_count"],
+    }
+    verification_updates = {
+        "verification_status": "verified",
+        "verification_mode": verification_mode,
+        "source_body_digest": stats["body_digest"],
+        "target_body_digest": desired_target_stats["body_digest"],
+        "source_line_count": stats["line_count"],
+        "target_line_count": desired_target_stats["line_count"],
+        "source_ref": source_ref,
+        "target_ref": target_ref,
+        "source_to_target_relation": relation,
+    }
+    metadata_changed = any(row.get(key) != value for key, value in row_updates.items())
+    metadata_changed = metadata_changed or any(
+        verification.get(key) != value for key, value in verification_updates.items()
+    )
+    if not metadata_changed and not target_changed:
+        return None
+
+    target_key = str(target_path.resolve(strict=False))
+    previous = target_copies.get(target_key)
+    if previous is not None and previous[0].resolve(strict=False) != source_path.resolve(
+        strict=False
+    ):
+        defects.append(
+            {
+                "material_id": material_id,
+                "target_ref": target_ref,
+                "protocol_ref": _display(protocol_path, public_root=public_root),
+                "defect_code": "source_module_refresh_protocol_target_conflict",
+                "body_in_receipt": False,
+            }
+        )
+        return None
+    if target_changed:
+        target_copies[target_key] = (source_path, target_path)
+
+    row.update(row_updates)
+    verification.update(verification_updates)
+    return {
+        "material_id": material_id,
+        "source_ref": source_ref,
+        "target_ref": _display(target_path, public_root=public_root),
+        "protocol_ref": _display(protocol_path, public_root=public_root),
+        "target_refresh_required": target_changed,
+        "metadata_refresh_required": metadata_changed,
+        "source_line_count": stats["line_count"],
+        "target_line_count": desired_target_stats["line_count"],
+        "body_in_receipt": False,
+    }
+
+
+def refresh_exact_copy_source_modules(
+    input_dir: str | Path,
+    *,
+    source_root: str | Path | None = None,
+    material_ids: list[str] | None = None,
+    write: bool = False,
+    allow_dirty_sources: bool = False,
+    allow_dirty_outputs: bool = False,
+    all_examples: bool = False,
+    scan_protocols: bool = True,
+    command: str | None = None,
+) -> dict[str, Any]:
+    input_path = Path(input_dir)
+    public_root = _public_root_for_path(input_path)
+    source_root_path = (
+        Path(source_root).resolve(strict=False)
+        if source_root is not None
+        else public_root.parent.resolve(strict=False)
+    )
+    material_filter = {str(item) for item in material_ids or [] if item}
+    manifest_paths = _source_module_manifest_paths(
+        input_path,
+        public_root=public_root,
+        all_examples=all_examples,
+    )
+    protocol_paths = (
+        _source_module_protocol_paths(input_path, public_root=public_root)
+        if scan_protocols
+        else []
+    )
+    target_copies: dict[str, tuple[Path, Path]] = {}
+    defects: list[dict[str, Any]] = []
+    manifest_rows: list[dict[str, Any]] = []
+    protocol_rows: list[dict[str, Any]] = []
+    json_updates: dict[str, tuple[Path, dict[str, Any]]] = {}
+    matched_material_ids: set[str] = set()
+    processed_manifest_keys: set[str] = set()
+    scanned_manifest_paths: list[Path] = []
+    exact_copy_targets: dict[str, tuple[Path, Path]] = {}
+
+    def process_manifest_paths(paths: list[Path]) -> None:
+        for manifest_path in paths:
+            key = str(manifest_path.resolve(strict=False))
+            if key in processed_manifest_keys:
+                continue
+            processed_manifest_keys.add(key)
+            payload = read_json_strict(manifest_path)
+            if not isinstance(payload, dict):
+                defects.append(
+                    {
+                        "manifest_ref": _display(manifest_path, public_root=public_root),
+                        "defect_code": "source_module_refresh_manifest_invalid",
+                        "body_in_receipt": False,
+                    }
+                )
+                continue
+            scanned_manifest_paths.append(manifest_path)
+            updated = False
+            for row in _rows(payload, "modules"):
+                material_id = _source_module_row_material_id(row)
+                if material_filter and material_id not in material_filter:
+                    continue
+                if not _source_module_row_is_refreshable(row):
+                    continue
+                if material_id:
+                    matched_material_ids.add(material_id)
+                update = _update_source_module_manifest_row(
+                    row,
+                    manifest_path=manifest_path,
+                    public_root=public_root,
+                    source_root=source_root_path,
+                    target_copies=target_copies,
+                    defects=defects,
+                    exact_copy_targets=exact_copy_targets,
+                )
+                if update is not None:
+                    updated = True
+                    manifest_rows.append(update)
+            if updated:
+                json_updates[str(manifest_path.resolve(strict=False))] = (
+                    manifest_path,
+                    payload,
+                )
+
+    process_manifest_paths(manifest_paths)
+
+    # When a specific manifest file is supplied, keep the protocol sweep scoped
+    # to its exact-copy rows. Directory/public-root refreshes intentionally keep
+    # the legacy broad behavior because old manifests do not always use the same
+    # material id as the protocol cell that points at them.
+    single_manifest_input = (
+        input_path.is_file() and input_path.name.endswith("source_module_manifest.json")
+    )
+    protocol_material_ids = material_filter or (
+        set(matched_material_ids) if single_manifest_input else set()
+    )
+    target_adjacent_manifest_paths: list[Path] = []
+    for protocol_path in protocol_paths:
+        payload = read_json_strict(protocol_path)
+        if not isinstance(payload, dict):
+            defects.append(
+                {
+                    "protocol_ref": _display(protocol_path, public_root=public_root),
+                    "defect_code": "source_module_refresh_protocol_invalid",
+                    "body_in_receipt": False,
+                }
+            )
+            continue
+        updated = False
+        for row in _rows(payload, "copied_material"):
+            material_id = str(row.get("material_id") or "")
+            if protocol_material_ids and material_id not in protocol_material_ids:
+                continue
+            verification = row.get("body_import_verification")
+            verification_mode = (
+                str(verification.get("verification_mode") or "")
+                if isinstance(verification, dict)
+                else ""
+            )
+            verification_relation = (
+                str(verification.get("source_to_target_relation") or "")
+                if isinstance(verification, dict)
+                else ""
+            )
+            protocol_row_refreshable = (
+                (
+                    verification_mode == "exact_source_digest_match"
+                    and verification_relation in EXACT_COPY_SOURCE_TO_TARGET_RELATIONS
+                )
+                or (
+                    verification_mode == "verified_light_edit_recipe"
+                    and verification_relation
+                    in VERIFIED_LIGHT_EDIT_SOURCE_TO_TARGET_RELATIONS
+                )
+            )
+            if material_id and protocol_row_refreshable:
+                matched_material_ids.add(material_id)
+                target_ref = str(row.get("target_ref") or verification.get("target_ref") or "")
+                target_path = (
+                    _resolve_public_target_path(target_ref, public_root=public_root)
+                    if target_ref
+                    else None
+                )
+                if target_path is not None:
+                    target_adjacent_manifest_paths.extend(
+                        _target_adjacent_source_module_manifest_paths(
+                            target_path,
+                            public_root=public_root,
+                        )
+                    )
+            update = _update_protocol_refreshable_row(
+                row,
+                protocol_path=protocol_path,
+                public_root=public_root,
+                source_root=source_root_path,
+                target_copies=target_copies,
+                defects=defects,
+            )
+            if update is not None:
+                matched_material_ids.add(material_id)
+                updated = True
+                protocol_rows.append(update)
+        if updated:
+            json_updates[str(protocol_path.resolve(strict=False))] = (
+                protocol_path,
+                payload,
+            )
+
+    process_manifest_paths(target_adjacent_manifest_paths)
+
+    for target_key, copy_pair in target_copies.items():
+        exact_copy_targets.setdefault(target_key, copy_pair)
+    bundle_manifest_rows = _co_update_bundle_manifest_expected_rows(
+        exact_copy_targets=exact_copy_targets,
+        json_updates=json_updates,
+        public_root=public_root,
+        defects=defects,
+    )
+
+    if material_filter and not matched_material_ids:
+        defects.append(
+            {
+                "material_ids": sorted(material_filter),
+                "defect_code": "source_module_refresh_material_ids_not_found",
+                "body_in_receipt": False,
+            }
+        )
+
+    pending_source_refs = [
+        str(row.get("source_ref") or "") for row in (*manifest_rows, *protocol_rows)
+    ]
+    source_module_boundary = evaluate_source_module_boundary(
+        direct_refs=pending_source_refs,
+    )
+    blocked_boundary_refs = list(source_module_boundary.get("blocked_refs") or [])
+    if write and blocked_boundary_refs:
+        defects.append(
+            {
+                "defect_code": "source_module_refresh_private_boundary_blocked",
+                "boundary_checker_id": source_module_boundary.get("checker_id"),
+                "blocked_ref_count": len(blocked_boundary_refs),
+                "blocked_refs": blocked_boundary_refs,
+                "next_action": source_module_boundary.get("next_action"),
+                "body_in_receipt": False,
+            }
+        )
+    source_coupling = _pending_source_coupling(
+        pending_source_refs,
+        source_root=source_root_path,
+        public_root=public_root,
+    )
+    dirty_source_rows = list(source_coupling.get("dirty_source_refs") or [])
+    if write and dirty_source_rows and not allow_dirty_sources:
+        defects.append(
+            {
+                "defect_code": "source_module_refresh_dirty_source_requires_review",
+                "dirty_source_ref_count": len(dirty_source_rows),
+                "dirty_source_refs": dirty_source_rows,
+                "body_in_receipt": False,
+            }
+        )
+
+    pending_output_paths: list[tuple[str, Path]] = [
+        ("target_copy", target_path) for _, target_path in target_copies.values()
+    ]
+    for path, _payload in json_updates.values():
+        if path.name.endswith("source_module_manifest.json"):
+            role = "manifest_json_update"
+        elif path.name == "projection_protocol.json":
+            role = "protocol_json_update"
+        elif path.name == "bundle_manifest.json":
+            role = "bundle_manifest_json_update"
+        else:
+            role = "json_update"
+        pending_output_paths.append((role, path))
+    output_coupling = _pending_output_coupling(
+        pending_output_paths,
+        git_probe_root=public_root,
+        public_root=public_root,
+    )
+    dirty_output_rows = list(output_coupling.get("dirty_output_paths") or [])
+    if write and dirty_output_rows and not allow_dirty_outputs:
+        defects.append(
+            {
+                "defect_code": "source_module_refresh_dirty_output_requires_review",
+                "dirty_output_path_count": len(dirty_output_rows),
+                "dirty_output_paths": dirty_output_rows,
+                "body_in_receipt": False,
+            }
+        )
+
+    pending_manifest_keys = {
+        str(path.resolve(strict=False))
+        for path, _payload in json_updates.values()
+        if path.name.endswith("source_module_manifest.json")
+    }
+    if not write:
+        for scanned_path in scanned_manifest_paths:
+            scanned_key = str(scanned_path.resolve(strict=False))
+            bundle_manifest_rows.extend(
+                _reconcile_bundle_manifest_self_row(
+                    manifest_path=scanned_path,
+                    bundle_updates=json_updates,
+                    public_root=public_root,
+                    # A manifest that will be rewritten this wave gets a deferred
+                    # marker (its post-write bytes are unknown); an untouched
+                    # manifest's disk bytes are final, so reconcile exactly.
+                    apply=scanned_key not in pending_manifest_keys,
+                )
+            )
+
+    if write and not defects:
+        for source_path, target_path in target_copies.values():
+            target_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source_path, target_path)
+        # Two-phase write: bodies + manifests + protocols first, then reconcile
+        # bundle_manifest self-pins from the manifests' on-disk bytes, then
+        # write the bundle manifests once with body rows and self rows folded in.
+        bundle_updates: dict[str, tuple[Path, dict[str, Any]]] = {
+            key: (path, payload)
+            for key, (path, payload) in json_updates.items()
+            if path.name == "bundle_manifest.json"
+        }
+        for key, (path, payload) in json_updates.items():
+            if key in bundle_updates:
+                continue
+            write_json_atomic(path, payload)
+        for scanned_path in scanned_manifest_paths:
+            bundle_manifest_rows.extend(
+                _reconcile_bundle_manifest_self_row(
+                    manifest_path=scanned_path,
+                    bundle_updates=bundle_updates,
+                    public_root=public_root,
+                    apply=True,
+                )
+            )
+        for path, payload in bundle_updates.values():
+            write_json_atomic(path, payload)
+
+    pending_update_count = (
+        len(manifest_rows)
+        + len(protocol_rows)
+        + len(target_copies)
+        + len(bundle_manifest_rows)
+    )
+    status = (
+        "blocked"
+        if defects
+        else PASS
+        if write or pending_update_count == 0
+        else "drift_detected"
+    )
+    return {
+        "schema_version": "macro_projection_exact_copy_source_module_refresh_v1",
+        "created_at": utc_now(),
+        "status": status,
+        "organ_id": ORGAN_ID,
+        "validator_id": VALIDATOR_ID,
+        "command": command
+        or (
+            "python -m microcosm_core.organs.macro_projection_import_protocol "
+            f"refresh-exact-copy-source-modules --input {input_dir}"
+        ),
+        "input_ref": _display(input_path, public_root=public_root),
+        "source_root_ref": str(source_root_path),
+        "write_requested": write,
+        "write_applied": bool(write and not defects),
+        "allow_dirty_sources": allow_dirty_sources,
+        "allow_dirty_outputs": allow_dirty_outputs,
+        "write_guard": (
+            "source_module_boundary_blocked_write"
+            if write and blocked_boundary_refs
+            else
+            "dirty_pending_sources_and_outputs_blocked_write"
+            if (
+                write
+                and dirty_source_rows
+                and not allow_dirty_sources
+                and dirty_output_rows
+                and not allow_dirty_outputs
+            )
+            else "dirty_pending_outputs_blocked_write"
+            if write and dirty_output_rows and not allow_dirty_outputs
+            else "dirty_pending_sources_blocked_write"
+            if write and dirty_source_rows and not allow_dirty_sources
+            else "dirty_pending_sources_and_outputs_override"
+            if write and dirty_source_rows and allow_dirty_sources and dirty_output_rows and allow_dirty_outputs
+            else "dirty_pending_sources_override"
+            if write and dirty_source_rows and allow_dirty_sources
+            else "dirty_pending_outputs_override"
+            if write and dirty_output_rows and allow_dirty_outputs
+            else "source_coupling_checked"
+        ),
+        "all_examples": all_examples,
+        "protocol_scan_enabled": scan_protocols,
+        "material_filter": sorted(material_filter),
+        "matched_material_ids": sorted(matched_material_ids),
+        "manifest_count": len(manifest_paths),
+        "protocol_count": len(protocol_paths),
+        "target_copy_count": len(target_copies),
+        "manifest_row_update_count": len(manifest_rows),
+        "protocol_row_update_count": len(protocol_rows),
+        "bundle_manifest_row_update_count": len(bundle_manifest_rows),
+        "pending_update_count": pending_update_count,
+        "manifests_scanned": [
+            _display(path, public_root=public_root) for path in manifest_paths
+        ],
+        "protocols_scanned": [
+            _display(path, public_root=public_root) for path in protocol_paths
+        ],
+        "manifest_rows": manifest_rows,
+        "protocol_rows": protocol_rows,
+        "bundle_manifest_rows": bundle_manifest_rows,
+        "defect_count": len(defects),
+        "defects": defects,
+        "source_module_boundary": source_module_boundary,
+        "source_coupling": source_coupling,
+        "output_coupling": output_coupling,
+        "body_text_in_receipt": False,
+        "authority_ceiling": AUTHORITY_CEILING,
+        "anti_claim": (
+            "This refresh helper updates only already-declared exact-copy or "
+            "verified light-edit non-secret macro source-module bodies and "
+            "digest metadata. Light-edit rows keep their existing public target "
+            "body and refresh metadata only. It does not validate release "
+            "readiness, call providers, read live sessions, or authorize new "
+            "body-import classes."
+        ),
+    }
+
+
+def _body_digest_is_placeholder(value: str) -> bool:
+    lowered = value.lower()
+    if not value.startswith(BODY_DIGEST_PREFIX):
+        return True
+    digest = value.removeprefix(BODY_DIGEST_PREFIX)
+    if len(digest) != BODY_DIGEST_HEX_LENGTH:
+        return True
+    if any(token in lowered for token in PLACEHOLDER_DIGEST_TOKENS):
+        return True
+    return any(char not in "0123456789abcdef" for char in digest.lower())
+
+
+def _source_ref_file_candidates(source_ref: str, *, public_root: Path | None) -> list[Path]:
+    ref_path = Path(source_ref.split("::", 1)[0])
+    if ref_path.is_absolute() or ".." in ref_path.parts:
+        return []
+    candidates: list[Path] = []
+    if public_root is not None:
+        public_root_prefixes = {
+            "atlas",
+            "core",
+            "examples",
+            "fixtures",
+            "paper_modules",
+            "receipts",
+            "src",
+            "standards",
+        }
+        if ref_path.parts[:1] == (STANDALONE_RUNTIME_ROOT_REF,):
+            candidates.extend(
+                [
+                    public_root.parent / ref_path,
+                    public_root / Path(*ref_path.parts[1:]),
+                ]
+            )
+        elif ref_path.parts[:1] and ref_path.parts[0] in public_root_prefixes:
+            candidates.extend(
+                [
+                    public_root / ref_path,
+                    public_root.parent / ref_path,
+                ]
+            )
+        else:
+            candidates.extend(
+                [
+                    public_root.parent / ref_path,
+                    public_root / ref_path,
+                ]
+            )
+    candidates.append(Path.cwd() / ref_path)
+    unique: list[Path] = []
+    seen: set[str] = set()
+    for candidate in candidates:
+        key = str(candidate.resolve(strict=False))
+        if key not in seen:
+            seen.add(key)
+            unique.append(candidate)
+    return unique
+
+
+def _first_existing_source_ref(source_refs: list[str], *, public_root: Path | None) -> tuple[str, Path] | None:
+    for source_ref in source_refs:
+        for candidate in _source_ref_file_candidates(source_ref, public_root=public_root):
+            if candidate.is_file():
+                return source_ref, candidate
+    return None
+
+
+def _body_import_verification_findings(
+    row: dict[str, Any],
+    *,
+    material_id: str,
+    declared_digest: str,
+    public_root: Path | None,
+) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
+    verification = row.get("body_import_verification")
+    if not isinstance(verification, dict):
+        return [
+            _finding(
+                "MACRO_PROJECTION_PUBLIC_SAFE_BODY_VERIFICATION_MISSING",
+                "body_copied verified macro material must carry a verified source-to-target import record.",
+                case_id="public_safe_body_import_floor",
+                subject_id=material_id,
+                subject_kind="copied_material",
+            )
+        ]
+
+    mode = str(verification.get("verification_mode") or "")
+    status = str(verification.get("verification_status") or "")
+    if status != "verified":
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_PUBLIC_SAFE_BODY_VERIFICATION_UNVERIFIED",
+                "body_copied verified macro material must be marked verified after source-to-target checking.",
+                case_id="public_safe_body_import_floor",
+                subject_id=material_id,
+                subject_kind="copied_material",
+            )
+        )
+    if mode not in BODY_IMPORT_VERIFICATION_MODES:
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_PUBLIC_SAFE_BODY_VERIFICATION_MODE_INVALID",
+                "body_copied verified macro material must use a known verification mode.",
+                case_id="public_safe_body_import_floor",
+                subject_id=material_id,
+                subject_kind="copied_material",
+            )
+        )
+
+    target_digest = str(verification.get("target_body_digest") or "")
+    if _body_digest_is_placeholder(target_digest) or target_digest != declared_digest:
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_PUBLIC_SAFE_BODY_VERIFICATION_DIGEST_MISMATCH",
+                "body import verification must bind the target body digest to the declared target digest.",
+                case_id="public_safe_body_import_floor",
+                subject_id=material_id,
+                subject_kind="copied_material",
+            )
+        )
+
+    if mode == "exact_source_digest_match":
+        source_digest = str(verification.get("source_body_digest") or "")
+        relation = str(verification.get("source_to_target_relation") or "")
+        verified_source_ref = verification.get("source_ref")
+        declared_source_refs = _source_refs_for_material(row)
+        declared_source_ref = (
+            str(row.get("source_ref"))
+            if isinstance(row.get("source_ref"), str) and row.get("source_ref")
+            else declared_source_refs[0]
+            if declared_source_refs
+            else None
+        )
+        source_refs = (
+            [verified_source_ref]
+            if isinstance(verified_source_ref, str) and verified_source_ref
+            else declared_source_refs
+        )
+        if _body_digest_is_placeholder(source_digest):
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_PUBLIC_SAFE_BODY_SOURCE_DIGEST_MISSING",
+                    "exact body imports must include the source body sha256 digest.",
+                    case_id="public_safe_body_import_floor",
+                    subject_id=material_id,
+                    subject_kind="copied_material",
+                )
+            )
+        elif relation not in EXACT_COPY_SOURCE_TO_TARGET_RELATIONS:
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_PUBLIC_SAFE_BODY_EXACT_RELATION_INVALID",
+                    "exact digest-match imports must use an exact-copy source-to-target relation.",
+                    case_id="public_safe_body_import_floor",
+                    subject_id=material_id,
+                    subject_kind="copied_material",
+                )
+            )
+        elif (
+            isinstance(verified_source_ref, str)
+            and verified_source_ref
+            and declared_source_ref
+            and declared_source_ref != verified_source_ref
+        ):
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_PUBLIC_SAFE_BODY_SOURCE_DIGEST_MISMATCH",
+                    "exact body imports must use the same declared source ref and verified source body ref.",
+                    case_id="public_safe_body_import_floor",
+                    subject_id=declared_source_ref,
+                    subject_kind="copied_material",
+                )
+            )
+        elif not source_refs:
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_PUBLIC_SAFE_BODY_SOURCE_REF_MISSING",
+                    "exact body imports must name the macro source ref whose bytes were copied.",
+                    case_id="public_safe_body_import_floor",
+                    subject_id=material_id,
+                    subject_kind="copied_material",
+                )
+            )
+        elif source_digest != target_digest:
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_PUBLIC_SAFE_BODY_SOURCE_TARGET_MISMATCH",
+                    "exact body imports must prove source and target body digests match.",
+                    case_id="public_safe_body_import_floor",
+                    subject_id=material_id,
+                    subject_kind="copied_material",
+                )
+            )
+        else:
+            existing_source = _first_existing_source_ref(source_refs, public_root=public_root)
+            if existing_source is not None:
+                actual_source_digest = _sha256_digest(existing_source[1])
+                if actual_source_digest != source_digest:
+                    target_ref = verification.get("target_ref") or row.get("target_ref")
+                    row["_live_source_drift"] = {
+                        "material_id": material_id,
+                        "source_ref": existing_source[0],
+                        "target_ref": target_ref,
+                        "recorded_source_body_digest": source_digest,
+                        "current_source_body_digest": actual_source_digest,
+                        "target_body_digest": target_digest,
+                        "source_target_path_relation": (
+                            "target_ref_carries_source_ref"
+                            if _target_ref_carries_source_ref(
+                                target_ref,
+                                existing_source[0],
+                            )
+                            else "target_is_import_snapshot"
+                        ),
+                        "status": "live_source_drift_not_import_proof_failure",
+                        "body_in_receipt": False,
+                    }
+    elif mode == "verified_light_edit_recipe":
+        relation = str(verification.get("source_to_target_relation") or "")
+        if relation not in VERIFIED_LIGHT_EDIT_SOURCE_TO_TARGET_RELATIONS:
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_PUBLIC_SAFE_BODY_LIGHT_EDIT_RELATION_INVALID",
+                    "light-edit imports must use a source-faithful public edit/refactor relation, not exact_copy.",
+                    case_id="public_safe_body_import_floor",
+                    subject_id=material_id,
+                    subject_kind="copied_material",
+                )
+            )
+        if not isinstance(verification.get("rewrite_recipe_ref"), str):
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_PUBLIC_SAFE_BODY_REWRITE_RECIPE_MISSING",
+                    "light-edit imports must cite a public rewrite recipe instead of relying on provenance prose.",
+                    case_id="public_safe_body_import_floor",
+                    subject_id=material_id,
+                    subject_kind="copied_material",
+                )
+            )
+        if not _strings(verification.get("source_symbol_refs")):
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_PUBLIC_SAFE_BODY_SOURCE_SYMBOLS_MISSING",
+                    "light-edit imports must name source symbols carried into the public target.",
+                    case_id="public_safe_body_import_floor",
+                    subject_id=material_id,
+                    subject_kind="copied_material",
+                )
+            )
+        if not _strings(verification.get("target_symbol_refs")):
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_PUBLIC_SAFE_BODY_TARGET_SYMBOLS_MISSING",
+                    "light-edit imports must name target symbols that carry the macro mechanism.",
+                    case_id="public_safe_body_import_floor",
+                    subject_id=material_id,
+                    subject_kind="copied_material",
+                )
+            )
+
+    if not _strings(verification.get("runtime_consumed_by")):
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_PUBLIC_SAFE_BODY_RUNTIME_CONSUMER_MISSING",
+                "body_copied verified macro material must name the command or test that consumes the imported target.",
+                case_id="public_safe_body_import_floor",
+                subject_id=material_id,
+                subject_kind="copied_material",
+            )
+        )
+    return findings
+
+
+def _public_safe_body_target_findings(
+    row: dict[str, Any],
+    *,
+    public_root: Path | None,
+) -> list[dict[str, Any]]:
+    if public_root is None or row.get("body_copied") is not True:
+        return []
+
+    material_id = str(row.get("material_id") or "public_safe_body_material")
+    target_ref = row.get("target_ref")
+    findings: list[dict[str, Any]] = []
+    if not isinstance(target_ref, str) or not target_ref.strip():
+        return [
+            _finding(
+                "MACRO_PROJECTION_PUBLIC_SAFE_BODY_TARGET_REF_MISSING",
+                "body_copied verified macro material must name the Microcosm target_ref that contains the copied body.",
+                case_id="public_safe_body_import_floor",
+                subject_id=material_id,
+                subject_kind="copied_material",
+            )
+        ]
+
+    target_path = Path(_normalize_runtime_root_ref(target_ref.split("::", 1)[0]))
+    if target_path.is_absolute() or ".." in target_path.parts:
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_PUBLIC_SAFE_BODY_TARGET_REF_UNSAFE",
+                "body_copied verified macro material must target a relative path inside microcosm-substrate.",
+                case_id="public_safe_body_import_floor",
+                subject_id=target_ref,
+                subject_kind="copied_material",
+            )
+        )
+        return findings
+
+    resolved_target = public_root / target_path
+    declared_digest = str(row.get("body_digest") or "")
+    if not resolved_target.is_file():
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_PUBLIC_SAFE_BODY_TARGET_MISSING",
+                "body_copied verified macro material must point at a real file inside microcosm-substrate.",
+                case_id="public_safe_body_import_floor",
+                subject_id=target_ref,
+                subject_kind="copied_material",
+            )
+        )
+    if _body_digest_is_placeholder(declared_digest):
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_PUBLIC_SAFE_BODY_DIGEST_PLACEHOLDER",
+                "body_copied verified macro material must carry a real sha256 digest, not a placeholder.",
+                case_id="public_safe_body_import_floor",
+                subject_id=material_id,
+                subject_kind="copied_material",
+            )
+        )
+    elif resolved_target.is_file() and declared_digest != _sha256_digest(resolved_target):
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_PUBLIC_SAFE_BODY_DIGEST_MISMATCH",
+                "body_copied verified macro material digest must match the target_ref file.",
+                case_id="public_safe_body_import_floor",
+                subject_id=target_ref,
+                subject_kind="copied_material",
+            )
+        )
+    findings.extend(
+        _body_import_verification_findings(
+            row,
+            material_id=material_id,
+            declared_digest=declared_digest,
+            public_root=public_root,
+        )
+    )
+    return findings
+
+
+def _forbidden_body_request(payload: object, *, import_policy: dict[str, Any] | None = None) -> list[str]:
+    policy = import_policy or {}
+    subjects: list[str] = []
+    for key in ("copied_material", "material_requests", "source_refs"):
+        for row in _rows(payload, key):
+            if _public_safe_import_status(row, import_policy=policy) is not None:
+                continue
+            material_id = str(row.get("material_id") or row.get("source_ref") or key)
+            material_class = str(row.get("material_class") or "")
+            if (
+                row.get("body_copied") is True
+                or row.get("body_included") is True
+                or row.get("forbidden_body_requested") is True
+                or material_class in FORBIDDEN_MATERIAL_CLASSES
+            ):
+                subjects.append(material_id)
+    if isinstance(payload, dict):
+        material_class = str(payload.get("material_class") or "")
+        if _public_safe_import_status(payload, import_policy=policy) is not None:
+            return sorted(set(subjects))
+        if (
+            payload.get("body_copied") is True
+            or payload.get("body_included") is True
+            or payload.get("forbidden_body_requested") is True
+            or material_class in FORBIDDEN_MATERIAL_CLASSES
+        ):
+            subjects.append(str(payload.get("material_id") or payload.get("case_id") or "material"))
+    return sorted(set(subjects))
+
+
+def validate_projection_protocol(
+    payload: object,
+    forbidden_body_negative: object | None = None,
+    omission_negative: object | None = None,
+    authority_negative: object | None = None,
+    release_negative: object | None = None,
+    import_policy: dict[str, Any] | None = None,
+    public_root: Path | None = None,
+) -> dict[str, Any]:
+    protocol = payload if isinstance(payload, dict) else {}
+    policy = import_policy or {}
+    source_refs = _strings(protocol.get("source_refs"))
+    public_runtime_refs = _strings(protocol.get("public_runtime_refs"))
+    validation_refs = _strings(protocol.get("validation_refs"))
+    copied_material = _rows(protocol, "copied_material")
+    omitted_material = _rows(protocol, "omitted_material")
+    cleaned_material = _rows(protocol, "cleaned_material")
+    steps = _rows(protocol, "steps")
+
+    findings: list[dict[str, Any]] = []
+    live_source_drift_rows: list[dict[str, Any]] = []
+    observed: dict[str, set[str]] = defaultdict(set)
+    if len(source_refs) < 2 or len(public_runtime_refs) < 2 or len(validation_refs) < 2:
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_PROTOCOL_DENSITY_MISSING",
+                "Projection protocol must cite source refs, public runtime refs, and validation refs.",
+                case_id="density_floor",
+                subject_id=str(protocol.get("protocol_id") or "projection_protocol"),
+                subject_kind="projection_protocol",
+            )
+        )
+    for row in copied_material:
+        material_id = str(row.get("material_id") or "copied_material")
+        material_class = str(row.get("material_class") or "")
+        public_safe_status = _public_safe_import_status(row, import_policy=policy)
+        if public_safe_status is not None:
+            row.pop("_live_source_drift", None)
+            for finding in public_safe_status["findings"]:
+                findings.append(
+                    _finding(
+                        str(finding.get("error_code") or "PUBLIC_SAFE_IMPORT_BLOCKED"),
+                        str(finding.get("message") or "Verified macro import classification blocked."),
+                        case_id="public_safe_body_import_floor",
+                        subject_id=material_id,
+                        subject_kind="copied_material",
+                    )
+                )
+            findings.extend(_public_safe_body_target_findings(row, public_root=public_root))
+            drift = row.pop("_live_source_drift", None)
+            if isinstance(drift, dict):
+                live_source_drift_rows.append(drift)
+            continue
+        if material_class in TRUE_FORBIDDEN_MATERIAL_CLASSES or row.get("body_copied") is True:
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_FORBIDDEN_BODY_IMPORT",
+                    "Copied material may carry metadata, fixture shape, or verified macro bodies only; credential-bound and raw operator/provider bodies remain forbidden.",
+                    case_id="protocol_floor",
+                    subject_id=material_id,
+                    subject_kind="copied_material",
+                )
+            )
+    for row in omitted_material:
+        if not row.get("omission_receipt_ref"):
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_OMISSION_RECEIPT_MISSING",
+                    "Omitted macro material must carry an omission receipt ref.",
+                    case_id="protocol_floor",
+                    subject_id=str(row.get("material_id") or "omitted_material"),
+                    subject_kind="omitted_material",
+                )
+            )
+    for negative in (forbidden_body_negative,):
+        for subject in _forbidden_body_request(negative, import_policy=policy):
+            _record(
+                findings,
+                observed,
+                "MACRO_PROJECTION_FORBIDDEN_BODY_IMPORT",
+                "Projection import rejects credential/account-bound body import requests.",
+                case_id="forbidden_body_import_overclaim",
+                subject_id=subject,
+                subject_kind="negative_case",
+            )
+    if isinstance(omission_negative, dict):
+        rows = _rows(omission_negative, "omitted_material")
+        if not rows:
+            rows = [omission_negative]
+        for row in rows:
+            if not row.get("omission_receipt_ref"):
+                _record(
+                    findings,
+                    observed,
+                    "MACRO_PROJECTION_OMISSION_RECEIPT_MISSING",
+                    "Projection import rejects omitted material without omission receipts.",
+                    case_id="missing_omission_receipt",
+                    subject_id=str(row.get("material_id") or "omitted_material"),
+                    subject_kind="negative_case",
+                )
+    if _authority_upgrade(authority_negative):
+        _record(
+            findings,
+            observed,
+            "MACRO_PROJECTION_AUTHORITY_UPGRADE",
+            "Projection import cannot upgrade public metadata into live macro source authority.",
+            case_id="authority_upgrade_overclaim",
+            subject_id=str(
+                authority_negative.get("case_id") if isinstance(authority_negative, dict) else "authority"
+            ),
+            subject_kind="negative_case",
+        )
+    if _release_or_equivalence_overclaim(release_negative):
+        _record(
+            findings,
+            observed,
+            "MACRO_PROJECTION_RELEASE_OR_EQUIVALENCE_OVERCLAIM",
+            "Projection import rejects release, publication, recipient, and private-equivalence claims.",
+            case_id="release_or_private_equivalence_overclaim",
+            subject_id=str(
+                release_negative.get("case_id") if isinstance(release_negative, dict) else "release"
+            ),
+            subject_kind="negative_case",
+        )
+
+    blocking_findings = [
+        row
+        for row in findings
+        if row.get("negative_case_id") in {"density_floor", "protocol_floor", "public_safe_body_import_floor"}
+    ]
+    public_safe_body_count = sum(
+        1
+        for row in copied_material
+        if _public_safe_import_status(row, import_policy=policy) is not None
+        and not _public_safe_import_status(row, import_policy=policy)["findings"]
+    )
+    public_safe_body_target_refs = [
+        str(row.get("target_ref"))
+        for row in copied_material
+        if _public_safe_import_status(row, import_policy=policy) is not None
+        and row.get("body_copied") is True
+        and isinstance(row.get("target_ref"), str)
+    ]
+    public_safe_body_digest_count = sum(
+        1
+        for row in copied_material
+        if _public_safe_import_status(row, import_policy=policy) is not None
+        and row.get("body_copied") is True
+        and not _body_digest_is_placeholder(str(row.get("body_digest") or ""))
+    )
+    public_safe_body_target_findings = [
+        row
+        for row in blocking_findings
+        if str(row.get("error_code") or "").startswith("MACRO_PROJECTION_PUBLIC_SAFE_BODY_")
+    ]
+    return {
+        "status": PASS
+        if len(source_refs) >= 2
+        and len(public_runtime_refs) >= 2
+        and len(validation_refs) >= 2
+        and copied_material
+        and omitted_material
+        and cleaned_material
+        and steps
+        and not blocking_findings
+        else "blocked",
+        "protocol_id": protocol.get("protocol_id"),
+        "source_refs": source_refs,
+        "public_runtime_refs": public_runtime_refs,
+        "validation_refs": validation_refs,
+        "copied_material_count": len(copied_material),
+        "public_safe_body_material_count": public_safe_body_count,
+        "public_safe_body_target_status": PASS
+        if not public_safe_body_target_findings
+        and public_safe_body_count == len(public_safe_body_target_refs) == public_safe_body_digest_count
+        else "blocked",
+        "public_safe_body_target_refs": sorted(public_safe_body_target_refs),
+        "public_safe_body_digest_count": public_safe_body_digest_count,
+        "live_source_drift_count": len(live_source_drift_rows),
+        "live_source_drift_rows": live_source_drift_rows,
+        "blocking_finding_count": len(blocking_findings),
+        "cleaned_material_count": len(cleaned_material),
+        "omitted_material_count": len(omitted_material),
+        "step_count": len(steps),
+        "findings": findings,
+        "observed_negative_cases": {key: sorted(value) for key, value in observed.items()},
+    }
+
+
+def validate_cleaning_policy(payload: object) -> dict[str, Any]:
+    policy = payload if isinstance(payload, dict) else {}
+    forbidden = set(_strings(policy.get("forbidden_material_classes")))
+    actions = _strings(policy.get("required_cleaning_actions"))
+    required_forbidden = {
+        "raw_seed_body",
+        "operator_thread_body",
+        "provider_payload_body",
+        "non_public_evidence_body",
+        "credential",
+    }
+    missing_forbidden = sorted(required_forbidden - forbidden)
+    findings: list[dict[str, Any]] = []
+    if missing_forbidden:
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_CLEANING_POLICY_INCOMPLETE",
+                "Cleaning policy must forbid private body and credential classes.",
+                case_id="cleaning_policy_floor",
+                subject_id="forbidden_material_classes",
+                subject_kind="cleaning_policy",
+            )
+        )
+    if policy.get("requires_omission_receipt") is not True:
+        findings.append(
+            _finding(
+                "MACRO_PROJECTION_CLEANING_POLICY_INCOMPLETE",
+                "Cleaning policy must require omission receipts.",
+                case_id="cleaning_policy_floor",
+                subject_id="requires_omission_receipt",
+                subject_kind="cleaning_policy",
+            )
+        )
+    return {
+        "status": PASS
+        if not findings
+        and policy.get("default_copy_mode") == "verified_macro_body_or_honest_regression_fixture"
+        and len(actions) >= 4
+        else "blocked",
+        "policy_id": policy.get("policy_id"),
+        "default_copy_mode": policy.get("default_copy_mode"),
+        "forbidden_material_classes": sorted(forbidden),
+        "required_cleaning_actions": actions,
+        "requires_omission_receipt": policy.get("requires_omission_receipt") is True,
+        "findings": findings,
+        "observed_negative_cases": {},
+    }
+
+
+def validate_import_plan(
+    payload: object,
+    missing_validation_negative: object | None = None,
+    public_safe_material_ids: set[str] | None = None,
+) -> dict[str, Any]:
+    plan = payload if isinstance(payload, dict) else {}
+    cells = _rows(plan, "proposed_cells")
+    known_public_safe_material_ids = public_safe_material_ids or set()
+    findings: list[dict[str, Any]] = []
+    observed: dict[str, set[str]] = defaultdict(set)
+    cell_ids: list[str] = []
+    target_refs: list[str] = []
+    validation_refs: list[str] = []
+    for row in cells:
+        cell_id = str(row.get("cell_id") or "projection_cell")
+        cell_ids.append(cell_id)
+        target_refs.extend(_strings(row.get("target_refs")))
+        validation_refs.extend(_strings(row.get("validation_refs")))
+        missing_body_material_ids = sorted(
+            material_id
+            for material_id in _strings(row.get("public_safe_body_material_ids"))
+            if material_id not in known_public_safe_material_ids
+        )
+        if not _strings(row.get("source_refs")) or not _strings(row.get("target_refs")):
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_CELL_ROUTE_MISSING",
+                    "Projection cell must name source and target refs.",
+                    case_id="import_plan_floor",
+                    subject_id=cell_id,
+                    subject_kind="projection_cell",
+                )
+            )
+        for ref_role, refs in (
+            ("source_ref", _strings(row.get("source_refs"))),
+            ("target_ref", _strings(row.get("target_refs"))),
+        ):
+            for ref in refs:
+                token = _public_bound_private_root_token(ref)
+                if not token:
+                    continue
+                findings.append(
+                    _finding(
+                        "MACRO_PROJECTION_PUBLIC_BOUND_PRIVATE_ROOT_REF",
+                        (
+                            "Public-bound projection cells must use public-safe "
+                            "replacement refs instead of private-root-shaped macro refs."
+                        ),
+                        case_id="import_plan_floor",
+                        subject_id=f"{cell_id}:{ref_role}:{token}",
+                        subject_kind="projection_cell_ref",
+                    )
+                )
+        if missing_body_material_ids:
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_PUBLIC_SAFE_BODY_MATERIAL_MISSING",
+            "Projection cell references verified macro body material not present in the projection protocol.",
+                    case_id="import_plan_floor",
+                    subject_id=cell_id,
+                    subject_kind="projection_cell",
+                )
+            )
+        if not _strings(row.get("validation_refs")):
+            findings.append(
+                _finding(
+                    "MACRO_PROJECTION_VALIDATION_REF_MISSING",
+                    "Projection cell must name validation refs.",
+                    case_id="import_plan_floor",
+                    subject_id=cell_id,
+                    subject_kind="projection_cell",
+                )
+            )
+    if isinstance(missing_validation_negative, dict):
+        rows = _rows(missing_validation_negative, "proposed_cells")
+        if not rows:
+            rows = [missing_validation_negative]
+        for row in rows:
+            if not _strings(row.get("validation_refs")):
+                _record(
+                    findings,
+                    observed,
+                    "MACRO_PROJECTION_VALIDATION_REF_MISSING",
+                    "Projection import rejects cells without validation refs.",
+                    case_id="missing_validation_ref",
+                    subject_id=str(row.get("cell_id") or "projection_cell"),
+                    subject_kind="negative_case",
+                )
+    blocking_findings = [
+        row for row in findings if row.get("negative_case_id") == "import_plan_floor"
+    ]
+    return {
+        "status": PASS
+        if len(cells) >= 3 and target_refs and validation_refs and not blocking_findings
+        else "blocked",
+        "plan_id": plan.get("plan_id"),
+        "projection_cell_count": len(cells),
+        "projection_cell_ids": sorted(cell_ids),
+        "target_refs": sorted(set(target_refs)),
+        "validation_refs": sorted(set(validation_refs)),
+        "public_bound_private_root_ref_count": sum(
+            1
+            for finding in findings
+            if finding.get("error_code")
+            == "MACRO_PROJECTION_PUBLIC_BOUND_PRIVATE_ROOT_REF"
+        ),
+        "next_best_lane": plan.get("next_best_lane"),
+        "blocking_finding_count": len(blocking_findings),
+        "findings": findings,
+        "observed_negative_cases": {key: sorted(value) for key, value in observed.items()},
+    }
+
+
+def _source_refs_for_material(row: dict[str, Any]) -> list[str]:
+    source_refs = _strings(row.get("source_refs"))
+    source_ref = row.get("source_ref")
+    if isinstance(source_ref, str) and source_ref and source_ref not in source_refs:
+        source_refs.insert(0, source_ref)
+    return source_refs
+
+
+def _target_ref_carries_source_ref(target_ref: object, source_ref: str) -> bool:
+    if not isinstance(target_ref, str) or not source_ref:
+        return False
+    normalized_target = _normalize_runtime_root_ref(target_ref.split("::", 1)[0])
+    normalized_source = source_ref.split("::", 1)[0]
+    return normalized_target == normalized_source or normalized_target.endswith(
+        f"source_modules/{normalized_source}"
+    )
+
+
+def _classification_values(value: object) -> list[str]:
+    if isinstance(value, str) and value:
+        return [value]
+    return _strings(value)
+
+
+def _normalize_runtime_root_ref(ref: str) -> str:
+    if ref.startswith(f"{STANDALONE_RUNTIME_ROOT_REF}/"):
+        return ref[len(STANDALONE_RUNTIME_ROOT_REF) + 1 :]
+    return ref
+
+
+def _runtime_ref_leak_reason(ref: str) -> str | None:
+    normalized = _normalize_runtime_root_ref(ref)
+    if not normalized:
+        return "empty_runtime_ref"
+    if any(normalized.startswith(prefix) for prefix in STANDALONE_RUNTIME_BLOCKED_PREFIXES):
+        return "blocked_runtime_prefix"
+    if any(token in normalized for token in STANDALONE_RUNTIME_BLOCKED_TOKENS):
+        return "blocked_runtime_token"
+    if not any(normalized == prefix or normalized.startswith(prefix) for prefix in STANDALONE_RUNTIME_ALLOWED_PREFIXES):
+        return "outside_microcosm_tree"
+    return None
+
+
+def _standalone_runtime_ref_rows(refs: list[str], *, role: str) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for ref in refs:
+        normalized = _normalize_runtime_root_ref(ref)
+        leak_reason = _runtime_ref_leak_reason(ref)
+        rows.append(
+            {
+                "ref": ref,
+                "normalized_ref": normalized,
+                "dependency_role": role,
+                "status": PASS if leak_reason is None else "blocked",
+                "leak_reason": leak_reason,
+            }
+        )
+    return rows
+
+
+def _runtime_dependency_rows(payload: object) -> list[dict[str, Any]]:
+    rows = _rows(payload, "runtime_dependencies")
+    if rows:
+        return rows
+    if isinstance(payload, dict):
+        ref = payload.get("runtime_ref") or payload.get("ref") or payload.get("path")
+        if isinstance(ref, str) and ref:
+            return [payload]
+    return []
+
+
+def _standalone_dependency_leaks(payload: object) -> list[dict[str, Any]]:
+    leaks: list[dict[str, Any]] = []
+    for row in _runtime_dependency_rows(payload):
+        ref = str(row.get("runtime_ref") or row.get("ref") or row.get("path") or "")
+        reason = _runtime_ref_leak_reason(ref)
+        if row.get("macro_runtime_dependency") is True:
+            reason = reason or "declared_macro_runtime_dependency"
+        if reason is not None:
+            leaks.append(
+                {
+                    "dependency_id": str(row.get("dependency_id") or row.get("case_id") or ref),
+                    "ref": ref,
+                    "dependency_role": str(row.get("dependency_role") or "runtime_required"),
+                    "leak_reason": reason,
+                    "body_in_receipt": False,
+                }
+            )
+    return leaks
+
+
+def validate_standalone_runtime_severance(
+    standalone_negative: object | None = None,
+) -> dict[str, Any]:
+    findings: list[dict[str, Any]] = []
+    observed: dict[str, set[str]] = defaultdict(set)
+    for leak in _standalone_dependency_leaks(standalone_negative):
+        _record(
+            findings,
+            observed,
+            "MACRO_PROJECTION_STANDALONE_DEPENDENCY_LEAK",
+            "Runtime severance rejects runtime dependencies on the live macro root.",
+            case_id="standalone_dependency_leak",
+            subject_id=str(leak["dependency_id"]),
+            subject_kind="negative_case",
+        )
+    return {
+        "status": PASS,
+        "findings": findings,
+        "observed_negative_cases": {key: sorted(value) for key, value in observed.items()},
+    }
+
+
+def _public_safe_body_import_rows(
+    protocol_payload: dict[str, Any],
+    *,
+    import_policy: dict[str, Any],
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for row in _rows(protocol_payload, "copied_material"):
+        classification = _public_safe_import_status(row, import_policy=import_policy)
+        if classification is None:
+            continue
+        findings = classification.get("findings", [])
+        rows.append(
+            {
+                "material_id": str(row.get("material_id") or "public_safe_body_material"),
+                "material_class": classification["material_class"],
+                "source_refs": _source_refs_for_material(row),
+                "target_ref": row.get("target_ref"),
+                "credential_exposure_risk": classification["credential_exposure_risk"],
+                "route": classification["route"],
+                "public_safe_mode": classification["public_safe_mode"],
+                "provenance_refs": _strings(row.get("provenance_refs")),
+                "validation_refs": _strings(row.get("validation_refs")),
+                "applied_edits": _strings(row.get("applied_edits")),
+                "claim_ceiling": row.get("claim_ceiling"),
+                "body_digest": row.get("body_digest"),
+                "body_import_verification": row.get("body_import_verification")
+                if isinstance(row.get("body_import_verification"), dict)
+                else None,
+                "classification": _classification_values(row.get("classification")),
+                "body_copied": row.get("body_copied") is True,
+                "body_text_in_receipt": False,
+                "classification_status": classification["status"],
+                "flow_allowed": classification["flow_allowed"] is True,
+                "finding_count": len(findings),
+                "error_codes": sorted(str(item.get("error_code") or "") for item in findings),
+            }
+        )
+    return rows
+
+
+def _projection_cell_rows(
+    plan_payload: dict[str, Any],
+    *,
+    public_safe_imports_by_id: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    cells: list[dict[str, Any]] = []
+    for row in _rows(plan_payload, "proposed_cells"):
+        cell_id = str(row.get("cell_id") or "projection_cell")
+        source_refs = _strings(row.get("source_refs"))
+        target_refs = _strings(row.get("target_refs"))
+        validation_refs = _strings(row.get("validation_refs"))
+        selected_pattern_ids = _strings(row.get("selected_pattern_ids"))
+        body_material_ids = _strings(row.get("public_safe_body_material_ids"))
+        missing_body_material_ids = sorted(
+            material_id
+            for material_id in body_material_ids
+            if material_id not in public_safe_imports_by_id
+        )
+        body_material_rows = [
+            public_safe_imports_by_id[material_id]
+            for material_id in body_material_ids
+            if material_id in public_safe_imports_by_id
+        ]
+        blocking_reasons: list[str] = []
+        if not source_refs:
+            blocking_reasons.append("source_refs_missing")
+        if not target_refs:
+            blocking_reasons.append("target_refs_missing")
+        if not validation_refs:
+            blocking_reasons.append("validation_refs_missing")
+        if row.get("body_copied") is True or row.get("body_included") is True:
+            blocking_reasons.append("body_copy_requested")
+        if missing_body_material_ids:
+            blocking_reasons.append("public_safe_body_material_missing")
+        ready_to_project = not blocking_reasons
+        copy_policy = PUBLIC_SAFE_BODY_COPY_POLICY if body_material_rows else METADATA_COPY_POLICY
+        if ready_to_project:
+            state = dict(
+                CELL_STATUS_OVERRIDES.get(
+                    cell_id,
+                    {
+                        "projection_status": "ready_for_projection",
+                        "cell_state": "ready_import_cell",
+                        "action_required": True,
+                        "status_reason": (
+                            "Cell has source, target, and validation refs but has no landed "
+                            "public runtime import recorded in the projection status protocol."
+                        ),
+                        "landed_evidence_refs": [],
+                        "next_runtime_surface": row.get("next_runtime_surface"),
+                    },
+                )
+            )
+        else:
+            state = {
+                "projection_status": "blocked",
+                "cell_state": "blocked_import_cell",
+                "action_required": True,
+                "status_reason": "Cell cannot enter public projection until blocking reasons clear.",
+                "landed_evidence_refs": [],
+                "next_runtime_surface": row.get("next_runtime_surface"),
+            }
+        cells.append(
+            {
+                "cell_id": cell_id,
+                "selected_pattern_ids": selected_pattern_ids,
+                "source_refs": source_refs,
+                "target_refs": target_refs,
+                "validation_refs": validation_refs,
+                "source_ref_count": len(source_refs),
+                "target_ref_count": len(target_refs),
+                "validation_ref_count": len(validation_refs),
+                "copy_policy": copy_policy,
+                "public_safe_body_material_ids": body_material_ids,
+                "public_safe_body_material_count": len(body_material_rows),
+                "public_safe_body_material_classes": sorted(
+                    {
+                        str(material.get("material_class") or "")
+                        for material in body_material_rows
+                        if material.get("material_class")
+                    }
+                ),
+                "public_safe_body_import_routes": sorted(
+                    {
+                        str(material.get("route") or "")
+                        for material in body_material_rows
+                        if material.get("route")
+                    }
+                ),
+                "classification": _classification_values(row.get("classification")),
+                "missing_public_safe_body_material_ids": missing_body_material_ids,
+                "authority_ceiling": row.get("authority_ceiling"),
+                "body_copied": row.get("body_copied") is True,
+                "body_in_receipt": False,
+                "ready_to_project": ready_to_project,
+                "blocking_reasons": blocking_reasons,
+                "projection_status": state["projection_status"],
+                "cell_state": state["cell_state"],
+                "action_required": state["action_required"] is True,
+                "status_reason": state["status_reason"],
+                "landed_evidence_refs": _strings(state.get("landed_evidence_refs")),
+                "next_runtime_surface": state.get("next_runtime_surface"),
+            }
+        )
+    return cells
+
+
+def _omitted_material_rows(protocol_payload: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        {
+            "material_id": str(row.get("material_id") or "omitted_material"),
+            "omitted_class": str(row.get("omitted_class") or ""),
+            "public_runtime_ref": row.get("public_runtime_ref"),
+            "omission_receipt_ref": row.get("omission_receipt_ref"),
+            "body_in_receipt": False,
+        }
+        for row in _rows(protocol_payload, "omitted_material")
+    ]
+
+
+def _build_projection_intake_board(
+    payloads: dict[str, Any],
+    *,
+    protocol: dict[str, Any],
+    cleaning_policy: dict[str, Any],
+    import_plan: dict[str, Any],
+    secret_scan: dict[str, Any],
+    import_policy: dict[str, Any],
+    input_mode: str,
+    expected_negative_cases: dict[str, list[str]],
+    observed_negative_cases: dict[str, list[str]],
+    missing_negative_cases: list[str],
+) -> dict[str, Any]:
+    protocol_payload = (
+        payloads.get("projection_protocol")
+        if isinstance(payloads.get("projection_protocol"), dict)
+        else {}
+    )
+    plan_payload = (
+        payloads.get("import_plan") if isinstance(payloads.get("import_plan"), dict) else {}
+    )
+    public_safe_body_imports = _public_safe_body_import_rows(
+        protocol_payload,
+        import_policy=import_policy,
+    )
+    imports_by_id = {
+        str(row.get("material_id")): row
+        for row in public_safe_body_imports
+        if row.get("material_id")
+    }
+    cell_rows = _projection_cell_rows(plan_payload, public_safe_imports_by_id=imports_by_id)
+    ready_count = sum(1 for row in cell_rows if row["ready_to_project"])
+    blocked_count = len(cell_rows) - ready_count
+    status_counts = dict(
+        sorted(Counter(str(row.get("projection_status") or "unknown") for row in cell_rows).items())
+    )
+    import_route_counts = dict(
+        sorted(Counter(str(row.get("route") or "unknown") for row in public_safe_body_imports).items())
+    )
+    import_class_counts = dict(
+        sorted(
+            Counter(str(row.get("material_class") or "unknown") for row in public_safe_body_imports).items()
+        )
+    )
+    open_actionable_count = sum(1 for row in cell_rows if row.get("action_required") is True)
+    landed_count = sum(
+        1 for row in cell_rows if str(row.get("projection_status") or "") in LANDING_PROJECTION_STATUSES
+    )
+    return {
+        "schema_version": "macro_projection_import_intake_board_v1",
+        "headline": "Macro source refs become import candidates; verified non-secret macro bodies flow only with source-to-target evidence and claim floors.",
+        "input_mode": input_mode,
+        "protocol_id": protocol["protocol_id"],
+        "policy_id": cleaning_policy["policy_id"],
+        "plan_id": import_plan["plan_id"],
+        "allowed_material": [
+            "metadata",
+            "fixture shape",
+            "standard schema",
+            "receipt summary",
+            "public-root replacement ref",
+            "verified non-secret macro body",
+        ],
+        "allowed_material_classes": _strings(protocol_payload.get("material_classes")),
+        "forbidden_material_classes": cleaning_policy["forbidden_material_classes"],
+        "omitted_material": _omitted_material_rows(protocol_payload),
+        "omitted_material_count": len(_omitted_material_rows(protocol_payload)),
+        "public_safe_body_imports": public_safe_body_imports,
+        "public_safe_body_import_count": len(public_safe_body_imports),
+        "public_safe_body_import_routes": import_route_counts,
+        "public_safe_body_import_classes": import_class_counts,
+        "projection_cells": cell_rows,
+        "projection_cell_count": len(cell_rows),
+        "ready_cell_count": ready_count,
+        "blocked_cell_count": blocked_count,
+        "projection_status_protocol": CELL_STATUS_PROTOCOL,
+        "projection_status_counts": status_counts,
+        "open_actionable_cell_count": open_actionable_count,
+        "landed_cell_count": landed_count,
+        "consumed_cell_count": landed_count,
+        "negative_case_coverage_status": PASS if not missing_negative_cases else "blocked",
+        "expected_negative_case_count": len(expected_negative_cases),
+        "observed_negative_case_count": len(observed_negative_cases),
+        "missing_negative_cases": missing_negative_cases,
+        "secret_exclusion_blocking_hit_count": secret_scan.get("blocking_hit_count"),
+        "next_best_lane": import_plan["next_best_lane"],
+        "authority_ceiling": AUTHORITY_CEILING,
+        "release_authorized": False,
+        "publication_authorized": False,
+        "private_data_equivalence_claim": False,
+        "body_in_receipt": False,
+    }
+
+
+def _build_runtime_severance_board(
+    projection_intake_board: dict[str, Any],
+    *,
+    protocol: dict[str, Any],
+    import_plan: dict[str, Any],
+    dependency_preflight_gate: dict[str, Any],
+) -> dict[str, Any]:
+    runtime_rows: list[dict[str, Any]] = []
+    seen_runtime: set[tuple[str, str]] = set()
+
+    def add_runtime_refs(refs: list[str], *, role: str) -> None:
+        for row in _standalone_runtime_ref_rows(refs, role=role):
+            key = (str(row["ref"]), role)
+            if key in seen_runtime:
+                continue
+            seen_runtime.add(key)
+            runtime_rows.append(row)
+
+    origin_refs: set[str] = set(protocol["source_refs"])
+    for row in projection_intake_board["public_safe_body_imports"]:
+        origin_refs.update(_strings(row.get("source_refs")))
+        origin_refs.update(_strings(row.get("provenance_refs")))
+        target_ref = row.get("target_ref")
+        add_runtime_refs([target_ref] if isinstance(target_ref, str) else [], role="imported_body_target")
+        add_runtime_refs(_strings(row.get("validation_refs")), role="import_validation")
+
+    for row in projection_intake_board["projection_cells"]:
+        origin_refs.update(_strings(row.get("source_refs")))
+        add_runtime_refs(_strings(row.get("target_refs")), role="projection_cell_target")
+        add_runtime_refs(_strings(row.get("validation_refs")), role="projection_cell_validation")
+        add_runtime_refs(_strings(row.get("landed_evidence_refs")), role="landed_evidence")
+
+    leaked_runtime_rows = [
+        row for row in runtime_rows if row.get("status") != PASS
+    ]
+    findings = [
+        _finding(
+            "MACRO_PROJECTION_STANDALONE_DEPENDENCY_LEAK",
+            "Runtime refs must resolve inside the Microcosm tree; macro-origin refs are provenance only.",
+            case_id="runtime_severance_floor",
+            subject_id=str(row.get("ref") or "runtime_dependency"),
+            subject_kind="runtime_severance_dependency",
+        )
+        for row in leaked_runtime_rows
+    ]
+    findings.extend(dependency_preflight_gate.get("findings", []))
+    runtime_dependency_status = PASS if not leaked_runtime_rows else "blocked"
+    status = (
+        PASS
+        if runtime_dependency_status == PASS and dependency_preflight_gate.get("status") == PASS
+        else "blocked"
+    )
+    return {
+        "schema_version": "macro_projection_runtime_severance_board_v1",
+        "status": status,
+        "runtime_severance_status": status,
+        "standalone_runtime_candidate": status == PASS,
+        "standalone_runtime_root": STANDALONE_RUNTIME_ROOT_REF,
+        "source_to_standalone_policy": "copy_vendor_rewrite_or_replace_then_run_without_private_root",
+        "macro_origin_ref_policy": MACRO_ORIGIN_REF_POLICY,
+        "macro_origin_refs": sorted(origin_refs),
+        "macro_origin_ref_count": len(origin_refs),
+        "macro_origin_refs_runtime_required": False,
+        "runtime_dependency_status": runtime_dependency_status,
+        "runtime_dependency_refs": sorted({str(row["ref"]) for row in runtime_rows}),
+        "runtime_dependency_count": len(runtime_rows),
+        "macro_runtime_dependency_count": len(leaked_runtime_rows),
+        "runtime_dependencies": sorted(
+            runtime_rows,
+            key=lambda row: (str(row.get("dependency_role") or ""), str(row.get("ref") or "")),
+        ),
+        "blocked_runtime_dependencies": leaked_runtime_rows,
+        "public_safe_body_import_count": projection_intake_board["public_safe_body_import_count"],
+        "public_safe_body_import_routes": projection_intake_board["public_safe_body_import_routes"],
+        "public_safe_body_import_classes": projection_intake_board["public_safe_body_import_classes"],
+        "projection_cell_count": import_plan["projection_cell_count"],
+        "ready_projection_cell_count": projection_intake_board["ready_cell_count"],
+        "dependency_preflight_gate_status": dependency_preflight_gate["status"],
+        "dependency_preflight_receipt_ref": dependency_preflight_gate["receipt_ref"],
+        "organ_lifecycle_coverage_status": dependency_preflight_gate[
+            "organ_lifecycle_coverage_status"
+        ],
+        "organ_lifecycle_coverage_counts": dependency_preflight_gate["coverage_counts"],
+        "dependency_preflight_gate": dependency_preflight_gate,
+        "claim_ceiling": AUTHORITY_CEILING,
+        "release_authorized": False,
+        "publication_authorized": False,
+        "private_data_equivalence_claim": False,
+        "severance_checks": [
+            {
+                "check_id": "macro_origin_refs_are_provenance_only",
+                "status": PASS,
+            },
+            {
+                "check_id": "runtime_refs_stay_inside_microcosm_tree",
+                "status": runtime_dependency_status,
+            },
+            {
+                "check_id": "organ_lifecycle_coverage_preflight_passes",
+                "status": dependency_preflight_gate["status"],
+            },
+            {
+                "check_id": "claim_ceiling_remains_false_for_release_and_private_equivalence",
+                "status": PASS,
+            },
+        ],
+        "findings": findings,
+        "body_in_receipt": False,
+    }
+
+
+def _build_result(
+    input_dir: Path,
+    *,
+    command: str,
+    input_mode: str,
+    include_negative: bool,
+) -> dict[str, Any]:
+    public_root = _public_root_for_path(input_dir)
+    payloads = _load_payloads(input_dir, include_negative=include_negative)
+    payloads["projection_protocol"] = _augment_protocol_from_source_module_manifests(
+        payloads["projection_protocol"],
+        payloads["import_plan"],
+        input_dir=input_dir,
+        public_root=public_root,
+    )
+    policy = load_forbidden_classes(public_root / "core/private_state_forbidden_classes.json")
+    secret_scan = scan_paths(
+        _input_paths(input_dir, include_negative=include_negative),
+        forbidden_classes=policy,
+        display_root=public_root,
+    )
+    dependency_preflight_gate = _dependency_preflight_lifecycle_gate(public_root)
+
+    protocol = validate_projection_protocol(
+        payloads["projection_protocol"],
+        payloads.get("forbidden_body_import_overclaim"),
+        payloads.get("missing_omission_receipt"),
+        payloads.get("authority_upgrade_overclaim"),
+        payloads.get("release_or_private_equivalence_overclaim"),
+        import_policy=policy,
+        public_root=public_root,
+    )
+    cleaning_policy = validate_cleaning_policy(payloads["cleaning_policy"])
+    standalone_negative = validate_standalone_runtime_severance(
+        payloads.get("standalone_dependency_leak")
+    )
+    public_safe_material_ids = {
+        str(row.get("material_id"))
+        for row in _public_safe_body_import_rows(payloads["projection_protocol"], import_policy=policy)
+        if row.get("material_id")
+    }
+    import_plan = validate_import_plan(
+        payloads["import_plan"],
+        payloads.get("missing_validation_ref"),
+        public_safe_material_ids=public_safe_material_ids,
+    )
+    observed = _merge_observed(
+        protocol,
+        cleaning_policy,
+        import_plan,
+        standalone_negative,
+    )
+    expected = EXPECTED_NEGATIVE_CASES if include_negative else {}
+    missing = sorted(case_id for case_id in expected if case_id not in observed)
+    findings = _merge_findings(protocol, cleaning_policy, import_plan, standalone_negative)
+    bundle_manifest = (
+        read_json_strict(input_dir / "bundle_manifest.json")
+        if (input_dir / "bundle_manifest.json").is_file()
+        else {}
+    )
+    projection_intake_board = _build_projection_intake_board(
+        payloads,
+        protocol=protocol,
+        cleaning_policy=cleaning_policy,
+        import_plan=import_plan,
+        secret_scan=secret_scan,
+        import_policy=policy,
+        input_mode=input_mode,
+        expected_negative_cases=expected,
+        observed_negative_cases=observed,
+        missing_negative_cases=missing,
+    )
+    runtime_severance_board = _build_runtime_severance_board(
+        projection_intake_board,
+        protocol=protocol,
+        import_plan=import_plan,
+        dependency_preflight_gate=dependency_preflight_gate,
+    )
+    findings = sorted(
+        [
+            *findings,
+            *runtime_severance_board["findings"],
+        ],
+        key=lambda row: (
+            str(row.get("negative_case_id") or ""),
+            str(row.get("subject_kind") or ""),
+            str(row.get("subject_id") or ""),
+            str(row.get("error_code") or ""),
+        ),
+    )
+    error_codes = sorted({str(row["error_code"]) for row in findings})
+    status = (
+        PASS
+        if not missing
+        and secret_scan["blocking_hit_count"] == 0
+        and protocol["status"] == PASS
+        and cleaning_policy["status"] == PASS
+        and import_plan["status"] == PASS
+        and runtime_severance_board["status"] == PASS
+        else "blocked"
+    )
+    return {
+        "schema_version": "macro_projection_import_protocol_result_v1",
+        "created_at": utc_now(),
+        "status": status,
+        "organ_id": ORGAN_ID,
+        "fixture_id": FIXTURE_ID,
+        "validator_id": VALIDATOR_ID,
+        "command": command,
+        "input_mode": input_mode,
+        "bundle_id": bundle_manifest.get("bundle_id") if isinstance(bundle_manifest, dict) else None,
+        "expected_negative_cases": sorted(expected),
+        "observed_negative_cases": observed,
+        "missing_negative_cases": missing,
+        "error_codes": error_codes,
+        "findings": findings,
+        "secret_exclusion_scan": secret_scan,
+        "authority_ceiling": AUTHORITY_CEILING,
+        "anti_claim": ANTI_CLAIM,
+        "protocol_id": protocol["protocol_id"],
+        "policy_id": cleaning_policy["policy_id"],
+        "plan_id": import_plan["plan_id"],
+        "source_ref_count": len(protocol["source_refs"]),
+        "public_runtime_ref_count": len(protocol["public_runtime_refs"]),
+        "validation_ref_count": len(set(protocol["validation_refs"] + import_plan["validation_refs"])),
+        "public_safe_body_material_count": protocol["public_safe_body_material_count"],
+        "public_safe_body_import_status": (
+            "pass"
+            if protocol["public_safe_body_material_count"]
+            and protocol["public_safe_body_target_status"] == PASS
+            else "blocked"
+            if protocol["public_safe_body_material_count"]
+            else "not_present"
+        ),
+        "public_safe_body_target_status": protocol["public_safe_body_target_status"],
+        "public_safe_body_target_refs": protocol["public_safe_body_target_refs"],
+        "public_safe_body_digest_count": protocol["public_safe_body_digest_count"],
+        "live_source_drift_count": protocol["live_source_drift_count"],
+        "live_source_drift_rows": protocol["live_source_drift_rows"],
+        "public_safe_body_import_count": projection_intake_board["public_safe_body_import_count"],
+        "public_safe_body_import_routes": projection_intake_board["public_safe_body_import_routes"],
+        "runtime_severance_status": runtime_severance_board["runtime_severance_status"],
+        "runtime_dependency_status": runtime_severance_board["runtime_dependency_status"],
+        "dependency_preflight_gate_status": runtime_severance_board[
+            "dependency_preflight_gate_status"
+        ],
+        "dependency_preflight_receipt_ref": runtime_severance_board[
+            "dependency_preflight_receipt_ref"
+        ],
+        "organ_lifecycle_coverage_status": runtime_severance_board[
+            "organ_lifecycle_coverage_status"
+        ],
+        "organ_lifecycle_coverage_counts": runtime_severance_board[
+            "organ_lifecycle_coverage_counts"
+        ],
+        "macro_runtime_dependency_count": runtime_severance_board[
+            "macro_runtime_dependency_count"
+        ],
+        "macro_origin_ref_count": runtime_severance_board["macro_origin_ref_count"],
+        "projection_cell_count": import_plan["projection_cell_count"],
+        "ready_projection_cell_count": projection_intake_board["ready_cell_count"],
+        "blocked_projection_cell_count": projection_intake_board["blocked_cell_count"],
+        "projection_cell_ids": import_plan["projection_cell_ids"],
+        "source_refs": protocol["source_refs"],
+        "public_runtime_refs": sorted(
+            set(protocol["public_runtime_refs"] + import_plan["target_refs"])
+        ),
+        "validation_refs": sorted(set(protocol["validation_refs"] + import_plan["validation_refs"])),
+        "forbidden_material_classes": cleaning_policy["forbidden_material_classes"],
+        "next_best_lane": import_plan["next_best_lane"],
+        "projection_board": {
+            "headline": "Macro material enters Microcosm as verified non-secret substrate; only secrets, credentials, operator conversation bodies, provider payloads, and account-bound material stay blocked.",
+            "protocol_id": protocol["protocol_id"],
+            "allowed_material": [
+                "metadata",
+                "fixture shape",
+                "standard schema",
+                "receipt summary",
+                "public-root replacement ref",
+                "verified non-secret macro body",
+            ],
+            "forbidden_material_classes": cleaning_policy["forbidden_material_classes"],
+            "public_safe_body_material_count": protocol["public_safe_body_material_count"],
+            "public_safe_body_import_count": projection_intake_board["public_safe_body_import_count"],
+            "public_safe_body_import_routes": projection_intake_board["public_safe_body_import_routes"],
+            "runtime_severance_status": runtime_severance_board["runtime_severance_status"],
+            "runtime_dependency_status": runtime_severance_board["runtime_dependency_status"],
+            "dependency_preflight_gate_status": runtime_severance_board[
+                "dependency_preflight_gate_status"
+            ],
+            "organ_lifecycle_coverage_status": runtime_severance_board[
+                "organ_lifecycle_coverage_status"
+            ],
+            "runtime_severance_board_embedded": True,
+            "projection_cell_count": import_plan["projection_cell_count"],
+            "next_best_lane": import_plan["next_best_lane"],
+            "release_authorized": False,
+            "private_data_equivalence_claim": False,
+            "body_in_receipt": False,
+            "intake_board_ref": INTAKE_BOARD_NAME,
+        },
+        "projection_intake_board": projection_intake_board,
+        "runtime_severance_board": runtime_severance_board,
+        "body_in_receipt": False,
+    }
+
+
+def _common_receipt(
+    result: dict[str, Any],
+    *,
+    schema_version: str,
+    receipt_paths: list[str],
+) -> dict[str, Any]:
+    keys = (
+        "status",
+        "organ_id",
+        "fixture_id",
+        "validator_id",
+        "command",
+        "input_mode",
+        "bundle_id",
+        "expected_negative_cases",
+        "observed_negative_cases",
+        "missing_negative_cases",
+        "error_codes",
+        "findings",
+        "secret_exclusion_scan",
+        "authority_ceiling",
+        "anti_claim",
+        "protocol_id",
+        "policy_id",
+        "plan_id",
+        "source_ref_count",
+        "public_runtime_ref_count",
+        "validation_ref_count",
+        "public_safe_body_material_count",
+        "public_safe_body_import_status",
+        "public_safe_body_import_count",
+        "public_safe_body_import_routes",
+        "live_source_drift_count",
+        "live_source_drift_rows",
+        "runtime_severance_status",
+        "runtime_dependency_status",
+        "dependency_preflight_gate_status",
+        "dependency_preflight_receipt_ref",
+        "organ_lifecycle_coverage_status",
+        "organ_lifecycle_coverage_counts",
+        "macro_runtime_dependency_count",
+        "macro_origin_ref_count",
+        "projection_cell_count",
+        "ready_projection_cell_count",
+        "blocked_projection_cell_count",
+        "projection_cell_ids",
+        "source_refs",
+        "public_runtime_refs",
+        "validation_refs",
+        "forbidden_material_classes",
+        "next_best_lane",
+        "runtime_severance_board",
+        "body_in_receipt",
+    )
+    payload = {
+        "schema_version": schema_version,
+        "receipt_id": schema_version,
+        "created_at": result["created_at"],
+        "receipt_paths": receipt_paths,
+    }
+    for key in keys:
+        payload[key] = result.get(key)
+    return payload
+
+
+def write_receipts(
+    out_dir: str | Path,
+    result: dict[str, Any],
+    *,
+    public_root: str | Path,
+    acceptance_out: str | Path | None = None,
+) -> dict[str, str]:
+    target = Path(out_dir)
+    if not target.is_absolute():
+        target = Path.cwd() / target
+    target.mkdir(parents=True, exist_ok=True)
+    public_root_path = Path(public_root).resolve(strict=False)
+    acceptance_path = (
+        Path(acceptance_out)
+        if acceptance_out is not None
+        else public_root_path / ACCEPTANCE_RECEIPT_REL
+    )
+    if not acceptance_path.is_absolute():
+        acceptance_path = Path.cwd() / acceptance_path
+    paths = {
+        "macro_projection_import_protocol_result": target / RESULT_NAME,
+        "projection_import_board": target / BOARD_NAME,
+        "projection_import_intake_board": target / INTAKE_BOARD_NAME,
+        "projection_import_validation_receipt": target / VALIDATION_RECEIPT_NAME,
+        "fixture_acceptance": acceptance_path,
+    }
+    receipt_paths = [_display(path, public_root=public_root_path) for path in paths.values()]
+
+    result_receipt = _common_receipt(
+        result,
+        schema_version="macro_projection_import_protocol_result_receipt_v1",
+        receipt_paths=receipt_paths,
+    )
+    board = _common_receipt(
+        result,
+        schema_version="macro_projection_import_protocol_board_v1",
+        receipt_paths=receipt_paths,
+    )
+    board.update(result["projection_board"])
+    intake_board = _common_receipt(
+        result,
+        schema_version="macro_projection_import_protocol_intake_board_v1",
+        receipt_paths=receipt_paths,
+    )
+    intake_board.update(result["projection_intake_board"])
+    validation = _common_receipt(
+        result,
+        schema_version="macro_projection_import_protocol_validation_receipt_v1",
+        receipt_paths=receipt_paths,
+    )
+    validation.update(
+        {
+            "negative_case_coverage_status": PASS
+            if not result["missing_negative_cases"]
+            else "blocked",
+            "forbidden_body_import_rejected": "forbidden_body_import_overclaim"
+            in result["observed_negative_cases"],
+            "omission_receipts_required": "missing_omission_receipt"
+            in result["observed_negative_cases"],
+            "authority_upgrades_rejected": "authority_upgrade_overclaim"
+            in result["observed_negative_cases"],
+            "validation_refs_required": "missing_validation_ref"
+            in result["observed_negative_cases"],
+            "release_and_equivalence_overclaims_rejected": "release_or_private_equivalence_overclaim"
+            in result["observed_negative_cases"],
+            "standalone_dependency_leaks_rejected": "standalone_dependency_leak"
+            in result["observed_negative_cases"],
+            "projection_intake_board_ref": _display(
+                paths["projection_import_intake_board"], public_root=public_root_path
+            ),
+            "ready_projection_cell_count": result["ready_projection_cell_count"],
+            "blocked_projection_cell_count": result["blocked_projection_cell_count"],
+            "release_authorized": False,
+        }
+    )
+    acceptance = _common_receipt(
+        result,
+        schema_version="macro_projection_import_protocol_fixture_acceptance_v1",
+        receipt_paths=receipt_paths,
+    )
+    acceptance.update(
+        {
+            "acceptance_status": "accepted_current_authority"
+            if result["status"] == PASS
+            else "blocked",
+            "accepted_organ_id": ORGAN_ID,
+            "projection_import_boundary": "verified_body_import_or_secret_exclusion_only",
+            "runtime_severance_boundary": (
+                "macro_origin_provenance_only_public_runtime_tree_required"
+            ),
+            "runtime_severance_status": result["runtime_severance_status"],
+        }
+    )
+
+    write_json_atomic(paths["macro_projection_import_protocol_result"], result_receipt)
+    write_json_atomic(paths["projection_import_board"], board)
+    write_json_atomic(paths["projection_import_intake_board"], intake_board)
+    write_json_atomic(paths["projection_import_validation_receipt"], validation)
+    write_json_atomic(paths["fixture_acceptance"], acceptance)
+    return {name: _display(path, public_root=public_root_path) for name, path in paths.items()}
+
+
+def run(
+    input_dir: str | Path,
+    out_dir: str | Path,
+    command: str | None = None,
+    *,
+    acceptance_out: str | Path | None = None,
+) -> dict[str, Any]:
+    input_path = Path(input_dir)
+    command_text = command or (
+        "python -m microcosm_core.organs.macro_projection_import_protocol run "
+        f"--input {input_dir} --out {out_dir}"
+    )
+    if not _has_negative_input_set(input_path):
+        return run_projection_bundle(
+            input_path,
+            out_dir,
+            command=command_text,
+            compatibility_route=_exported_bundle_run_compatibility_route(),
+        )
+    result = _build_result(
+        input_path,
+        command=command_text,
+        input_mode="first_wave_fixture",
+        include_negative=True,
+    )
+    result["receipt_paths"] = list(
+        write_receipts(
+            out_dir,
+            result,
+            public_root=_public_root_for_path(input_path),
+            acceptance_out=acceptance_out,
+        ).values()
+    )
+    return result
+
+
+def run_projection_bundle(
+    input_dir: str | Path,
+    out_dir: str | Path,
+    command: str | None = None,
+    *,
+    compatibility_route: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    input_path = Path(input_dir)
+    command_text = command or (
+        "python -m microcosm_core.organs.macro_projection_import_protocol "
+        f"run-projection-bundle --input {input_dir} --out {out_dir}"
+    )
+    result = _build_result(
+        input_path,
+        command=command_text,
+        input_mode="exported_projection_import_bundle",
+        include_negative=False,
+    )
+    if compatibility_route is not None:
+        result["compatibility_route"] = compatibility_route
+    target = Path(out_dir)
+    if not target.is_absolute():
+        target = Path.cwd() / target
+    target.mkdir(parents=True, exist_ok=True)
+    public_root = _public_root_for_path(input_path)
+    receipt_path = target / BUNDLE_RESULT_NAME
+    result["receipt_paths"] = _stored_receipt_paths(
+        [_display(receipt_path, public_root=public_root)]
+    )
+    result["source_ref_digest_manifest"] = _source_ref_digest_manifest(
+        result.get("source_refs"),
+        public_root=public_root,
+    )
+    write_json_atomic(receipt_path, result)
+    return result
+
+
+def _top_level_json_mtime_refs(input_path: Path) -> list[dict[str, Any]]:
+    if not input_path.is_dir():
+        return []
+    rows: list[dict[str, Any]] = []
+    public_root = _public_root_for_path(input_path)
+    for path in sorted(input_path.glob("*.json")):
+        try:
+            stat = path.stat()
+        except FileNotFoundError:
+            continue
+        rows.append(
+            {
+                "ref": _display(path, public_root=public_root),
+                "mtime_ns": stat.st_mtime_ns,
+            }
+        )
+    return rows
+
+
+def _cached_receipt_source_mtime_refs(
+    payload: dict[str, Any],
+    *,
+    public_root: Path,
+) -> list[dict[str, Any]]:
+    refs = payload.get("source_refs")
+    if not isinstance(refs, list):
+        return []
+    rows: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for source_ref in refs:
+        if not isinstance(source_ref, str) or not source_ref:
+            continue
+        for candidate in _source_ref_file_candidates(source_ref, public_root=public_root):
+            if not candidate.is_file():
+                continue
+            resolved = str(candidate.resolve(strict=False))
+            if resolved in seen:
+                break
+            seen.add(resolved)
+            try:
+                stat = candidate.stat()
+            except FileNotFoundError:
+                break
+            rows.append(
+                {
+                    "source_ref": source_ref,
+                    "ref": _display(candidate, public_root=public_root),
+                    "mtime_ns": stat.st_mtime_ns,
+                }
+            )
+            break
+    return rows
+
+
+def _source_ref_digest_manifest(
+    source_refs: object,
+    *,
+    public_root: Path,
+) -> dict[str, Any]:
+    aggregate = hashlib.sha256()
+    tracked_count = 0
+    missing_count = 0
+    seen: set[str] = set()
+    for source_ref in _strings(source_refs):
+        matched = False
+        for candidate in _source_ref_file_candidates(source_ref, public_root=public_root):
+            if not candidate.is_file():
+                continue
+            resolved = str(candidate.resolve(strict=False))
+            if resolved in seen:
+                matched = True
+                break
+            try:
+                digest = _sha256_digest(candidate)
+            except FileNotFoundError:
+                continue
+            seen.add(resolved)
+            matched = True
+            tracked_count += 1
+            aggregate.update(source_ref.encode("utf-8"))
+            aggregate.update(b"\0")
+            aggregate.update(digest.encode("ascii"))
+            aggregate.update(b"\n")
+            break
+        if not matched:
+            missing_count += 1
+
+    return {
+        "schema_version": "macro_projection_source_ref_digest_manifest_v1",
+        "status": "available" if tracked_count else "empty",
+        "tracked_source_ref_count": tracked_count,
+        "missing_source_ref_count": missing_count,
+        "aggregate_sha256": (
+            f"{BODY_DIGEST_PREFIX}{aggregate.hexdigest()}" if tracked_count else None
+        ),
+        "source_refs_exported": False,
+        "digest_rows_exported": False,
+    }
+
+
+def projection_bundle_cached_card(
+    input_dir: str | Path,
+    out_dir: str | Path,
+    command: str | None = None,
+) -> dict[str, Any]:
+    input_path = Path(input_dir)
+    target = Path(out_dir)
+    if not target.is_absolute():
+        target = Path.cwd() / target
+    public_root = _public_root_for_path(input_path)
+    receipt_path = target / BUNDLE_RESULT_NAME
+    display_input = _display(input_path, public_root=public_root)
+    command_text = command or (
+        "python -m microcosm_core.organs.macro_projection_import_protocol "
+        f"run-projection-bundle --card --input {display_input} --out {out_dir}"
+    )
+    if not receipt_path.is_file():
+        return {
+            "schema_version": "macro_projection_bundle_cached_card_v1",
+            "card_id": "projection_bundle_cached_validation",
+            "status": "missing_cached_receipt",
+            "command": command_text,
+            "input_ref": display_input,
+            "out_ref": str(out_dir),
+            "cache_status": "missing_cached_receipt",
+            "cached_receipt_ref": _display(receipt_path, public_root=public_root),
+            "cached_receipt_bytes": 0,
+            "run_required": (
+                "microcosm macro-projection-import-protocol "
+                f"run-projection-bundle --input {display_input} "
+                f"--out {out_dir}"
+            ),
+            "anti_claim": (
+                "Cached projection-bundle cards read public receipts only; run "
+                "the full projection-bundle route when the receipt is missing "
+                "or stale."
+            ),
+        }
+
+    receipt_stat = receipt_path.stat()
+    payload = read_json_strict(receipt_path)
+    if not isinstance(payload, dict):
+        raise ValueError(f"Projection bundle receipt must be a JSON object: {receipt_path}")
+    input_exists = input_path.exists()
+    input_refs = _top_level_json_mtime_refs(input_path)
+    source_refs = _cached_receipt_source_mtime_refs(payload, public_root=public_root)
+    receipt_source_digest = payload.get("source_ref_digest_manifest")
+    source_digest_status = "unavailable"
+    source_digest_checked = False
+    current_source_digest: dict[str, Any] | None = None
+    source_digest_stale = False
+    if isinstance(receipt_source_digest, dict) and receipt_source_digest.get(
+        "aggregate_sha256"
+    ):
+        current_source_digest = _source_ref_digest_manifest(
+            payload.get("source_refs"),
+            public_root=public_root,
+        )
+        source_digest_checked = True
+        source_digest_status = (
+            "current"
+            if current_source_digest.get("aggregate_sha256")
+            == receipt_source_digest.get("aggregate_sha256")
+            else "stale"
+        )
+        source_digest_stale = source_digest_status == "stale"
+    newest_input = max((row["mtime_ns"] for row in input_refs), default=0)
+    newest_source = max((row["mtime_ns"] for row in source_refs), default=0)
+    stale_input_count = sum(
+        1 for row in input_refs if row["mtime_ns"] > receipt_stat.st_mtime_ns
+    )
+    input_stale = not input_exists or stale_input_count > 0
+    source_stale = newest_source > receipt_stat.st_mtime_ns
+    stale = input_stale or source_stale or source_digest_stale
+    input_status = (
+        "missing_input"
+        if not input_exists
+        else "stale" if stale_input_count else "current"
+    )
+    status = "stale_cached_receipt" if stale else payload.get("status")
+    return {
+        "schema_version": "macro_projection_bundle_cached_card_v1",
+        "card_id": "projection_bundle_cached_validation",
+        "status": status,
+        "command": command_text,
+        "expanded_command": (
+            "microcosm macro-projection-import-protocol run-projection-bundle "
+            f"--input {display_input} --out {out_dir}"
+        ),
+        "input_ref": display_input,
+        "out_ref": str(out_dir),
+        "cache_status": "stale_cached_receipt" if stale else "cached_receipt_read",
+        "cached_receipt_ref": _display(receipt_path, public_root=public_root),
+        "cached_receipt_bytes": receipt_stat.st_size,
+        "cache_freshness": {
+            "status": "stale" if stale else "current",
+            "input_status": input_status,
+            "source_ref_status": "stale" if source_stale else "current",
+            "tracked_top_level_json_count": len(input_refs),
+            "stale_top_level_json_count": stale_input_count,
+            "tracked_source_ref_count": len(source_refs),
+            "source_ref_digest_status": source_digest_status,
+            "source_ref_digest_checked": source_digest_checked,
+            "tracked_source_ref_digest_count": (
+                current_source_digest.get("tracked_source_ref_count")
+                if current_source_digest is not None
+                else receipt_source_digest.get("tracked_source_ref_count", 0)
+                if isinstance(receipt_source_digest, dict)
+                else 0
+            ),
+            "newest_input_mtime_ns": newest_input,
+            "newest_source_mtime_ns": newest_source,
+            "receipt_mtime_ns": receipt_stat.st_mtime_ns,
+            "input_refs_exported": False,
+            "source_refs_exported": False,
+            "source_ref_digest_rows_exported": False,
+        },
+        "input_mode": payload.get("input_mode"),
+        "projection_cell_count": payload.get("projection_cell_count"),
+        "ready_projection_cell_count": payload.get("ready_projection_cell_count"),
+        "blocked_projection_cell_count": payload.get("blocked_projection_cell_count"),
+        "public_safe_body_import_status": payload.get("public_safe_body_import_status"),
+        "public_safe_body_import_count": payload.get("public_safe_body_import_count"),
+        "runtime_severance_status": payload.get("runtime_severance_status"),
+        "runtime_dependency_status": payload.get("runtime_dependency_status"),
+        "dependency_preflight_gate_status": payload.get(
+            "dependency_preflight_gate_status"
+        ),
+        "organ_lifecycle_coverage_status": payload.get(
+            "organ_lifecycle_coverage_status"
+        ),
+        "source_ref_count": payload.get("source_ref_count"),
+        "public_runtime_ref_count": payload.get("public_runtime_ref_count"),
+        "validation_ref_count": payload.get("validation_ref_count"),
+        "next_best_lane": payload.get("next_best_lane"),
+        "safe_to_show": {
+            "body_in_receipt": payload.get("body_in_receipt"),
+            "provider_payloads_exported": False,
+            "credential_equivalent_payloads_exported": False,
+            "raw_operator_voice_exported": False,
+            "release_authorized": False,
+            "private_data_equivalence_claim": False,
+            "receipt_metadata_visible": True,
+            "input_refs_exported": False,
+            "source_refs_exported": False,
+        },
+        "authority_ceiling": AUTHORITY_CEILING,
+        "anti_claim": ANTI_CLAIM,
+        "reader_action": (
+            "Use the cached card for repeat projection-bundle validation state; "
+            "run the expanded command when cache_freshness.status is stale or "
+            "when full findings/source refs are needed."
+        ),
+        "next_commands": [
+            "microcosm intake --card",
+            "microcosm projection-import-map",
+            (
+                "microcosm macro-projection-import-protocol run-projection-bundle "
+                f"--input {display_input} --out {out_dir}"
+            ),
+        ],
+    }
+
+
+def preview_import_plan(input_dir: str | Path, command: str | None = None) -> dict[str, Any]:
+    input_path = Path(input_dir)
+    include_negative = _has_negative_input_set(input_path)
+    command_text = command or (
+        "python -m microcosm_core.organs.macro_projection_import_protocol "
+        f"plan --input {input_dir}"
+    )
+    result = _build_result(
+        input_path,
+        command=command_text,
+        input_mode="first_wave_fixture" if include_negative else "exported_projection_import_bundle",
+        include_negative=include_negative,
+    )
+    findings = result.get("findings", [])
+    finding_preview = [
+        {
+            "error_code": row.get("error_code"),
+            "negative_case_id": row.get("negative_case_id"),
+            "subject_id": row.get("subject_id"),
+            "subject_kind": row.get("subject_kind"),
+            "body_in_receipt": row.get("body_in_receipt", False),
+        }
+        for row in findings[:8]
+        if isinstance(row, dict)
+    ]
+    blocking_surface_ids = sorted(
+        {
+            str(row.get("negative_case_id") or "runtime_severance")
+            for row in findings
+            if isinstance(row, dict)
+        }
+    )
+    blocking_surface_details = {
+        surface_id: {
+            "status": "blocked",
+            "finding_count": sum(
+                1
+                for row in findings
+                if isinstance(row, dict)
+                and str(row.get("negative_case_id") or "runtime_severance") == surface_id
+            ),
+            "error_codes": sorted(
+                {
+                    str(row.get("error_code"))
+                    for row in findings
+                    if isinstance(row, dict)
+                    and str(row.get("negative_case_id") or "runtime_severance")
+                    == surface_id
+                    and row.get("error_code")
+                }
+            ),
+            "subject_ids_preview": [
+                str(row.get("subject_id"))
+                for row in findings
+                if isinstance(row, dict)
+                and str(row.get("negative_case_id") or "runtime_severance") == surface_id
+                and row.get("subject_id")
+            ][:8],
+        }
+        for surface_id in blocking_surface_ids
+    }
+    return {
+        "schema_version": "macro_projection_import_intake_preview_v1",
+        "created_at": result["created_at"],
+        "status": result["status"],
+        "organ_id": ORGAN_ID,
+        "validator_id": VALIDATOR_ID,
+        "command": command_text,
+        "input_mode": result["input_mode"],
+        "projection_intake_board": result["projection_intake_board"],
+        "runtime_severance_board": result["runtime_severance_board"],
+        "blocking_surface_ids": blocking_surface_ids,
+        "blocking_surface_details": blocking_surface_details,
+        "finding_count": len(findings),
+        "finding_preview": finding_preview,
+        "error_codes": result["error_codes"],
+        "live_source_drift_count": result["live_source_drift_count"],
+        "live_source_drift_rows": result["live_source_drift_rows"],
+        "live_source_drift_preview": result["live_source_drift_rows"][:8],
+        "status_surfaces": {
+            "public_safe_body_import_status": result["public_safe_body_import_status"],
+            "public_safe_body_target_status": result["public_safe_body_target_status"],
+            "runtime_severance_status": result["runtime_severance_status"],
+            "runtime_dependency_status": result["runtime_dependency_status"],
+            "dependency_preflight_gate_status": result["dependency_preflight_gate_status"],
+            "organ_lifecycle_coverage_status": result["organ_lifecycle_coverage_status"],
+        },
+        "next_commands": [
+            "microcosm macro-projection-import-protocol plan --input <bundle>",
+            "microcosm macro-projection-import-protocol run-projection-bundle --input <bundle> --out /tmp/microcosm-macro-projection",
+        ],
+        "authority_ceiling": AUTHORITY_CEILING,
+        "anti_claim": ANTI_CLAIM,
+        "release_authorized": False,
+        "publication_authorized": False,
+        "private_data_equivalence_claim": False,
+        "body_in_receipt": False,
+    }
+
+
+def _parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Validate macro projection import protocol bundles. Bundle inputs are "
+            "directories that contain projection_protocol.json plus sibling payloads."
+        )
+    )
+    subparsers = parser.add_subparsers(dest="action", required=True)
+    run_parser = subparsers.add_parser("run")
+    run_parser.add_argument("--input", required=True)
+    run_parser.add_argument("--out", required=True)
+    run_parser.add_argument("--acceptance-out")
+    bundle_parser = subparsers.add_parser("run-projection-bundle")
+    bundle_parser.add_argument("--input", required=True)
+    bundle_parser.add_argument("--out", required=True)
+    bundle_parser.add_argument(
+        "--card",
+        action="store_true",
+        help="read the cached projection-bundle validation receipt without rerunning",
+    )
+    plan_parser = subparsers.add_parser(
+        "plan",
+        help="preview a projection bundle directory without writing receipts",
+        description=(
+            "Preview a macro projection import bundle directory. Pass the bundle "
+            "directory itself, not projection_protocol.json; the planner reads "
+            "projection_protocol.json and sibling payload files from that directory."
+        ),
+    )
+    plan_parser.add_argument(
+        "--input",
+        required=True,
+        metavar="BUNDLE_DIR",
+        help=(
+            "projection bundle directory containing projection_protocol.json; "
+            "do not pass projection_protocol.json directly"
+        ),
+    )
+    refresh_parser = subparsers.add_parser("refresh-exact-copy-source-modules")
+    refresh_parser.add_argument("--input", required=True)
+    refresh_parser.add_argument("--source-root")
+    refresh_parser.add_argument("--material-id", action="append", default=[])
+    refresh_parser.add_argument(
+        "--all-examples",
+        action="store_true",
+        help="scan every examples/**/source_module_manifest.json under the public root",
+    )
+    refresh_parser.add_argument(
+        "--write",
+        action="store_true",
+        help="apply target copies and JSON digest updates; omit for dry-run drift audit",
+    )
+    refresh_parser.add_argument(
+        "--allow-dirty-sources",
+        action="store_true",
+        help=(
+            "permit write even when pending macro source refs have uncommitted "
+            "git status; dry-run receipts always report source coupling"
+        ),
+    )
+    refresh_parser.add_argument(
+        "--allow-dirty-outputs",
+        action="store_true",
+        help=(
+            "permit write over pending target copy or JSON output paths that "
+            "already have git dirt after the caller has reviewed those output diffs"
+        ),
+    )
+    refresh_parser.add_argument(
+        "--skip-protocols",
+        action="store_true",
+        help="refresh source_module_manifest rows only; do not scan projection_protocol mirrors",
+    )
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = _parser()
+    args = parser.parse_args(argv)
+    if args.action == "run":
+        result = run(args.input, args.out, acceptance_out=args.acceptance_out)
+    elif args.action == "plan":
+        plan_input = Path(args.input)
+        if plan_input.is_file():
+            parser.error(
+                "plan --input expects a projection bundle directory containing "
+                "projection_protocol.json, not projection_protocol.json itself"
+            )
+        result = preview_import_plan(args.input)
+    elif args.action == "refresh-exact-copy-source-modules":
+        result = refresh_exact_copy_source_modules(
+            args.input,
+            source_root=args.source_root,
+            material_ids=args.material_id,
+            write=args.write,
+            allow_dirty_sources=args.allow_dirty_sources,
+            allow_dirty_outputs=args.allow_dirty_outputs,
+            all_examples=args.all_examples,
+            scan_protocols=not args.skip_protocols,
+        )
+    elif args.card:
+        result = projection_bundle_cached_card(args.input, args.out)
+    else:
+        result = run_projection_bundle(args.input, args.out)
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0 if result["status"] == PASS else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

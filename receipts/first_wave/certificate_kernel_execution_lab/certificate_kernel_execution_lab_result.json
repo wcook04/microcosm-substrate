@@ -1,0 +1,1096 @@
+{
+  "anti_claim": "Certificate kernel execution lab runs a source-available public Lean certificate kernel in a temporary workspace, checks generated certificate rows, and records structured public CP2/Evolve rerun receipts with only dangerous payload fields omitted. It does not import macro proof bodies, export proof text, call providers, count oracle/provider output as proof, mutate source, claim benchmark solve-rate, or authorize release.",
+  "authority_ceiling": {
+    "authority_ceiling": "bounded_public_certificate_kernel_execution_receipt_only",
+    "benchmark_solve_rate_claim": false,
+    "cp2_outputs_are_proof_bodies": false,
+    "evolve_mutates_arbitrary_code": false,
+    "formal_proof_authority": "bounded_public_certificate_fixture_rows_only",
+    "lean_lake_execution_authorized": true,
+    "lean_lake_execution_scope": "temporary_workspace_copy_of_public_fixture",
+    "macro_private_body_import_authorized": false,
+    "oracle_success_counts_as_forward_success": false,
+    "proof_bodies_allowed_in_receipts": false,
+    "provider_calls_authorized": false,
+    "provider_text_counts_as_proof": false,
+    "release_authorized": false,
+    "source_mutation_authorized": false,
+    "status": "pass"
+  },
+  "authority_counters": {
+    "accepted_transition_count": 7,
+    "analyzed_declaration_count": 23,
+    "analyzed_lean_file_count": 5,
+    "cp2_downstream_effect_count": 2,
+    "cp2_translation_count": 2,
+    "evolve_accepted_count": 2,
+    "evolve_candidate_count": 2,
+    "macro_private_body_import_count": 0,
+    "oracle_forward_success_increment_count": 0,
+    "proof_body_export_count": 0,
+    "provider_results_counted": 0,
+    "residual_transition_count": 3,
+    "source_mutation_count": 0,
+    "transition_count": 10
+  },
+  "body_copied_material_count": 0,
+  "body_in_receipt": false,
+  "body_material_status": "",
+  "bundle_id": null,
+  "certificate_lab_id": "public_certificate_kernel_execution_lab_v2",
+  "certificate_manifest_id": "public_certificate_kernel_v2",
+  "certificate_manifest_summary": {
+    "body_in_receipt": false,
+    "certificate_schema": "NatSumCertificate(left,right,total) + BoundedOrderCertificate(base,period,modulus,witness)",
+    "generated_certificate_count": 7,
+    "manifest_id": "public_certificate_kernel_v2",
+    "negative_certificate_count": 2,
+    "proof_bodies_exported": false
+  },
+  "claim_separation": {
+    "contract_rejected": [],
+    "cp2_translated": [
+      {
+        "candidate_action_class": "add_certificate_row",
+        "candidate_kind": "typed_action_candidate",
+        "contract_rejected": false,
+        "disconfirmation_test": "rerun certificate row residual with selected public generated certificate and require Lean acceptance",
+        "downstream_effect": true,
+        "downstream_transition_id": "cp2_add_certificate_row_rerun",
+        "downstream_verifier_rerun": {
+          "accepted": true,
+          "action_class": "add_certificate_row",
+          "allowed_certificate_refs": [
+            "cert_8_13_21"
+          ],
+          "candidate_kind": "cp2_typed_action_rerun",
+          "contract_rejected": false,
+          "error_codes": [],
+          "lean_return_code": 0,
+          "oracle_visible": false,
+          "problem_id": "cert_8_13_21",
+          "proof_body_exported": false,
+          "provider_visible": false,
+          "stdout_stderr_in_receipt": false,
+          "target_shape": "certificate_row_selection",
+          "timed_out": false,
+          "transition_id": "cp2_add_certificate_row_rerun",
+          "verifier_failure_class": "NONE"
+        },
+        "error_codes": [],
+        "oracle_template_exported": false,
+        "proof_body_exported": false,
+        "provider_hypothesis_id": "synthetic_provider_missing_certificate_residual",
+        "provider_output_body_exported": false,
+        "raw_tactic_script_exported": false,
+        "request_id": "cp2_translate_missing_certificate_row",
+        "residual_id": "residual_missing_certificate_row",
+        "selected_certificate_refs": [
+          "cert_8_13_21"
+        ]
+      },
+      {
+        "candidate_action_class": "add_certificate_row",
+        "candidate_kind": "typed_action_candidate",
+        "contract_rejected": false,
+        "disconfirmation_test": "rerun bounded order certificate row residual with selected public generated certificate and require Lean acceptance",
+        "downstream_effect": true,
+        "downstream_transition_id": "cp2_add_order_certificate_row_rerun",
+        "downstream_verifier_rerun": {
+          "accepted": true,
+          "action_class": "add_certificate_row",
+          "allowed_certificate_refs": [
+            "order_cert_3_4_mod5"
+          ],
+          "candidate_kind": "cp2_typed_action_rerun",
+          "contract_rejected": false,
+          "error_codes": [],
+          "lean_return_code": 0,
+          "oracle_visible": false,
+          "problem_id": "order_cert_3_4_mod5",
+          "proof_body_exported": false,
+          "provider_visible": false,
+          "stdout_stderr_in_receipt": false,
+          "target_shape": "bounded_order_certificate_row_selection",
+          "timed_out": false,
+          "transition_id": "cp2_add_order_certificate_row_rerun",
+          "verifier_failure_class": "NONE"
+        },
+        "error_codes": [],
+        "oracle_template_exported": false,
+        "proof_body_exported": false,
+        "provider_hypothesis_id": "synthetic_provider_missing_order_certificate_residual",
+        "provider_output_body_exported": false,
+        "raw_tactic_script_exported": false,
+        "request_id": "cp2_translate_missing_order_certificate_row",
+        "residual_id": "residual_missing_order_certificate_row",
+        "selected_certificate_refs": [
+          "order_cert_3_4_mod5"
+        ]
+      }
+    ],
+    "evolve_accepted": [
+      {
+        "accepted": true,
+        "baseline_accept_count": 0,
+        "baseline_transition_ids": [
+          "missing_certificate_row_residual"
+        ],
+        "body_in_receipt": false,
+        "contract_rejected": false,
+        "decision": "accepted",
+        "error_codes": [],
+        "leakage_regression": false,
+        "mutated_artifact": "certificate_row_selection_policy",
+        "mutation_id": "evolve_prioritize_generated_certificate_row_after_miss",
+        "oracle_to_forward_contamination": false,
+        "rerun_accept_count": 1,
+        "rerun_transition_ids": [
+          "evolve_certificate_policy_rerun"
+        ],
+        "source_mutation_authorized": false
+      },
+      {
+        "accepted": true,
+        "baseline_accept_count": 0,
+        "baseline_transition_ids": [
+          "missing_order_certificate_row_residual"
+        ],
+        "body_in_receipt": false,
+        "contract_rejected": false,
+        "decision": "accepted",
+        "error_codes": [],
+        "leakage_regression": false,
+        "mutated_artifact": "certificate_row_selection_policy",
+        "mutation_id": "evolve_prioritize_order_certificate_row_after_miss",
+        "oracle_to_forward_contamination": false,
+        "rerun_accept_count": 1,
+        "rerun_transition_ids": [
+          "evolve_order_certificate_policy_rerun"
+        ],
+        "source_mutation_authorized": false
+      }
+    ],
+    "evolve_candidate": [
+      {
+        "accepted": true,
+        "baseline_accept_count": 0,
+        "baseline_transition_ids": [
+          "missing_certificate_row_residual"
+        ],
+        "body_in_receipt": false,
+        "contract_rejected": false,
+        "decision": "accepted",
+        "error_codes": [],
+        "leakage_regression": false,
+        "mutated_artifact": "certificate_row_selection_policy",
+        "mutation_id": "evolve_prioritize_generated_certificate_row_after_miss",
+        "oracle_to_forward_contamination": false,
+        "rerun_accept_count": 1,
+        "rerun_transition_ids": [
+          "evolve_certificate_policy_rerun"
+        ],
+        "source_mutation_authorized": false
+      },
+      {
+        "accepted": true,
+        "baseline_accept_count": 0,
+        "baseline_transition_ids": [
+          "missing_order_certificate_row_residual"
+        ],
+        "body_in_receipt": false,
+        "contract_rejected": false,
+        "decision": "accepted",
+        "error_codes": [],
+        "leakage_regression": false,
+        "mutated_artifact": "certificate_row_selection_policy",
+        "mutation_id": "evolve_prioritize_order_certificate_row_after_miss",
+        "oracle_to_forward_contamination": false,
+        "rerun_accept_count": 1,
+        "rerun_transition_ids": [
+          "evolve_order_certificate_policy_rerun"
+        ],
+        "source_mutation_authorized": false
+      }
+    ],
+    "lean_verified": [
+      {
+        "accepted": true,
+        "action_class": "direct_certificate_check",
+        "allowed_certificate_refs": [
+          "cert_2_3_5"
+        ],
+        "candidate_kind": "forward_direct_certificate",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 0,
+        "oracle_visible": false,
+        "problem_id": "cert_2_3_5",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "certificate_kernel_validation",
+        "timed_out": false,
+        "transition_id": "direct_certificate_check_2_3_5",
+        "verifier_failure_class": "NONE"
+      },
+      {
+        "accepted": true,
+        "action_class": "generated_certificate_theorem",
+        "allowed_certificate_refs": [
+          "cert_4_7_11"
+        ],
+        "candidate_kind": "forward_direct_certificate",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 0,
+        "oracle_visible": false,
+        "problem_id": "cert_4_7_11",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "generated_certificate_theorem",
+        "timed_out": false,
+        "transition_id": "direct_generated_certificate_theorem_4_7_11",
+        "verifier_failure_class": "NONE"
+      },
+      {
+        "accepted": true,
+        "action_class": "add_certificate_row",
+        "allowed_certificate_refs": [
+          "cert_8_13_21"
+        ],
+        "candidate_kind": "cp2_typed_action_rerun",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 0,
+        "oracle_visible": false,
+        "problem_id": "cert_8_13_21",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "certificate_row_selection",
+        "timed_out": false,
+        "transition_id": "cp2_add_certificate_row_rerun",
+        "verifier_failure_class": "NONE"
+      },
+      {
+        "accepted": true,
+        "action_class": "select_certificate_row",
+        "allowed_certificate_refs": [
+          "cert_8_13_21"
+        ],
+        "candidate_kind": "evolve_policy_rerun",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 0,
+        "oracle_visible": false,
+        "problem_id": "cert_8_13_21",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "certificate_row_selection",
+        "timed_out": false,
+        "transition_id": "evolve_certificate_policy_rerun",
+        "verifier_failure_class": "NONE"
+      },
+      {
+        "accepted": true,
+        "action_class": "direct_order_certificate_check",
+        "allowed_certificate_refs": [
+          "order_cert_2_3_mod5"
+        ],
+        "candidate_kind": "forward_direct_certificate",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 0,
+        "oracle_visible": false,
+        "problem_id": "order_cert_2_3_mod5",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "bounded_order_certificate_validation",
+        "timed_out": false,
+        "transition_id": "direct_order_certificate_check_2_3_mod5",
+        "verifier_failure_class": "NONE"
+      },
+      {
+        "accepted": true,
+        "action_class": "add_certificate_row",
+        "allowed_certificate_refs": [
+          "order_cert_3_4_mod5"
+        ],
+        "candidate_kind": "cp2_typed_action_rerun",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 0,
+        "oracle_visible": false,
+        "problem_id": "order_cert_3_4_mod5",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "bounded_order_certificate_row_selection",
+        "timed_out": false,
+        "transition_id": "cp2_add_order_certificate_row_rerun",
+        "verifier_failure_class": "NONE"
+      },
+      {
+        "accepted": true,
+        "action_class": "select_certificate_row",
+        "allowed_certificate_refs": [
+          "order_cert_3_4_mod5"
+        ],
+        "candidate_kind": "evolve_policy_rerun",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 0,
+        "oracle_visible": false,
+        "problem_id": "order_cert_3_4_mod5",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "bounded_order_certificate_row_selection",
+        "timed_out": false,
+        "transition_id": "evolve_order_certificate_policy_rerun",
+        "verifier_failure_class": "NONE"
+      }
+    ],
+    "oracle_compared": [
+      {
+        "counted_as_forward_success": false,
+        "forward_problem_id": "missing_cert_5_8_13",
+        "oracle_result_class": "oracle_can_name_certificate_row",
+        "sidecar_id": "oracle_missing_certificate_row_available_for_comparison_only"
+      },
+      {
+        "counted_as_forward_success": false,
+        "forward_problem_id": "missing_order_cert_7_11_mod13",
+        "oracle_result_class": "oracle_can_name_order_certificate_row",
+        "sidecar_id": "oracle_missing_order_certificate_row_available_for_comparison_only"
+      }
+    ],
+    "proof_synthesis_fail": [
+      {
+        "accepted": false,
+        "action_class": "direct_certificate_check",
+        "allowed_certificate_refs": [
+          "bad_cert_2_3_6"
+        ],
+        "candidate_kind": "forward_negative_certificate",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 1,
+        "oracle_visible": false,
+        "problem_id": "bad_cert_2_3_6",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "certificate_kernel_validation",
+        "timed_out": false,
+        "transition_id": "bad_generated_certificate_rejected",
+        "verifier_failure_class": "PROOF_SYNTHESIS_FAIL"
+      }
+    ],
+    "provider_suggested": [
+      {
+        "candidate_action_classes": [
+          "add_certificate_row"
+        ],
+        "hypothesis_id": "synthetic_provider_missing_certificate_residual",
+        "missing_primitive": "public certificate row selection",
+        "provider_results_counted": false,
+        "residual_class": "PREMISE_RETRIEVAL_MISS",
+        "residual_id": "residual_missing_certificate_row"
+      },
+      {
+        "candidate_action_classes": [
+          "add_certificate_row"
+        ],
+        "hypothesis_id": "synthetic_provider_missing_order_certificate_residual",
+        "missing_primitive": "public bounded order certificate row selection",
+        "provider_results_counted": false,
+        "residual_class": "PREMISE_RETRIEVAL_MISS",
+        "residual_id": "residual_missing_order_certificate_row"
+      }
+    ],
+    "retrieval_miss": [
+      {
+        "accepted": false,
+        "action_class": "select_certificate_row",
+        "allowed_certificate_refs": [],
+        "candidate_kind": "forward_baseline",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 1,
+        "oracle_visible": false,
+        "problem_id": "missing_cert_5_8_13",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "certificate_row_selection",
+        "timed_out": false,
+        "transition_id": "missing_certificate_row_residual",
+        "verifier_failure_class": "PREMISE_RETRIEVAL_MISS"
+      },
+      {
+        "accepted": false,
+        "action_class": "select_certificate_row",
+        "allowed_certificate_refs": [],
+        "candidate_kind": "forward_baseline",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 1,
+        "oracle_visible": false,
+        "problem_id": "missing_order_cert_7_11_mod13",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "bounded_order_certificate_row_selection",
+        "timed_out": false,
+        "transition_id": "missing_order_certificate_row_residual",
+        "verifier_failure_class": "PREMISE_RETRIEVAL_MISS"
+      }
+    ]
+  },
+  "command": "python -m microcosm_core.organs.certificate_kernel_execution_lab run --input fixtures/first_wave/certificate_kernel_execution_lab/input --out receipts/first_wave/certificate_kernel_execution_lab",
+  "cp2_translation_trace": [
+    {
+      "candidate_action_class": "add_certificate_row",
+      "candidate_kind": "typed_action_candidate",
+      "contract_rejected": false,
+      "disconfirmation_test": "rerun certificate row residual with selected public generated certificate and require Lean acceptance",
+      "downstream_effect": true,
+      "downstream_transition_id": "cp2_add_certificate_row_rerun",
+      "downstream_verifier_rerun": {
+        "accepted": true,
+        "action_class": "add_certificate_row",
+        "allowed_certificate_refs": [
+          "cert_8_13_21"
+        ],
+        "candidate_kind": "cp2_typed_action_rerun",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 0,
+        "oracle_visible": false,
+        "problem_id": "cert_8_13_21",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "certificate_row_selection",
+        "timed_out": false,
+        "transition_id": "cp2_add_certificate_row_rerun",
+        "verifier_failure_class": "NONE"
+      },
+      "error_codes": [],
+      "oracle_template_exported": false,
+      "proof_body_exported": false,
+      "provider_hypothesis_id": "synthetic_provider_missing_certificate_residual",
+      "provider_output_body_exported": false,
+      "raw_tactic_script_exported": false,
+      "request_id": "cp2_translate_missing_certificate_row",
+      "residual_id": "residual_missing_certificate_row",
+      "selected_certificate_refs": [
+        "cert_8_13_21"
+      ]
+    },
+    {
+      "candidate_action_class": "add_certificate_row",
+      "candidate_kind": "typed_action_candidate",
+      "contract_rejected": false,
+      "disconfirmation_test": "rerun bounded order certificate row residual with selected public generated certificate and require Lean acceptance",
+      "downstream_effect": true,
+      "downstream_transition_id": "cp2_add_order_certificate_row_rerun",
+      "downstream_verifier_rerun": {
+        "accepted": true,
+        "action_class": "add_certificate_row",
+        "allowed_certificate_refs": [
+          "order_cert_3_4_mod5"
+        ],
+        "candidate_kind": "cp2_typed_action_rerun",
+        "contract_rejected": false,
+        "error_codes": [],
+        "lean_return_code": 0,
+        "oracle_visible": false,
+        "problem_id": "order_cert_3_4_mod5",
+        "proof_body_exported": false,
+        "provider_visible": false,
+        "stdout_stderr_in_receipt": false,
+        "target_shape": "bounded_order_certificate_row_selection",
+        "timed_out": false,
+        "transition_id": "cp2_add_order_certificate_row_rerun",
+        "verifier_failure_class": "NONE"
+      },
+      "error_codes": [],
+      "oracle_template_exported": false,
+      "proof_body_exported": false,
+      "provider_hypothesis_id": "synthetic_provider_missing_order_certificate_residual",
+      "provider_output_body_exported": false,
+      "raw_tactic_script_exported": false,
+      "request_id": "cp2_translate_missing_order_certificate_row",
+      "residual_id": "residual_missing_order_certificate_row",
+      "selected_certificate_refs": [
+        "order_cert_3_4_mod5"
+      ]
+    }
+  ],
+  "created_at": "2026-06-01T04:18:23+00:00",
+  "error_codes": [
+    "CERTIFICATE_KERNEL_EXECUTION_CP2_PROOF_BODY_FORBIDDEN",
+    "CERTIFICATE_KERNEL_EXECUTION_EVOLVE_SCOPE_FORBIDDEN",
+    "CERTIFICATE_KERNEL_EXECUTION_PRIVATE_SOURCE_REF_FORBIDDEN",
+    "CERTIFICATE_KERNEL_EXECUTION_PROVIDER_OR_ORACLE_VISIBLE"
+  ],
+  "evolve_mutation_trace": [
+    {
+      "accepted": true,
+      "baseline_accept_count": 0,
+      "baseline_transition_ids": [
+        "missing_certificate_row_residual"
+      ],
+      "body_in_receipt": false,
+      "contract_rejected": false,
+      "decision": "accepted",
+      "error_codes": [],
+      "leakage_regression": false,
+      "mutated_artifact": "certificate_row_selection_policy",
+      "mutation_id": "evolve_prioritize_generated_certificate_row_after_miss",
+      "oracle_to_forward_contamination": false,
+      "rerun_accept_count": 1,
+      "rerun_transition_ids": [
+        "evolve_certificate_policy_rerun"
+      ],
+      "source_mutation_authorized": false
+    },
+    {
+      "accepted": true,
+      "baseline_accept_count": 0,
+      "baseline_transition_ids": [
+        "missing_order_certificate_row_residual"
+      ],
+      "body_in_receipt": false,
+      "contract_rejected": false,
+      "decision": "accepted",
+      "error_codes": [],
+      "leakage_regression": false,
+      "mutated_artifact": "certificate_row_selection_policy",
+      "mutation_id": "evolve_prioritize_order_certificate_row_after_miss",
+      "oracle_to_forward_contamination": false,
+      "rerun_accept_count": 1,
+      "rerun_transition_ids": [
+        "evolve_order_certificate_policy_rerun"
+      ],
+      "source_mutation_authorized": false
+    }
+  ],
+  "expected_negative_cases": [
+    "certificate_manifest_private_source_ref",
+    "cp2_certificate_contains_proof_body",
+    "evolve_certificate_mutates_source",
+    "transition_provider_oracle_visible"
+  ],
+  "findings": [
+    {
+      "body_in_receipt": false,
+      "error_code": "CERTIFICATE_KERNEL_EXECUTION_PRIVATE_SOURCE_REF_FORBIDDEN",
+      "message": "Certificate manifests may not import private source paths or private macro bodies.",
+      "negative_case_id": "certificate_manifest_private_source_ref",
+      "subject_id": "certificate_manifest_private_source_ref",
+      "subject_kind": "certificate_manifest"
+    },
+    {
+      "body_in_receipt": false,
+      "error_code": "CERTIFICATE_KERNEL_EXECUTION_CP2_PROOF_BODY_FORBIDDEN",
+      "message": "CP2 negative fixture rejected proof bodies or raw tactic scripts.",
+      "negative_case_id": "cp2_certificate_contains_proof_body",
+      "subject_id": "cp2_certificate_contains_proof_body",
+      "subject_kind": "cp2_translation_request"
+    },
+    {
+      "body_in_receipt": false,
+      "error_code": "CERTIFICATE_KERNEL_EXECUTION_EVOLVE_SCOPE_FORBIDDEN",
+      "message": "Evolve negative fixture rejected unbounded source mutation.",
+      "negative_case_id": "evolve_certificate_mutates_source",
+      "subject_id": "evolve_certificate_mutates_source",
+      "subject_kind": "evolve_mutation"
+    },
+    {
+      "body_in_receipt": false,
+      "error_code": "CERTIFICATE_KERNEL_EXECUTION_PROVIDER_OR_ORACLE_VISIBLE",
+      "message": "Forward certificate transition execution must not see oracle sidecars or provider hypothesis text.",
+      "negative_case_id": "transition_provider_oracle_visible",
+      "subject_id": "transition_provider_oracle_visible",
+      "subject_kind": "transition_candidate"
+    }
+  ],
+  "fixture_id": "first_wave.certificate_kernel_execution_lab",
+  "input_mode": "first_wave_fixture",
+  "lake_project_build": {
+    "argv": [
+      "lake",
+      "build",
+      "MicrocosmCertificateLab"
+    ],
+    "cwd_name": "lake_project",
+    "return_code": 0,
+    "stderr_line_count": 2,
+    "stdout_line_count": 5,
+    "stdout_stderr_in_receipt": false,
+    "timed_out": false
+  },
+  "lean_analyzer_receipt": {
+    "anti_claim": "Analyzer metadata records public declarations, imports, hashes, and line counts only; it does not export proof bodies or prove general theorem correctness.",
+    "body_in_receipt": false,
+    "declaration_count": 23,
+    "files": [
+      {
+        "body_in_receipt": false,
+        "declarations": [
+          "public_certificate_kernel_instance_2_3_5",
+          "public_certificate_kernel_instance_4_7_11",
+          "public_certificate_kernel_instance_8_13_21",
+          "public_order_certificate_kernel_instance_2_3_mod5",
+          "public_order_certificate_kernel_instance_3_4_mod5"
+        ],
+        "imports": [
+          "MicrocosmCertificateLab.GeneratedCertificates"
+        ],
+        "line_count": 25,
+        "sha256": "3d85c9ae20795c4de4d36d9fdd6a1eaf5b7265cac509eb9811e73a154d989a44",
+        "source_ref": "fixtures/first_wave/certificate_kernel_execution_lab/input/lake_project/MicrocosmCertificateLab/Basic.lean"
+      },
+      {
+        "body_in_receipt": false,
+        "declarations": [
+          "BoundedOrderCertificate",
+          "NatSumCertificate",
+          "certificateRowShape",
+          "orderCertificateShape",
+          "validateBoundedOrderCertificate",
+          "validateNatSumCertificate"
+        ],
+        "imports": [],
+        "line_count": 31,
+        "sha256": "7bfedd6e9943e3eaf447836b34c3b4c036ccdd7b2252364368dab28ed8e9e62e",
+        "source_ref": "fixtures/first_wave/certificate_kernel_execution_lab/input/lake_project/MicrocosmCertificateLab/CertificateKernel.lean"
+      },
+      {
+        "body_in_receipt": false,
+        "declarations": [
+          "bad_cert_2_3_6",
+          "bad_order_cert_4_2_mod5",
+          "cert_2_3_5",
+          "cert_2_3_5_valid",
+          "cert_4_7_11",
+          "cert_4_7_11_valid",
+          "cert_8_13_21",
+          "cert_8_13_21_valid",
+          "order_cert_2_3_mod5",
+          "order_cert_2_3_mod5_valid",
+          "order_cert_3_4_mod5",
+          "order_cert_3_4_mod5_valid"
+        ],
+        "imports": [
+          "MicrocosmCertificateLab.CertificateKernel"
+        ],
+        "line_count": 36,
+        "sha256": "1dd302a14905e0c7b9b34aeb9675f2aaf08f8eedf8e56a24f883b5062c167ab2",
+        "source_ref": "fixtures/first_wave/certificate_kernel_execution_lab/input/lake_project/MicrocosmCertificateLab/GeneratedCertificates.lean"
+      },
+      {
+        "body_in_receipt": false,
+        "declarations": [],
+        "imports": [
+          "MicrocosmCertificateLab.Basic",
+          "MicrocosmCertificateLab.CertificateKernel",
+          "MicrocosmCertificateLab.GeneratedCertificates"
+        ],
+        "line_count": 4,
+        "sha256": "54b83aad5a8d889a20426b298c0e7515db2930845e056e35fe485ce4ac86a700",
+        "source_ref": "fixtures/first_wave/certificate_kernel_execution_lab/input/lake_project/MicrocosmCertificateLab.lean"
+      },
+      {
+        "body_in_receipt": false,
+        "declarations": [],
+        "imports": [
+          "Lake"
+        ],
+        "line_count": 8,
+        "sha256": "596c40a44b8ba76b172ce99fe102708ba320d4e91935af1f7d59cb8c89417f08",
+        "source_ref": "fixtures/first_wave/certificate_kernel_execution_lab/input/lake_project/lakefile.lean"
+      }
+    ],
+    "generated_certificates_separate_from_kernel": true,
+    "imports": [
+      "Lake",
+      "MicrocosmCertificateLab.Basic",
+      "MicrocosmCertificateLab.CertificateKernel",
+      "MicrocosmCertificateLab.GeneratedCertificates"
+    ],
+    "lean_file_count": 5,
+    "profile_timing_available": false,
+    "schema_version": "certificate_kernel_execution_lab_lean_analyzer_v1"
+  },
+  "missing_negative_cases": [],
+  "observed_negative_cases": {
+    "certificate_manifest_private_source_ref": [
+      "CERTIFICATE_KERNEL_EXECUTION_PRIVATE_SOURCE_REF_FORBIDDEN"
+    ],
+    "cp2_certificate_contains_proof_body": [
+      "CERTIFICATE_KERNEL_EXECUTION_CP2_PROOF_BODY_FORBIDDEN"
+    ],
+    "evolve_certificate_mutates_source": [
+      "CERTIFICATE_KERNEL_EXECUTION_EVOLVE_SCOPE_FORBIDDEN"
+    ],
+    "transition_provider_oracle_visible": [
+      "CERTIFICATE_KERNEL_EXECUTION_PROVIDER_OR_ORACLE_VISIBLE"
+    ]
+  },
+  "organ_id": "certificate_kernel_execution_lab",
+  "public_runtime_refs": [
+    "fixtures/first_wave/certificate_kernel_execution_lab/input/lake_project/MicrocosmCertificateLab/CertificateKernel.lean",
+    "fixtures/first_wave/certificate_kernel_execution_lab/input/lake_project/MicrocosmCertificateLab/GeneratedCertificates.lean",
+    "fixtures/first_wave/certificate_kernel_execution_lab/input/lake_project/MicrocosmCertificateLab/Basic.lean"
+  ],
+  "real_runtime_receipt": true,
+  "receipt_id": "certificate_kernel_execution_lab_result_receipt_v1",
+  "receipt_paths": [
+    "receipts/first_wave/certificate_kernel_execution_lab/certificate_kernel_execution_lab_result.json",
+    "receipts/first_wave/certificate_kernel_execution_lab/certificate_kernel_execution_lab_board.json",
+    "receipts/first_wave/certificate_kernel_execution_lab/certificate_kernel_execution_lab_validation_receipt.json",
+    "receipts/acceptance/first_wave/certificate_kernel_execution_lab_fixture_acceptance.json"
+  ],
+  "receipt_transparency_contract": {
+    "body_in_receipt": false,
+    "forbidden_payload_fields": [
+      "proof_body",
+      "raw_tactic_script",
+      "provider_text",
+      "oracle_ideal_answer",
+      "oracle_needed_premise_ids",
+      "private_source_path",
+      "private_payload_body",
+      "stdout_body",
+      "stderr_body"
+    ],
+    "omitted_payload_scope": "proof_provider_oracle_private_source_and_stdout_stderr_bodies_only",
+    "real_substrate_default": true,
+    "receipt_body_is_public_evidence": true,
+    "required_public_evidence_fields": [
+      "theorem_or_declaration_names",
+      "lean_lake_command_identity",
+      "lean_return_code",
+      "source_hashes",
+      "declaration_counts",
+      "accepted_transition_count",
+      "residual_transition_count",
+      "negative_case_id",
+      "cp2_action_class",
+      "evolve_policy_artifact_id",
+      "oracle_provider_separation_counters",
+      "authority_ceiling",
+      "anti_claim"
+    ],
+    "schema_version": "verifier_lab_receipt_transparency_contract_v1",
+    "stdout_stderr_policy": "counts_and_return_codes_public_bodies_omitted"
+  },
+  "schema_version": "certificate_kernel_execution_lab_result_receipt_v1",
+  "secret_exclusion_scan": {
+    "anti_claim": "Scanner terms are regression sentinels for tests and declared import rows. A pass is not a complete secret scan, credential audit, release clearance, or proof that no private material exists.",
+    "blocking_hit_count": 0,
+    "body_in_receipt": false,
+    "exclusion_policy": "Open-source macro substrate by default; exclude only secrets, credentials, operator conversation bodies, provider payloads, account/session state, and credential-equivalent live-access material.",
+    "hit_count": 0,
+    "hits": [],
+    "omitted_output_fields": [
+      "source_excerpt",
+      "body"
+    ],
+    "real_substrate_default": true,
+    "scan_purpose": "credential_account_bound_and_operator_payload_exclusion",
+    "scan_scope": {
+      "body_text_exported_in_findings": false,
+      "does_not_authorize_source_mutation": true,
+      "does_not_certify_absence_of_secrets": true,
+      "does_not_read_binary_or_live_account_state": true,
+      "intended_use": "Detect declared synthetic sentinel tokens and classify explicit macro-import material rows before public body import.",
+      "not_a_complete_secret_scan": true,
+      "scope_id": "synthetic_sentinel_and_declared_import_policy"
+    },
+    "scanned_path_count": 12,
+    "status": "pass",
+    "synthetic_receipt_policy": "Synthetic receipts are admissible only as regression or negative-case harness artifacts, or as named blocked-import debt. They are not substitutes for non-secret macro substrate, real runtime receipts, real copied bodies, or source-faithful refactors."
+  },
+  "source_module_count": 0,
+  "source_module_imports": {
+    "blocked_source_refs": [],
+    "body_in_receipt": false,
+    "body_material_classes": {},
+    "findings": [],
+    "material_classes": [],
+    "module_count": 0,
+    "module_ids": [],
+    "omitted_material": [],
+    "source_module_import_status": "not_present",
+    "source_module_manifest_ref": "fixtures/first_wave/certificate_kernel_execution_lab/input/source_module_manifest.json",
+    "source_refs": [],
+    "status": "not_present",
+    "verified_module_count": 0
+  },
+  "source_module_manifest_ref": "fixtures/first_wave/certificate_kernel_execution_lab/input/source_module_manifest.json",
+  "source_module_manifest_status": "not_present",
+  "source_open_body_imports": {
+    "aggregate_floor_ref": "",
+    "authority_ceiling": {
+      "formal_proof_authority": "bounded_public_macro_certificate_kernel_body_refs_only",
+      "proof_bodies_in_receipts": false,
+      "provider_calls_authorized": false,
+      "release_authorized": false
+    },
+    "blocked_source_refs": [],
+    "body_in_receipt": false,
+    "body_material_classes": {},
+    "body_material_count": 0,
+    "body_material_ids": [],
+    "body_material_status": "",
+    "body_text_exported_in_receipts": false,
+    "body_text_exported_in_workingness": false,
+    "body_text_in_receipt": false,
+    "material_classes": [],
+    "omitted_material": [],
+    "reader_action": "",
+    "schema_version": "certificate_kernel_execution_lab_source_open_body_imports_v1",
+    "source_import_class": "",
+    "source_manifest_refs": [],
+    "status": "not_present"
+  },
+  "status": "pass",
+  "synthetic_receipt_standin_allowed": false,
+  "tool_versions": {
+    "lake_available": true,
+    "lake_version_command": {
+      "argv": [
+        "lake",
+        "--version"
+      ],
+      "cwd_name": "microcosm-substrate",
+      "return_code": 0,
+      "stderr_line_count": 0,
+      "stdout_line_count": 1,
+      "stdout_stderr_in_receipt": false,
+      "timed_out": false
+    },
+    "lean_available": true,
+    "lean_version_command": {
+      "argv": [
+        "lean",
+        "--version"
+      ],
+      "cwd_name": "microcosm-substrate",
+      "return_code": 0,
+      "stderr_line_count": 0,
+      "stdout_line_count": 1,
+      "stdout_stderr_in_receipt": false,
+      "timed_out": false
+    }
+  },
+  "transition_trace": [
+    {
+      "accepted": true,
+      "action_class": "direct_certificate_check",
+      "allowed_certificate_refs": [
+        "cert_2_3_5"
+      ],
+      "candidate_kind": "forward_direct_certificate",
+      "contract_rejected": false,
+      "error_codes": [],
+      "lean_return_code": 0,
+      "oracle_visible": false,
+      "problem_id": "cert_2_3_5",
+      "proof_body_exported": false,
+      "provider_visible": false,
+      "stdout_stderr_in_receipt": false,
+      "target_shape": "certificate_kernel_validation",
+      "timed_out": false,
+      "transition_id": "direct_certificate_check_2_3_5",
+      "verifier_failure_class": "NONE"
+    },
+    {
+      "accepted": true,
+      "action_class": "generated_certificate_theorem",
+      "allowed_certificate_refs": [
+        "cert_4_7_11"
+      ],
+      "candidate_kind": "forward_direct_certificate",
+      "contract_rejected": false,
+      "error_codes": [],
+      "lean_return_code": 0,
+      "oracle_visible": false,
+      "problem_id": "cert_4_7_11",
+      "proof_body_exported": false,
+      "provider_visible": false,
+      "stdout_stderr_in_receipt": false,
+      "target_shape": "generated_certificate_theorem",
+      "timed_out": false,
+      "transition_id": "direct_generated_certificate_theorem_4_7_11",
+      "verifier_failure_class": "NONE"
+    },
+    {
+      "accepted": false,
+      "action_class": "select_certificate_row",
+      "allowed_certificate_refs": [],
+      "candidate_kind": "forward_baseline",
+      "contract_rejected": false,
+      "error_codes": [],
+      "lean_return_code": 1,
+      "oracle_visible": false,
+      "problem_id": "missing_cert_5_8_13",
+      "proof_body_exported": false,
+      "provider_visible": false,
+      "stdout_stderr_in_receipt": false,
+      "target_shape": "certificate_row_selection",
+      "timed_out": false,
+      "transition_id": "missing_certificate_row_residual",
+      "verifier_failure_class": "PREMISE_RETRIEVAL_MISS"
+    },
+    {
+      "accepted": false,
+      "action_class": "direct_certificate_check",
+      "allowed_certificate_refs": [
+        "bad_cert_2_3_6"
+      ],
+      "candidate_kind": "forward_negative_certificate",
+      "contract_rejected": false,
+      "error_codes": [],
+      "lean_return_code": 1,
+      "oracle_visible": false,
+      "problem_id": "bad_cert_2_3_6",
+      "proof_body_exported": false,
+      "provider_visible": false,
+      "stdout_stderr_in_receipt": false,
+      "target_shape": "certificate_kernel_validation",
+      "timed_out": false,
+      "transition_id": "bad_generated_certificate_rejected",
+      "verifier_failure_class": "PROOF_SYNTHESIS_FAIL"
+    },
+    {
+      "accepted": true,
+      "action_class": "add_certificate_row",
+      "allowed_certificate_refs": [
+        "cert_8_13_21"
+      ],
+      "candidate_kind": "cp2_typed_action_rerun",
+      "contract_rejected": false,
+      "error_codes": [],
+      "lean_return_code": 0,
+      "oracle_visible": false,
+      "problem_id": "cert_8_13_21",
+      "proof_body_exported": false,
+      "provider_visible": false,
+      "stdout_stderr_in_receipt": false,
+      "target_shape": "certificate_row_selection",
+      "timed_out": false,
+      "transition_id": "cp2_add_certificate_row_rerun",
+      "verifier_failure_class": "NONE"
+    },
+    {
+      "accepted": true,
+      "action_class": "select_certificate_row",
+      "allowed_certificate_refs": [
+        "cert_8_13_21"
+      ],
+      "candidate_kind": "evolve_policy_rerun",
+      "contract_rejected": false,
+      "error_codes": [],
+      "lean_return_code": 0,
+      "oracle_visible": false,
+      "problem_id": "cert_8_13_21",
+      "proof_body_exported": false,
+      "provider_visible": false,
+      "stdout_stderr_in_receipt": false,
+      "target_shape": "certificate_row_selection",
+      "timed_out": false,
+      "transition_id": "evolve_certificate_policy_rerun",
+      "verifier_failure_class": "NONE"
+    },
+    {
+      "accepted": true,
+      "action_class": "direct_order_certificate_check",
+      "allowed_certificate_refs": [
+        "order_cert_2_3_mod5"
+      ],
+      "candidate_kind": "forward_direct_certificate",
+      "contract_rejected": false,
+      "error_codes": [],
+      "lean_return_code": 0,
+      "oracle_visible": false,
+      "problem_id": "order_cert_2_3_mod5",
+      "proof_body_exported": false,
+      "provider_visible": false,
+      "stdout_stderr_in_receipt": false,
+      "target_shape": "bounded_order_certificate_validation",
+      "timed_out": false,
+      "transition_id": "direct_order_certificate_check_2_3_mod5",
+      "verifier_failure_class": "NONE"
+    },
+    {
+      "accepted": false,
+      "action_class": "select_certificate_row",
+      "allowed_certificate_refs": [],
+      "candidate_kind": "forward_baseline",
+      "contract_rejected": false,
+      "error_codes": [],
+      "lean_return_code": 1,
+      "oracle_visible": false,
+      "problem_id": "missing_order_cert_7_11_mod13",
+      "proof_body_exported": false,
+      "provider_visible": false,
+      "stdout_stderr_in_receipt": false,
+      "target_shape": "bounded_order_certificate_row_selection",
+      "timed_out": false,
+      "transition_id": "missing_order_certificate_row_residual",
+      "verifier_failure_class": "PREMISE_RETRIEVAL_MISS"
+    },
+    {
+      "accepted": true,
+      "action_class": "add_certificate_row",
+      "allowed_certificate_refs": [
+        "order_cert_3_4_mod5"
+      ],
+      "candidate_kind": "cp2_typed_action_rerun",
+      "contract_rejected": false,
+      "error_codes": [],
+      "lean_return_code": 0,
+      "oracle_visible": false,
+      "problem_id": "order_cert_3_4_mod5",
+      "proof_body_exported": false,
+      "provider_visible": false,
+      "stdout_stderr_in_receipt": false,
+      "target_shape": "bounded_order_certificate_row_selection",
+      "timed_out": false,
+      "transition_id": "cp2_add_order_certificate_row_rerun",
+      "verifier_failure_class": "NONE"
+    },
+    {
+      "accepted": true,
+      "action_class": "select_certificate_row",
+      "allowed_certificate_refs": [
+        "order_cert_3_4_mod5"
+      ],
+      "candidate_kind": "evolve_policy_rerun",
+      "contract_rejected": false,
+      "error_codes": [],
+      "lean_return_code": 0,
+      "oracle_visible": false,
+      "problem_id": "order_cert_3_4_mod5",
+      "proof_body_exported": false,
+      "provider_visible": false,
+      "stdout_stderr_in_receipt": false,
+      "target_shape": "bounded_order_certificate_row_selection",
+      "timed_out": false,
+      "transition_id": "evolve_order_certificate_policy_rerun",
+      "verifier_failure_class": "NONE"
+    }
+  ],
+  "validator_id": "validator.microcosm.organs.certificate_kernel_execution_lab",
+  "verified_source_module_count": 0
+}
