@@ -2,10 +2,10 @@
   "anti_claim": "This receipt validates export shape for a generated public folder. It is not release, publication, hosted launch, private-root equivalence, or complete secret-audit authority.",
   "artifact": {
     "artifact_dir": "microcosm-substrate",
-    "artifact_payload_hash_sha256": "3b01698a5cd74a4544bd5ee15a0b30d027e486a5b56feae84a490203e4a9b5da",
+    "artifact_payload_hash_sha256": "bc3cae88832f73bb159e240a189b4a4c69a512c19c515560f6f3d358de55c7da",
     "file_count": 4803,
     "mode": "generated_standalone_folder",
-    "payload_bytes": 104184112,
+    "payload_bytes": 104184106,
     "receipt_generated_after_inventory": true,
     "release_receipt_ref": "receipts/release/release_export_receipt.json"
   },
@@ -651,7 +651,7 @@
       "status": "pass"
     }
   },
-  "generated_at": "2026-06-19T18:47:44+00:00",
+  "generated_at": "2026-06-19T19:06:03+00:00",
   "install_smoke_receipt": {
     "body_in_receipt": false,
     "bytecode_write_suppressed": true,
@@ -915,8 +915,8 @@
       {
         "path": "SECURITY.md",
         "role": "public_entry_document",
-        "sha256": "a161e151d03fe3a4892c280486e8495bb0cd0a025c537c7fad14c2969c98f64d",
-        "size_bytes": 5250
+        "sha256": "07d08509af42edbacc77ce695d4e62ea446048be88bc99b3a9a010e4fbcb698e",
+        "size_bytes": 5244
       },
       {
         "path": "atlas/agent_task_routes.json",
@@ -30543,7 +30543,7 @@
     },
     "hosted_launch_authorized": false,
     "materials_ledger": {
-      "artifact_payload_hash_sha256": "3b01698a5cd74a4544bd5ee15a0b30d027e486a5b56feae84a490203e4a9b5da",
+      "artifact_payload_hash_sha256": "bc3cae88832f73bb159e240a189b4a4c69a512c19c515560f6f3d358de55c7da",
       "body_in_receipt": false,
       "dependency_summary": {
         "build_requires": [
@@ -30813,8 +30813,10 @@
       "hosted_launch_authorized": false,
       "publish_authorized": false,
       "release_authorization_gate": {
-        "additional_gate_input_count": 0,
-        "additional_gate_inputs": [],
+        "additional_gate_input_count": 1,
+        "additional_gate_inputs": [
+          "clean_source_root_or_explicit_dirty_material_authorization"
+        ],
         "gate_id": "explicit_release_authorization_gate",
         "invoked": false,
         "promotion_action": "record_explicit_release_authorization_receipt",
@@ -30832,44 +30834,46 @@
     "candidate_identity": {
       "artifact": {
         "artifact_dir": "microcosm-substrate",
-        "artifact_payload_hash_sha256": "3b01698a5cd74a4544bd5ee15a0b30d027e486a5b56feae84a490203e4a9b5da",
+        "artifact_payload_hash_sha256": "bc3cae88832f73bb159e240a189b4a4c69a512c19c515560f6f3d358de55c7da",
         "file_count": 4803,
         "mode": "generated_standalone_folder",
-        "payload_bytes": 104184112
+        "payload_bytes": 104184106
       },
       "export_command": "python -m microcosm_core.release_export --root <microcosm-root> --out <release-out> --force --summary",
       "release_receipt_ref": "receipts/release/release_export_receipt.json",
       "source": {
         "body_in_receipt": false,
-        "dirty_source_path_count": 0,
+        "dirty_source_path_count": 1,
         "dirty_source_path_overflow_count": 0,
-        "dirty_source_path_sample": [],
-        "git_head": "94a049af8b7d632789b90dcf0328378fe267dff8",
+        "dirty_source_path_sample": [
+          "SECURITY.md"
+        ],
+        "git_head": "bfb7cafccd6d4090b7169115de11cdb2b220de80",
         "source_root_ref": "microcosm-substrate",
-        "source_tree_state_kind": "git_head_clean",
+        "source_tree_state_kind": "git_head_with_worktree_delta",
         "status": "available"
       }
     },
     "candidate_invalidation_assessment": {
       "assessment_status": "pass",
-      "candidate_validity_result": "gate_eligible",
+      "candidate_validity_result": "historical_only",
       "comparison": {
         "commits_after_candidate_count": 0,
-        "compare_head": "94a049af8b7d632789b90dcf0328378fe267dff8",
+        "compare_head": "bfb7cafccd6d4090b7169115de11cdb2b220de80",
         "compare_ref": "HEAD",
         "observed_commits": []
       },
-      "disclosure": "no_newer_commits_after_frozen_candidate",
+      "disclosure": "candidate_is_not_gate_ready",
       "frozen_candidate": {
-        "artifact_hash": "3b01698a5cd74a4544bd5ee15a0b30d027e486a5b56feae84a490203e4a9b5da",
+        "artifact_hash": "bc3cae88832f73bb159e240a189b4a4c69a512c19c515560f6f3d358de55c7da",
         "file_count": 4803,
-        "git_head": "94a049af8b7d632789b90dcf0328378fe267dff8",
-        "payload_bytes": 104184112,
+        "git_head": "bfb7cafccd6d4090b7169115de11cdb2b220de80",
+        "payload_bytes": 104184106,
         "release_receipt_ref": "receipts/release/release_export_receipt.json",
         "source_root_ref": "microcosm-substrate",
-        "source_tree_state_kind": "git_head_clean"
+        "source_tree_state_kind": "git_head_with_worktree_delta"
       },
-      "gate_state": "ready_pending_operator_authorization",
+      "gate_state": "defer",
       "materiality_policy": {
         "macro_assimilation_material_prefixes": [
           "microcosm-substrate/examples/macro_projection_import_protocol/",
@@ -30913,10 +30917,10 @@
     },
     "candidate_state": "validated_release_candidate_pending_explicit_authorization",
     "external_warning_classification": {
-      "release_authorization_blocking_warning_count": 0,
+      "release_authorization_blocking_warning_count": 1,
       "release_blocking_rule": "A warning blocks release only if it changes public artifact claims for included or excluded files, private-state absence, runnable first-screen behavior, projection freshness, source/material digest correspondence, install-mode support, authority ceiling, or cold-reader documentation.",
       "release_blocking_warning_count": 0,
-      "warning_count": 3,
+      "warning_count": 4,
       "warnings": [
         {
           "classification": "release_candidate_disclosed",
@@ -30941,39 +30945,58 @@
           "release_authorization_blocking": false,
           "release_blocking": false,
           "warning_id": "cap_census.json"
+        },
+        {
+          "classification": "release_authority_gate_input",
+          "dirty_source_path_count": 1,
+          "public_artifact_claim_impact": [
+            "source_material_identity"
+          ],
+          "reason": "The artifact is hash-bound, but the source root has uncommitted material. Promotion must either consume a clean source-root candidate or explicitly authorize the dirty material fingerprint.",
+          "release_authorization_blocking": true,
+          "release_blocking": false,
+          "warning_id": "source_tree_dirty_at_export"
         }
       ]
     },
     "release_authorization_gate_decision": {
-      "blocking_codes": [],
-      "blocking_promotion_inputs": [],
+      "blocking_codes": [
+        "RELEASE_AUTHORIZATION_DIRTY_SOURCE_TREE"
+      ],
+      "blocking_promotion_inputs": [
+        "source_tree_dirty_at_export"
+      ],
       "clean_source_requirement": "An authorized public release must bind the artifact to a clean git HEAD unless a separate dirty-material authorization rule is explicitly invoked.",
-      "decision": "ready_pending_operator_authorization",
-      "decision_reason": "The candidate is gate-eligible, but release remains unauthorized until the operator explicitly invokes the release authorization gate and records its receipt.",
+      "decision": "defer",
+      "decision_reason": "Release authorization is deferred because the candidate is export-shape validated but its source identity is not clean enough for public promotion.",
       "dirty_material_authorization_rule": "Dirty-source promotion requires a stable dirty-diff/material fingerprint, path classification, and an explicit authorization receipt. This exporter does not promote dirty material by default.",
       "dry_run": true,
       "evaluated_inputs": {
-        "artifact_payload_hash_sha256": "3b01698a5cd74a4544bd5ee15a0b30d027e486a5b56feae84a490203e4a9b5da",
+        "artifact_payload_hash_sha256": "bc3cae88832f73bb159e240a189b4a4c69a512c19c515560f6f3d358de55c7da",
         "candidate_state": "validated_release_candidate_pending_explicit_authorization",
         "candidate_status": "pass_with_external_warnings",
-        "dirty_source_path_count": 0,
-        "dirty_source_path_sample": [],
+        "dirty_source_path_count": 1,
+        "dirty_source_path_sample": [
+          "SECURITY.md"
+        ],
         "export_status": "pass",
-        "git_head": "94a049af8b7d632789b90dcf0328378fe267dff8",
-        "release_authorization_blocking_warning_count": 0,
+        "git_head": "bfb7cafccd6d4090b7169115de11cdb2b220de80",
+        "release_authorization_blocking_warning_count": 1,
         "release_authorized": false,
         "release_blocking_warning_count": 0,
         "release_receipt_ref": "receipts/release/release_export_receipt.json",
         "source_status": "available",
-        "source_tree_state_kind": "git_head_clean",
+        "source_tree_state_kind": "git_head_with_worktree_delta",
         "validation_blocking_codes": []
       },
       "gate_id": "explicit_release_authorization_gate",
       "gate_invoked": false,
-      "operator_authorization_gate_eligible": true,
+      "operator_authorization_gate_eligible": false,
       "release_authorization_allowed_now": false,
       "release_authorized_after_dry_run": false,
-      "required_actions": [],
+      "required_actions": [
+        "regenerate_from_clean_source_tree_or_authorize_dirty_material_fingerprint"
+      ],
       "schema_version": "microcosm_release_authorization_gate_decision_v1"
     },
     "schema_version": "microcosm_release_candidate_packet_v1",
