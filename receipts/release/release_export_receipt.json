@@ -2,10 +2,10 @@
   "anti_claim": "This receipt validates export shape for a generated public folder. It is not release, publication, hosted launch, private-root equivalence, or complete secret-audit authority.",
   "artifact": {
     "artifact_dir": "microcosm-substrate",
-    "artifact_payload_hash_sha256": "bc3cae88832f73bb159e240a189b4a4c69a512c19c515560f6f3d358de55c7da",
-    "file_count": 4803,
+    "artifact_payload_hash_sha256": "bece60ac1a0a273d8a7ce92ae65348635d9d2a41e105d966c80e0a36606b96e6",
+    "file_count": 4804,
     "mode": "generated_standalone_folder",
-    "payload_bytes": 104184106,
+    "payload_bytes": 104186119,
     "receipt_generated_after_inventory": true,
     "release_receipt_ref": "receipts/release/release_export_receipt.json"
   },
@@ -651,7 +651,7 @@
       "status": "pass"
     }
   },
-  "generated_at": "2026-06-19T19:06:03+00:00",
+  "generated_at": "2026-06-19T19:14:51+00:00",
   "install_smoke_receipt": {
     "body_in_receipt": false,
     "bytecode_write_suppressed": true,
@@ -760,7 +760,7 @@
     "status": "pass"
   },
   "inventory_receipt": {
-    "file_count": 4803,
+    "file_count": 4804,
     "files": [
       {
         "path": ".github/PULL_REQUEST_TEMPLATE.md",
@@ -917,6 +917,12 @@
         "role": "public_entry_document",
         "sha256": "07d08509af42edbacc77ce695d4e62ea446048be88bc99b3a9a010e4fbcb698e",
         "size_bytes": 5244
+      },
+      {
+        "path": "SOURCE_STATUS.md",
+        "role": "public_artifact_member",
+        "sha256": "f88375b6aa7962320f9af183def98c8fdeb94ac80bd3a2add7d75e0138800f22",
+        "size_bytes": 1965
       },
       {
         "path": "atlas/agent_task_routes.json",
@@ -27405,8 +27411,8 @@
       {
         "path": "src/microcosm_core/release_export.py",
         "role": "runtime_source",
-        "sha256": "5a00336d7334679cdb979a09df85fbc087039c6a61a311c141604f4f5f1b96ed",
-        "size_bytes": 181393
+        "sha256": "8d9d4a414d771841a3513057fce48c2076b30483e51abd7fb3b93696331cc790",
+        "size_bytes": 181441
       },
       {
         "path": "src/microcosm_core/resource_root.py",
@@ -29607,6 +29613,7 @@
       "RELEASE_REVIEW.md",
       "README.md",
       "SECURITY.md",
+      "SOURCE_STATUS.md",
       "atlas",
       "bootstrap.sh",
       "core",
@@ -29632,7 +29639,7 @@
       "fixture": 889,
       "package_manifest": 1,
       "package_metadata": 3,
-      "public_artifact_member": 5,
+      "public_artifact_member": 6,
       "public_entry_document": 18,
       "public_paper_module": 188,
       "public_skill": 778,
@@ -29704,8 +29711,8 @@
     "claim_language_scan": {
       "anti_claim": "Pattern hits in explicit boundary or anti-claim contexts are reported for review but do not by themselves authorize or block the export candidate.",
       "body_in_receipt": false,
-      "boundary_context_hit_count": 19,
-      "hit_count": 31,
+      "boundary_context_hit_count": 21,
+      "hit_count": 33,
       "hit_overflow_count": 0,
       "hits": [
         {
@@ -29784,6 +29791,26 @@
           "context": "boundary_or_anti_claim_context",
           "line": 3,
           "path": "SECURITY.md",
+          "pattern_id": "hosted_or_production_security_claim",
+          "release_authorization_blocking": false,
+          "release_candidate_blocking": false
+        },
+        {
+          "body_in_receipt": false,
+          "category": "product_claim_boundary",
+          "context": "boundary_or_anti_claim_context",
+          "line": 30,
+          "path": "SOURCE_STATUS.md",
+          "pattern_id": "hosted_or_production_security_claim",
+          "release_authorization_blocking": false,
+          "release_candidate_blocking": false
+        },
+        {
+          "body_in_receipt": false,
+          "category": "product_claim_boundary",
+          "context": "boundary_or_anti_claim_context",
+          "line": 30,
+          "path": "SOURCE_STATUS.md",
           "pattern_id": "hosted_or_production_security_claim",
           "release_authorization_blocking": false,
           "release_candidate_blocking": false
@@ -29902,7 +29929,7 @@
           "body_in_receipt": false,
           "category": "affiliation_boundary",
           "context": "boundary_or_anti_claim_context",
-          "line": 146,
+          "line": 148,
           "path": "src/microcosm_core/release_export.py",
           "pattern_id": "provider_or_institution_affiliation",
           "release_authorization_blocking": false,
@@ -29912,7 +29939,7 @@
           "body_in_receipt": false,
           "category": "affiliation_boundary",
           "context": "boundary_or_anti_claim_context",
-          "line": 146,
+          "line": 148,
           "path": "src/microcosm_core/release_export.py",
           "pattern_id": "provider_or_institution_affiliation",
           "release_authorization_blocking": false,
@@ -29922,7 +29949,7 @@
           "body_in_receipt": false,
           "category": "affiliation_boundary",
           "context": "boundary_or_anti_claim_context",
-          "line": 146,
+          "line": 148,
           "path": "src/microcosm_core/release_export.py",
           "pattern_id": "provider_or_institution_affiliation",
           "release_authorization_blocking": false,
@@ -29932,7 +29959,7 @@
           "body_in_receipt": false,
           "category": "affiliation_boundary",
           "context": "boundary_or_anti_claim_context",
-          "line": 146,
+          "line": 148,
           "path": "src/microcosm_core/release_export.py",
           "pattern_id": "provider_or_institution_affiliation",
           "release_authorization_blocking": false,
@@ -29942,7 +29969,7 @@
           "body_in_receipt": false,
           "category": "affiliation_boundary",
           "context": "suspect_positive_claim",
-          "line": 146,
+          "line": 148,
           "path": "src/microcosm_core/release_export.py",
           "pattern_id": "provider_or_institution_affiliation",
           "release_authorization_blocking": true,
@@ -29952,7 +29979,7 @@
           "body_in_receipt": false,
           "category": "affiliation_boundary",
           "context": "suspect_positive_claim",
-          "line": 146,
+          "line": 148,
           "path": "src/microcosm_core/release_export.py",
           "pattern_id": "provider_or_institution_affiliation",
           "release_authorization_blocking": true,
@@ -29962,7 +29989,7 @@
           "body_in_receipt": false,
           "category": "product_claim_boundary",
           "context": "boundary_or_anti_claim_context",
-          "line": 153,
+          "line": 155,
           "path": "src/microcosm_core/release_export.py",
           "pattern_id": "hosted_or_production_security_claim",
           "release_authorization_blocking": false,
@@ -29972,7 +29999,7 @@
           "body_in_receipt": false,
           "category": "product_claim_boundary",
           "context": "boundary_or_anti_claim_context",
-          "line": 153,
+          "line": 155,
           "path": "src/microcosm_core/release_export.py",
           "pattern_id": "hosted_or_production_security_claim",
           "release_authorization_blocking": false,
@@ -29982,7 +30009,7 @@
           "body_in_receipt": false,
           "category": "product_claim_boundary",
           "context": "boundary_or_anti_claim_context",
-          "line": 153,
+          "line": 155,
           "path": "src/microcosm_core/release_export.py",
           "pattern_id": "hosted_or_production_security_claim",
           "release_authorization_blocking": false,
@@ -30029,9 +30056,9 @@
     "finance_promotion_scan": {
       "anti_claim": "Pattern hits in explicit boundary or anti-claim contexts are reported for review but do not by themselves authorize or block the export candidate.",
       "body_in_receipt": false,
-      "boundary_context_hit_count": 54,
-      "hit_count": 76,
-      "hit_overflow_count": 26,
+      "boundary_context_hit_count": 55,
+      "hit_count": 77,
+      "hit_overflow_count": 27,
       "hits": [
         {
           "body_in_receipt": false,
@@ -30061,6 +30088,16 @@
           "path": "README.md",
           "pattern_id": "trading_system_or_strategy",
           "release_authorization_blocking": true,
+          "release_candidate_blocking": false
+        },
+        {
+          "body_in_receipt": false,
+          "category": "financial_promotion_boundary",
+          "context": "boundary_or_anti_claim_context",
+          "line": 31,
+          "path": "SOURCE_STATUS.md",
+          "pattern_id": "trading_system_or_strategy",
+          "release_authorization_blocking": false,
           "release_candidate_blocking": false
         },
         {
@@ -30522,16 +30559,6 @@
           "pattern_id": "investment_recommendation",
           "release_authorization_blocking": false,
           "release_candidate_blocking": false
-        },
-        {
-          "body_in_receipt": false,
-          "category": "financial_promotion_boundary",
-          "context": "boundary_or_anti_claim_context",
-          "line": 2,
-          "path": "receipts/runtime_shell/demo_project/organs/batch8_structural_theses_capsule/batch8_structural_theses_capsule_validation_receipt.json",
-          "pattern_id": "investment_recommendation",
-          "release_authorization_blocking": false,
-          "release_candidate_blocking": false
         }
       ],
       "release_authorization_blocking_hit_count": 22,
@@ -30543,7 +30570,7 @@
     },
     "hosted_launch_authorized": false,
     "materials_ledger": {
-      "artifact_payload_hash_sha256": "bc3cae88832f73bb159e240a189b4a4c69a512c19c515560f6f3d358de55c7da",
+      "artifact_payload_hash_sha256": "bece60ac1a0a273d8a7ce92ae65348635d9d2a41e105d966c80e0a36606b96e6",
       "body_in_receipt": false,
       "dependency_summary": {
         "build_requires": [
@@ -30565,7 +30592,7 @@
         "fixture": 889,
         "package_manifest": 1,
         "package_metadata": 3,
-        "public_artifact_member": 5,
+        "public_artifact_member": 6,
         "public_entry_document": 18,
         "public_paper_module": 188,
         "public_skill": 778,
@@ -30639,6 +30666,7 @@
         "RELEASE_DISCIPLINE.md": 1,
         "RELEASE_REVIEW.md": 1,
         "SECURITY.md": 1,
+        "SOURCE_STATUS.md": 1,
         "atlas": 6,
         "bootstrap.sh": 1,
         "core": 123,
@@ -30834,21 +30862,22 @@
     "candidate_identity": {
       "artifact": {
         "artifact_dir": "microcosm-substrate",
-        "artifact_payload_hash_sha256": "bc3cae88832f73bb159e240a189b4a4c69a512c19c515560f6f3d358de55c7da",
-        "file_count": 4803,
+        "artifact_payload_hash_sha256": "bece60ac1a0a273d8a7ce92ae65348635d9d2a41e105d966c80e0a36606b96e6",
+        "file_count": 4804,
         "mode": "generated_standalone_folder",
-        "payload_bytes": 104184106
+        "payload_bytes": 104186119
       },
       "export_command": "python -m microcosm_core.release_export --root <microcosm-root> --out <release-out> --force --summary",
       "release_receipt_ref": "receipts/release/release_export_receipt.json",
       "source": {
         "body_in_receipt": false,
-        "dirty_source_path_count": 1,
+        "dirty_source_path_count": 2,
         "dirty_source_path_overflow_count": 0,
         "dirty_source_path_sample": [
-          "SECURITY.md"
+          "SOURCE_STATUS.md",
+          "src/microcosm_core/release_export.py"
         ],
-        "git_head": "bfb7cafccd6d4090b7169115de11cdb2b220de80",
+        "git_head": "fe92cdd685fef2982c4c0f76de1c64cb384b1aa7",
         "source_root_ref": "microcosm-substrate",
         "source_tree_state_kind": "git_head_with_worktree_delta",
         "status": "available"
@@ -30859,16 +30888,16 @@
       "candidate_validity_result": "historical_only",
       "comparison": {
         "commits_after_candidate_count": 0,
-        "compare_head": "bfb7cafccd6d4090b7169115de11cdb2b220de80",
+        "compare_head": "fe92cdd685fef2982c4c0f76de1c64cb384b1aa7",
         "compare_ref": "HEAD",
         "observed_commits": []
       },
       "disclosure": "candidate_is_not_gate_ready",
       "frozen_candidate": {
-        "artifact_hash": "bc3cae88832f73bb159e240a189b4a4c69a512c19c515560f6f3d358de55c7da",
-        "file_count": 4803,
-        "git_head": "bfb7cafccd6d4090b7169115de11cdb2b220de80",
-        "payload_bytes": 104184106,
+        "artifact_hash": "bece60ac1a0a273d8a7ce92ae65348635d9d2a41e105d966c80e0a36606b96e6",
+        "file_count": 4804,
+        "git_head": "fe92cdd685fef2982c4c0f76de1c64cb384b1aa7",
+        "payload_bytes": 104186119,
         "release_receipt_ref": "receipts/release/release_export_receipt.json",
         "source_root_ref": "microcosm-substrate",
         "source_tree_state_kind": "git_head_with_worktree_delta"
@@ -30948,7 +30977,7 @@
         },
         {
           "classification": "release_authority_gate_input",
-          "dirty_source_path_count": 1,
+          "dirty_source_path_count": 2,
           "public_artifact_claim_impact": [
             "source_material_identity"
           ],
@@ -30972,15 +31001,16 @@
       "dirty_material_authorization_rule": "Dirty-source promotion requires a stable dirty-diff/material fingerprint, path classification, and an explicit authorization receipt. This exporter does not promote dirty material by default.",
       "dry_run": true,
       "evaluated_inputs": {
-        "artifact_payload_hash_sha256": "bc3cae88832f73bb159e240a189b4a4c69a512c19c515560f6f3d358de55c7da",
+        "artifact_payload_hash_sha256": "bece60ac1a0a273d8a7ce92ae65348635d9d2a41e105d966c80e0a36606b96e6",
         "candidate_state": "validated_release_candidate_pending_explicit_authorization",
         "candidate_status": "pass_with_external_warnings",
-        "dirty_source_path_count": 1,
+        "dirty_source_path_count": 2,
         "dirty_source_path_sample": [
-          "SECURITY.md"
+          "SOURCE_STATUS.md",
+          "src/microcosm_core/release_export.py"
         ],
         "export_status": "pass",
-        "git_head": "bfb7cafccd6d4090b7169115de11cdb2b220de80",
+        "git_head": "fe92cdd685fef2982c4c0f76de1c64cb384b1aa7",
         "release_authorization_blocking_warning_count": 1,
         "release_authorized": false,
         "release_blocking_warning_count": 0,
@@ -31150,7 +31180,8 @@
       "QUICKSTART.md",
       "RELEASE_DISCIPLINE.md",
       "RELEASE_REVIEW.md",
-      "SECURITY.md"
+      "SECURITY.md",
+      "SOURCE_STATUS.md"
     ],
     "required_public_entry_refs_missing": [],
     "required_public_entry_refs_present": [
@@ -31181,7 +31212,8 @@
       "QUICKSTART.md",
       "RELEASE_DISCIPLINE.md",
       "RELEASE_REVIEW.md",
-      "SECURITY.md"
+      "SECURITY.md",
+      "SOURCE_STATUS.md"
     ],
     "runnable_smoke_status": "pass",
     "schema_version": "microcosm_standalone_severance_receipt_v1",
