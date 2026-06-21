@@ -1,0 +1,19 @@
+{
+  "builder": "tools/meta/dissemination/build_microcosm_public_site.py",
+  "canonical_projection_status": "https://wcook04.github.io/plectis/projection-status.json",
+  "current_public_name": "Plectis",
+  "generated_at": "1970-01-01T00:00:00+00:00",
+  "legacy_public_name": "Microcosm",
+  "machine_readable_boundary": "This file is JSON so the old projection-status URL never returns an HTML transition page. It points to the canonical status for the current public projection.",
+  "mode_counts": {
+    "byte_compatible_alias": 15,
+    "html_redirect": 25,
+    "legacy_404": 1,
+    "legacy_projection_status": 1,
+    "legacy_security_txt": 2
+  },
+  "route_count": 44,
+  "route_manifest": "legacy-route-manifest.json",
+  "schema": "plectis_legacy_projection_status_v0",
+  "status": "compatibility_projection"
+}
