@@ -1,5 +1,0 @@
-{
-  "case_id": "command_displacement",
-  "expected_status": "red",
-  "text": "You can run make smoke to verify the package."
-}

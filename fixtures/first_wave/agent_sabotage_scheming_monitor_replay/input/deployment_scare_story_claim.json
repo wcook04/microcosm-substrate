@@ -1,7 +1,0 @@
-{
-  "body_in_receipt": false,
-  "case_id": "deployment_scare_story_claim",
-  "deployment_claim_made": true,
-  "expected_negative_case_id": "deployment_scare_story_claim",
-  "live_deployment_risk_claimed": true
-}

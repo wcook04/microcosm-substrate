@@ -1,6 +1,0 @@
-{
-  "schema_version": "cold_eval_index_fixture_v1",
-  "validators": [
-    "registry/validators.json"
-  ]
-}

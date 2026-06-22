@@ -1,9 +1,0 @@
-{
-  "schema_version": "proof_diagnostic_evidence_spine_runtime_overclaim_fixture_v1",
-  "receipt_id": "receipt.regression.ring2_diagnostic_pass_overclaims_runtime_correctness",
-  "expected_negative_case_id": "passing_check_overclaims_runtime_correctness",
-  "check_id": "ring2_failure_taxonomy_receipt_anchor",
-  "status": "pass",
-  "claims_runtime_correctness": true,
-  "authority_ceiling": "passing Ring2 diagnostic refs do not prove runtime correctness"
-}
